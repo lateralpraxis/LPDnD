@@ -8,6 +8,10 @@
     <Button
         android:id="@+id/btnDeliveryReport"
         style="@style/style_homeButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_vertical"
+        android:layout_weight="0.5"
         android:drawableLeft="@drawable/ic_dashboard"
         android:text="@string/menu_deliveryView"
         android:textAllCaps="true"
