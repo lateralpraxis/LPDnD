@@ -31,8 +31,8 @@
     <string name="BalQty">BAL</string>
     <string name="RetQty">RET</string>
     <string name="Type">PType</string>
-     <string name="AssignedRoute">Assigned Route</string>
-      <string name="OtherRoute">Other Route</string>
+    <string name="AssignedRoute">Assigned Route</string>
+    <string name="OtherRoute">Other Route</string>
     <string name="CreateDemand">Create [+]</string>
     <string name="create_demand">Create Demand</string>
     <string name="rate">Rate</string>
@@ -185,7 +185,7 @@
     <string name="saveandnext">Save &amp; Next</string>
 
     <!-- End of Cash Deposit -->
-    
+
     <!-- Start of Cash Deposit Delete-->
     <string name="cashDepositDeleteHead">CD# - Route Officer</string>
     <string name="routeofficer">Route Officer:</string>
@@ -193,11 +193,11 @@
     <string name="datehead">Date:</string>
     <string name="cdhead">Cash Deposit#:</string>
     <string name="delete">Delete</string>
-    
+
     <string name="modehead">Mode</string>
     <string name="amounthead">Amount\u20B9</string>
     <!-- End of Cash Deposit Delete-->
-    
+
     <!-- Start of Delete Delivery Delete-->
     <string name="VehicleHead">Vehicle#:</string>
     <string name="DeleteDeliveryHead">Delivery Details</string>
@@ -207,7 +207,6 @@
     <string name="deletedelivery">Delete Delivery</string>
     <string name="ReceiptHead">Receipt#:</string>
     <!-- End of Delete Delivery Delete-->
-    
 
 
     <string-array name="languages">
@@ -217,7 +216,6 @@
 
     <string name="lang_eng">English</string>
     <string name="lang_hindi">हिंदी</string>
-
 
 
     <string name="uat_app_">UAT App!</string>
@@ -262,38 +260,38 @@
     <string name="amthead">Amount\u20B9</string>
     <string name="next">Next</string>
     <string name="skipcompany">Skip Company</string>
-    
+
     <string name="viewRoutes">Assigned Routes</string>
     <string name="string_routes">Routes assigned to Route Officer</string>
     <string name="viewRouteAllocation">View Route Allocation</string>
-    
-     <!-- Start of Report Variables-->
-     <string name="hint_date">Select Date</string>
-     <string name="label_Search">Go</string>
-     <string name="label_Demand">Demand Details</string>
-     <string name="label_Centre">Centre:</string>
-     <string name="label_CentreHead">Centre/Veh#</string>
-     <string name="label_Company">Company:</string>
-     <string name="label_Alloc">Alloc#</string>
-     <string name="label_Vehicle">Vehicle#</string>
-     <string name="label_RouteOfficer">Route Officer</string>
-     <string name="label_Allo">Allo.</string>
-     <string name="label_Deli">Deli.</string>
-     <string name="label_Ret">Ret.</string>    
-     <string name="label_Leak">Leak</string>
-     <string name="label_CreateBy">Create By</string>
-     <string name="label_ConversionNo">Conversion#</string>
-     <string name="label_AllocReport">Allocation Details</string>
-     <string name="label_AdjustReportReport">Stock Adjustment Details</string>
-     <string name="label_DeliveryReport">Delivery Details</string>
-     <string name="label_DeliveryReceipt">Delivery / Receipt\u20B9</string>
-     <string name="label_ConversionReport">Stock Conversion Detail</string>
-     <string name="label_OutstandingReport">Cash Outstanding</string>
-     <string name="label_CollectReport">Cash Collection</string>
-     <string name="label_Type">Type</string>
-     <string name="label_Inventory">Inventory</string>
-     <string name="label_DelVsRecReport">Delivery Vs. Receipt</string>
-     <string name="label_NameReport">Name</string>
+
+    <!-- Start of Report Variables-->
+    <string name="hint_date">Select Date</string>
+    <string name="label_Search">Go</string>
+    <string name="label_Demand">Demand Details</string>
+    <string name="label_Centre">Centre:</string>
+    <string name="label_CentreHead">Centre/Veh#</string>
+    <string name="label_Company">Company:</string>
+    <string name="label_Alloc">Alloc#</string>
+    <string name="label_Vehicle">Vehicle#</string>
+    <string name="label_RouteOfficer">Route Officer</string>
+    <string name="label_Allo">Allo.</string>
+    <string name="label_Deli">Deli.</string>
+    <string name="label_Ret">Ret.</string>
+    <string name="label_Leak">Leak</string>
+    <string name="label_CreateBy">Create By</string>
+    <string name="label_ConversionNo">Conversion#</string>
+    <string name="label_AllocReport">Allocation Details</string>
+    <string name="label_AdjustReportReport">Stock Adjustment Details</string>
+    <string name="label_DeliveryReport">Delivery Details</string>
+    <string name="label_DeliveryReceipt">Delivery / Receipt\u20B9</string>
+    <string name="label_ConversionReport">Stock Conversion Detail</string>
+    <string name="label_OutstandingReport">Cash Outstanding</string>
+    <string name="label_CollectReport">Cash Collection</string>
+    <string name="label_Type">Type</string>
+    <string name="label_Inventory">Inventory</string>
+    <string name="label_DelVsRecReport">Delivery Vs. Receipt</string>
+    <string name="label_NameReport">Name</string>
     <string name="label_CollBy">Collected By</string>
 
 

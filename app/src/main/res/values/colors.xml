@@ -26,4 +26,5 @@
     <color name="dialog_background_color">#3340cc</color>
     <color name="colorEditText">#A2A2A2</color>
     <color name="colorEditTextBorder">#DEDEDE</color>
+    <color name="colorBlue">#086DAD</color>
 </resources>
