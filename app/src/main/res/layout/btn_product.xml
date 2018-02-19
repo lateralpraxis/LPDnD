@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <Button
+        android:id="@+id/btnCustomerProduct"
+        style="@style/style_homeButton"
+        android:drawableLeft="@drawable/ic_food_fork_drink_white_24dp"
+        android:text="@string/product"
+        android:textAllCaps="true"
+        tools:ignore="RtlHardcoded,RtlSymmetry" />
+</LinearLayout>

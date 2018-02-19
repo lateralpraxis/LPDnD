@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="vertical" 
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        >
+
+        <TextView
+            android:id="@+id/tvCompany"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+             android:textSize="16sp"
+            android:textColor="@color/lpgreen" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="1" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvItem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                     android:textSize="16sp"
+                    android:text="@string/app_name" />
+            </LinearLayout>
+
+           <!--  <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.15"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvCFQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout> -->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.18"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvALQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:layout_gravity="end"
+                     android:textSize="16sp"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.19"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvDLQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:layout_gravity="end"
+                     android:textSize="16sp"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.19"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvRetQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:layout_gravity="end"
+                     android:textSize="16sp"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.19"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvBalQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_name"
+                    android:layout_gravity="end"
+                     android:textSize="16sp"
+                    android:layout_marginTop="5dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

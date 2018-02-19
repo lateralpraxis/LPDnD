@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/style_topbar"
+        android:text="@string/rate" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+         >
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radioAssign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:textSize="21sp"
+                android:text="@string/Company" />
+
+            <RadioButton
+                android:id="@+id/radioOther"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="21sp"
+                android:text="@string/Customer" />
+        </RadioGroup>
+
+        <Spinner
+            android:id="@+id/spCompany"
+            style="@style/spinner"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:textSize="21sp" 
+            android:layout_marginRight="20dp" />
+
+        <Spinner
+            android:id="@+id/spCustomer"
+            style="@style/spinner"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:textSize="21sp" 
+            android:layout_marginRight="20dp" />
+
+        <LinearLayout
+            style="@style/style_gridheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+            android:weightSum="1" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvCompany"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:textSize="16sp" 
+                    android:textColor="@color/white"
+                    android:text="@string/Company"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.4"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvItem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/Item"
+                    android:textSize="16sp" 
+                    android:textColor="@color/white" 
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/Rate"
+                    android:textSize="16sp" 
+                    android:textColor="@color/white" 
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listViewMain"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="afterDescendants"
+            android:divider="@color/black"
+            android:dividerHeight="1sp"
+            android:focusable="false" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/tvNoRecord"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20sp"
+            android:gravity="center"
+            android:text="@string/norecord"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

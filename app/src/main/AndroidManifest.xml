@@ -1,0 +1,348 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="lateralpraxis.lpdnd">
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <application
+        android:allowBackup="false"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityLogin"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCreateDemand"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityHomeScreen"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCreateDelivery"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityClose"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityChangePassword"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityLanding"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityComplaintFeedback"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCustomerSignUp"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.DatabaseManager"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDemandViewDetail"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityMessageViewSummary"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDemandViewSummary"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeliveryViewSummary"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeliveryViewDetail"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityPayment"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityPaymentView"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityPaymentDetails"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ViewImage"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityStockReturn"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityStockReturnViewDetail"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityStockReturnViewSummary"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCashDeposit"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityComplaintFeedbackViewSummary"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityComplaintFeedbackViewDetail"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityProductMaster"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityVehicleMaster"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCustomerMaster"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityRateMaster"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeliveryPaymentViewDetail"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeliveryPaymentViewSummary"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeliveryPayment"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityPaymentOnly"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityRORoutesView"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityRORouteAllocation"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityMasters"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityAdminHomeScreen"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCashDepositView"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCashDepositDelete"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeleteDeliveryList"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeleteDeliveryView"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeletePaymentList"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeletePaymentView"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDemandReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.AllocationReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityDeliveryReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityAdjustmentReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityConversionReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCashCollectReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityInventoryReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityCustDelVsRecReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityVehDelVsRecReport"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="lateralpraxis.lpdnd.ActivityOutstanding"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" >
+        </activity>
+
+    </application>
+</manifest>

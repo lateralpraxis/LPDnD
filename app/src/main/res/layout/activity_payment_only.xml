@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvHeader"
+            style="@style/style_topbar"
+            android:text="@string/payments" />
+
+        <LinearLayout
+            android:id="@+id/llCustSelection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <Spinner
+                android:id="@+id/spCustomer"
+                style="@style/spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnGo"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_gravity="end"
+            android:layout_marginLeft="5sp"
+            android:layout_marginRight="5sp"
+            android:layout_weight="1"
+            android:background="@drawable/button_design"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:text="@string/go"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/llPayment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/llCustomerDet"
+                style="@style/style_layout" >
+
+                <TextView
+                    android:id="@+id/tvCustomerHead"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/customer_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCustId"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvCustName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCompany"
+                style="@style/style_layout" >
+
+                <TextView
+                    android:id="@+id/tvCompany"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/company_label"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCompanyId"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvCompanyName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llPayable"
+                style="@style/style_layout" >
+
+                <TextView
+                    android:id="@+id/tvPayable"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/payable"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvPayableAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCash"
+                style="@style/style_layout" >
+
+                <TextView
+                    android:id="@+id/tvCash"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/cashamt"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etCashAmount"
+                    style="@style/edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_cashamount"
+                    android:inputType="numberDecimal"
+                    android:maxLength="8"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llCheque"
+                style="@style/style_layout" >
+
+                <TextView
+                    android:id="@+id/tvCheque"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/cheqamt"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etChequeAmount"
+                    style="@style/edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_chequeamount"
+                    android:inputType="numberDecimal"
+                    android:maxLength="8"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llChequeNo"
+                style="@style/style_layout"
+                android:visibility="gone" >
+
+                <TextView
+                    android:id="@+id/tvChequeNo"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/cheq"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etChequeNo"
+                    style="@style/edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_cheque"
+                    android:inputType="number"
+                    android:maxLength="6"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llBank"
+                style="@style/style_layout"
+                android:visibility="gone" >
+
+                <Spinner
+                    android:id="@+id/spBank"
+                    style="@style/spinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llAttachment"
+                style="@style/style_layout"
+                android:visibility="gone" >
+
+                <Button
+                    android:id="@+id/btnUpload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/button_design"
+                    android:text="@string/upload_file"
+                    android:textColor="#FFFFFF" />
+
+                <TextView
+                    android:id="@+id/tvAttach"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/lpblue"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llOnline"
+                style="@style/style_layout" >
+
+                <TextView
+                    android:id="@+id/tvOnline"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/onlineamt"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etOnlineAmount"
+                    style="@style/edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_onlineamount"
+                    android:inputType="numberDecimal"
+                    android:maxLength="8"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llRemarks"
+                android:visibility="gone"
+                style="@style/style_layout" >
+
+                <TextView
+                    android:id="@+id/tvRemarks"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/onlineremarks"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etRemarks"
+                    style="@style/edittext"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/enter_Remarks"
+                    android:inputType="text"
+                    android:maxLength="50"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llBalance"
+                style="@style/style_layout" >
+
+                <TextView
+                    android:id="@+id/tvBalance"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/balance"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvBalanceData"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#800000"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llNavBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dip"
+                android:orientation="vertical"
+                android:paddingLeft="17sp"
+                android:paddingRight="17sp" >
+
+                <Button
+                    android:id="@+id/btnSubmit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_gravity="end"
+                    android:layout_margin="1sp"
+                    android:layout_weight=".5"
+                    android:background="@drawable/button_design"
+                    android:paddingBottom="5sp"
+                    android:paddingLeft="10sp"
+                    android:paddingRight="10sp"
+                    android:paddingTop="5sp"
+                    android:text="@string/submit"
+                    android:textColor="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end" >
+
+                    <Button
+                        android:id="@+id/btnSkip"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="1sp"
+                        android:layout_marginEnd="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/button_design"
+                        android:paddingBottom="5sp"
+                        android:paddingLeft="10sp"
+                        android:paddingRight="10sp"
+                        android:paddingTop="5sp"
+                        android:text="@string/skipcompany"
+                        android:textColor="@color/white" />
+
+                    <Button
+                        android:id="@+id/btnNext"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_margin="1sp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/button_design"
+                        android:paddingBottom="5sp"
+                        android:paddingLeft="10sp"
+                        android:paddingRight="10sp"
+                        android:paddingTop="5sp"
+                        android:text="@string/next"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

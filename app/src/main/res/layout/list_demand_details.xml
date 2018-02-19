@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/llCustomer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="@string/custname"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textIsSelectable="false"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableGridHead"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:stretchColumns="0,1"
+        android:visibility="visible" >
+
+        <TableRow
+            android:id="@+id/tableHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5.0dip" >
+			<!-- 1/0 -->
+            <TextView
+                android:id="@+id/tvProduct"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".8"
+                android:text="@string/product"
+                android:textColor="@color/black"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+            <!-- 1/1 -->
+
+            <TextView
+                android:id="@+id/tvQuantity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".2"
+                android:text="@string/Quantity"
+                android:textColor="@color/black"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

@@ -1,0 +1,138 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="edittext">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">5dip</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="style_topbar">
+        <item name="android:textSize">16sp</item>
+        <item name="android:minHeight">36sp</item>
+        <item name="android:background">@color/lpgreen</item>
+        <item name="android:autoText">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">2dip</item>
+        <item name="android:paddingBottom">5sp</item>
+        <item name="android:paddingLeft">14sp</item>
+        <item name="android:paddingRight">14sp</item>
+        <item name="android:paddingTop">5sp</item>
+        <item name="android:gravity">left</item>
+    </style>
+
+    <style name="topbar">
+        <item name="android:textSize">18sp</item>
+        <item name="android:minHeight">40sp</item>
+        <item name="android:background">@color/lpblue</item>
+        <item name="android:autoText">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dip</item>
+        <item name="android:paddingBottom">5sp</item>
+        <item name="android:paddingLeft">17sp</item>
+        <item name="android:paddingRight">17sp</item>
+        <item name="android:paddingTop">5sp</item>
+    </style>
+
+
+    <style name="edit_text">
+        <item name="android:textSize">18sp</item>
+        <item name="android:minHeight">40sp</item>
+        <item name="android:background">@android:drawable/editbox_background_normal</item>
+        <item name="android:autoText">false</item>
+    </style>
+
+    <style name="spinner">
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_width">250dip</item>
+        <item name="android:layout_height">35dip</item>
+        <item name="android:soundEffectsEnabled">true</item>
+        <item name="android:drawSelectorOnTop">false</item>
+        <item name="android:background">@android:drawable/btn_dropdown</item>
+    </style>
+
+    <style name="custom_dialog_theme">
+        <item name="android:windowBackground">@color/dialog_background_color</item>
+    </style>
+
+    <style name="style_innerheader">
+        <item name="android:textSize">18sp</item>
+        <item name="android:minHeight">40sp</item>
+        <item name="android:background">@color/lpgreen</item>
+        <item name="android:autoText">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dip</item>
+        <item name="android:paddingBottom">5sp</item>
+        <item name="android:paddingTop">5sp</item>
+    </style>
+
+    <style name="style_gridheader">
+        <item name="android:textSize">18sp</item>
+        <item name="android:minHeight">40sp</item>
+        <item name="android:background">@color/lpgrey</item>
+        <item name="android:autoText">false</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dip</item>
+        <item name="android:paddingBottom">5sp</item>
+        <item name="android:paddingTop">5sp</item>
+    </style>
+
+    <style name="style_layout">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">12dip</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingLeft">@dimen/activity_horizontal_margin</item>
+        <item name="android:paddingRight">@dimen/activity_horizontal_margin</item>
+    </style>
+
+    <style name="style_homemenu">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">15dip</item>
+        <item name="android:orientation">horizontal</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:weightSum">2</item>
+    </style>
+
+    <style name="style_menuButtonPadding">
+        <item name="android:paddingLeft">@dimen/menuButton_horizontal_padding</item>
+        <item name="android:paddingRight">@dimen/menuButton_horizontal_padding</item>
+        <item name="android:paddingTop">@dimen/menuButton_vertical_padding</item>
+        <item name="android:paddingBottom">@dimen/menuButton_horizontal_padding</item>
+    </style>
+
+    <style name="style_homeButton" parent="style_menuButtonPadding">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">88dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:minHeight">88dp</item>
+        <item name="android:background">@drawable/rectangle</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+    </style>
+
+
+</resources>

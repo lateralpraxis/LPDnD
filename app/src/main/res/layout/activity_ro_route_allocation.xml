@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvTopHeader"
+        style="@style/style_topbar"
+        android:text="@string/viewRouteAllocation" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+         >
+
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp" 
+            android:textIsSelectable="false"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            style="@style/style_gridheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+            android:weightSum="1" >
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.25"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvCompany"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/Item"
+                    android:textSize="16sp" 
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+   <!--          <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.15"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvItem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/Item"
+                    android:textStyle="bold" />
+            </LinearLayout> -->
+
+             <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.18"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvCFQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/ALQty"
+                    android:textSize="16sp" 
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout> 
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.19"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvALQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/DLQty"
+                   android:textSize="16sp" 
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.19"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvRetQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/RetQty"
+                    android:textSize="16sp" 
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.19"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvDLQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/BalQty"
+                    android:textSize="16sp" 
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/listAllocation"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="afterDescendants"
+            android:divider="@color/black"
+            android:minHeight="64sp"
+            android:dividerHeight="1sp"
+            android:focusable="false" >
+        </ListView>
+
+        <TextView
+            android:id="@+id/tvNoRecord"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16sp"
+            android:gravity="center"
+            android:textSize="21sp" 
+            android:text="@string/norecord"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>

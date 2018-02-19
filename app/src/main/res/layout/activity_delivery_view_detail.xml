@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/style_topbar"
+        android:text="@string/view_delivery" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="36dp"
+        android:layout_gravity="center"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="1" >
+
+        <!-- col 1 -->
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/ButtonLeft"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_arrow_left"
+                android:textColor="@color/lpblue" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.8"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tvHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textIsSelectable="false"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight="0.1"
+            android:gravity="end"
+            android:orientation="vertical" >
+
+            <Button
+                android:id="@+id/ButtonRight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_arrow_right"
+                android:textColor="@color/lpblue" />
+        </LinearLayout>
+    </LinearLayout>
+    <!-- Left Right Arrow End -->
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            style="@style/style_gridheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:weightSum="1" >
+
+            <!-- col 1 -->
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:layout_weight="0.3"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvItem"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/Item"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/Rate"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_weight="0.15"
+                android:gravity="end"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvDQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/DQty"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_weight="0.15"
+                android:gravity="end"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvDelQty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/DelQty"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:text="@string/Amount"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight=".99"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/listViewMain"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="afterDescendants"
+                android:divider="@color/black"
+                android:dividerHeight="1sp"
+                android:focusable="false" >
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_weight=".01"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tvTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvNoRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/norecord"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/tvHeaderPayment"
+                style="@style/style_topbar"
+                android:text="@string/paymentdetails" />
+
+            <TextView
+                android:id="@+id/tvDataHead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textIsSelectable="false"
+                android:textStyle="bold" />
+
+            <TableLayout
+                android:id="@+id/tableDataHeader"
+                style="@style/style_gridheader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1.0dip"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:stretchColumns="0,1,2,3"
+                android:visibility="gone" >
+
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip" >
+
+                    <!-- 1/0 -->
+
+                    <TextView
+                        android:id="@+id/tvComp"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".4"
+                        android:text="@string/comphead"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textStyle="bold" />
+
+                    <!-- 1/1 -->
+
+                    <TextView
+                        android:id="@+id/tvAmt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="end"
+                        android:paddingEnd="10dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:paddingStart="5dp"
+                        android:text="@string/amthead"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textStyle="bold" />
+                    <!-- 1/2 -->
+
+                    <TextView
+                        android:id="@+id/tvCh"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".2"
+                        android:text="@string/cheqhead"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textStyle="bold" />
+                    <!-- 1/3 -->
+
+                    <TextView
+                        android:id="@+id/tvBlank"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".1"
+                        android:text="@string/blank"
+                        android:textIsSelectable="false" />
+                </TableRow>
+            </TableLayout>
+
+            <RelativeLayout
+                android:id="@+id/relativeLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center" >
+
+                <TextView
+                    android:id="@+id/tvEmpty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="@string/norecord"
+                    android:textStyle="bold" />
+
+                <ListView
+                    android:id="@+id/lvPaymentDetails"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="2dp"
+                    android:descendantFocusability="afterDescendants"
+                    android:divider="@color/black"
+                    android:dividerHeight="1sp"
+                    android:fadeScrollbars="false"
+                    android:focusable="false" >
+                </ListView>
+            </RelativeLayout>
+
+            <TableLayout
+                android:id="@+id/tableLayoutTotal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1.0dip"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:stretchColumns="0,1,2,3"
+                android:visibility="gone" >
+
+                <TableRow
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip" >
+
+                    <!-- 1/0 -->
+
+                    <TextView
+                        android:id="@+id/tvTotal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".4"
+                        android:text="@string/totalhead"
+                        android:textIsSelectable="false"
+                        android:textStyle="bold" />
+
+                    <!-- 1/1 -->
+
+                    <TextView
+                        android:id="@+id/tvTotalAmt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="end"
+                        android:paddingEnd="10dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="10dp"
+                        android:paddingStart="5dp"
+                        android:textIsSelectable="false"
+                        android:textStyle="bold" />
+                    <!-- 1/2 -->
+
+                    <TextView
+                        android:id="@+id/tvBlank1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".2"
+                        android:text="@string/blank"
+                        android:textIsSelectable="false" />
+                    <!-- 1/3 -->
+
+                    <TextView
+                        android:id="@+id/tvBlank2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".1"
+                        android:text="@string/blank"
+                        android:textIsSelectable="false" />
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

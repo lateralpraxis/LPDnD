@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="lpblue">#086dad</color>
+    <color name="lpred">#ff4500</color>
+    <color name="lpgreen">#20b14a</color>
+    <color name="lpgrey">#454545</color>
+    <color name="lpgreyold">#A9A9A9</color>
+    <color name="blue">#2A5C8F</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="yellow">#ffff00</color>
+    <color name="orangeshade">#FFA62F</color>
+    <color name="silver">#C0C0C0</color>
+    <color name="ldrawer_color">#FFFFFF</color>
+    <color name="actionbar_color">#FFF1B2</color>
+    <color name="drawer_arrow_second_color">#303f9f</color>
+    <color name="barDarkColor">#CECECE</color>
+    <color name="barMeduimColor">#DFDEE0</color>
+    <color name="barLightColor">#F2F2F2</color>
+    <color name="sendLightColor">#8897BF</color>
+    <color name="sendMeduimColor">#3340cc</color>
+    <color name="sendDarkColor">#81a1e0</color>
+    <color name="dialog_background_color">#3340cc</color>
+    <color name="colorEditText">#A2A2A2</color>
+    <color name="colorEditTextBorder">#DEDEDE</color>
+</resources>

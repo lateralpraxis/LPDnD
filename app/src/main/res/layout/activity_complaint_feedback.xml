@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/barLightColor"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvHeader"
+        style="@style/style_topbar"
+        android:text="@string/header_complaint" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dip"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tvComplaintType"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/complaint_type"
+                android:textStyle="bold" />
+
+            <RadioGroup
+                android:id="@+id/RadioMode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal" >
+
+                <RadioButton
+                    android:id="@+id/RadioComplaint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="@string/rg_complaint" />
+
+                <RadioButton
+                    android:id="@+id/RadioFeedback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rg_feedback" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llComplaint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dip"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tvComplaintCategory"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="@string/complaint_category"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spComplaintCategory"
+                style="@style/spinner"
+                android:layout_width="200dp"
+                android:layout_height="43dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llFeedback"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dip"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/tvRating"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/rating"
+                android:textStyle="bold" />
+
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="wrap_content"
+                android:layout_height="43dp"
+                android:maxWidth="20dp"
+                android:numStars="5"
+                android:rating="1.0"
+                android:stepSize="1.0" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dip"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/tvRemarks"
+                android:layout_width="65dp"
+                android:layout_height="wrap_content"
+                android:text="@string/complaint_remarks"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etRemark"
+                style="@style/edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="top|start"
+                android:inputType="textMultiLine"
+                android:lines="5"
+                android:hint="@string/enterComplaintRemarks"
+                android:maxLength="500"
+                android:singleLine="false" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_design"
+            android:text="@string/submit"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>

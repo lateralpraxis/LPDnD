@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <TextView
+        style="@style/style_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="@string/label_CollectReport" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="1" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="@string/label_Company"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/spCompany"
+                style="@style/spinner"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="0.7" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="1" >
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="@string/datehead"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.6"
+                android:hint="@string/hint_date" />
+
+            <ImageView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_weight="0.1"
+                android:contentDescription="@string/datehead"
+                android:gravity="center"
+                android:onClick="setDate"
+                android:src="@drawable/ic_calendar" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="end"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/btnGo"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_design"
+                android:paddingBottom="5dp"
+                android:paddingEnd="10sp"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"
+                android:paddingStart="10sp"
+                android:text="@string/label_Search"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="3dp"
+            android:orientation="vertical" >
+
+            <TableLayout
+                android:id="@+id/tableGridHead"
+                style="@style/style_gridheader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="visible" >
+
+                <TableRow
+                    android:id="@+id/tableHeaderDet"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip"
+                    tools:ignore="UselessParent" >
+
+                    <!-- 1/0 -->
+
+                    <TextView
+                        android:id="@+id/tvCollBy"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:text="@string/label_CollBy"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <!-- 1/1 -->
+
+                    <TextView
+                        android:id="@+id/tvAmount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:gravity="end"
+                        android:text="@string/amthead"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </TableRow>
+            </TableLayout>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+
+                    <lateralpraxis.lpdnd.NonScrollableListView
+                        android:id="@+id/listCollection"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@color/black"
+                        android:dividerHeight="1sp" />
+
+                    <TextView
+                        android:id="@+id/tvEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/norecord"
+                        android:textColor="@color/black" />
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

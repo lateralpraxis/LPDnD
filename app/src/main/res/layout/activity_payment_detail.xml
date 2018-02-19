@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fillViewport="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvHeader"
+            style="@style/style_topbar"
+            android:text="@string/viewpayments" />
+
+        <TextView
+            android:id="@+id/tvDataHead"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textIsSelectable="false"
+            android:textStyle="bold" />
+
+        <TableLayout
+            android:id="@+id/tableDataHeader"
+            style="@style/style_gridheader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1.0dip"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:stretchColumns="0,1,2,3"
+            android:visibility="gone" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5.0dip"
+                tools:ignore="UselessParent" >
+
+                <!-- 1/0 -->
+
+                <TextView
+                    android:id="@+id/tvComp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:text="@string/comphead"
+                    android:textColor="@color/white"
+                    android:textIsSelectable="false" />
+
+                <!-- 1/1 -->
+
+                <TextView
+                    android:id="@+id/tvAmt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:gravity="end"
+                    android:paddingEnd="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingStart="5dp"
+                    android:text="@string/amthead"
+                    android:textColor="@color/white"
+                    android:textIsSelectable="false" />
+                <!-- 1/2 -->
+
+                <TextView
+                    android:id="@+id/tvCh"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".2"
+                    android:text="@string/cheqhead"
+                    android:textColor="@color/white"
+                    android:textIsSelectable="false" />
+                <!-- 1/3 -->
+
+                <TextView
+                    android:id="@+id/tvBlank"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".1"
+                    android:text="@string/blank"
+                    android:textIsSelectable="false" />
+            </TableRow>
+        </TableLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/tvEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/norecord" />
+
+            <ListView
+                android:id="@+id/lvPaymentDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="2dp"
+                android:descendantFocusability="afterDescendants"
+                android:divider="@color/black"
+                android:dividerHeight="1sp"
+                android:fadeScrollbars="false"
+                android:focusable="false"
+                tools:ignore="NestedScrolling" >
+            </ListView>
+        </RelativeLayout>
+        <TableLayout
+            android:id="@+id/tableLayoutTotal"
+            android:visibility="gone"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_margin="1.0dip"
+            android:stretchColumns="0,1,2,3" >
+
+            <TableRow
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5.0dip"
+                tools:ignore="UselessParent" >
+
+                <!-- 1/0 -->
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="0dp"
+                    android:layout_weight=".4"
+                    android:layout_height="wrap_content"
+                    android:text="@string/totalhead"
+                    android:textStyle="bold"
+                    android:textIsSelectable="false" />
+
+                <!-- 1/1 -->
+
+                <TextView
+                    android:id="@+id/tvTotalAmt"
+                    android:layout_width="0dp"
+                    android:layout_weight=".3"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:paddingLeft="5dp"
+                    android:paddingStart="5dp"
+                    android:paddingRight="10dp"
+                    android:paddingEnd="10dp"
+                    android:textStyle="bold"
+                    android:textIsSelectable="false" />
+                <!-- 1/2 -->
+
+                <TextView
+                    android:id="@+id/tvBlank1"
+                    android:layout_width="0dp"
+                    android:layout_weight=".2"
+                    android:layout_height="wrap_content"
+                    android:text="@string/blank"
+                    android:textIsSelectable="false" />
+                <!-- 1/3 -->
+
+                <TextView
+                    android:id="@+id/tvBlank2"
+                    android:layout_width="0dp"
+                    android:layout_weight=".1"
+                    android:layout_height="wrap_content"
+                    android:text="@string/blank"
+                    android:textIsSelectable="false" />
+            </TableRow>
+        </TableLayout>
+    </LinearLayout>
+
+</ScrollView>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvHeader"
+        style="@style/style_topbar"
+        android:text="@string/viewpayments" />
+    
+    <Button
+            android:id="@+id/btnCreate"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_gravity="end"
+            android:background="@android:color/transparent"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@string/createpayment"
+            android:textColor="@color/lpblue"            
+            android:textSize="18sp" />
+
+    <TableLayout
+        android:id="@+id/tableGridHead"
+        style="@style/style_gridheader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1.0dip"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:stretchColumns="0,1"
+        android:visibility="gone" >
+
+        <TableRow
+            android:id="@+id/tableHeader"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5.0dip"
+            tools:ignore="UselessParent" >
+
+            <!-- 1/0 -->
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:textStyle="bold"
+                android:text="@string/custname"
+                 android:textSize="18sp" 
+                    android:textColor="@color/white"
+                android:textIsSelectable="false" />
+
+            <!-- 1/1 -->
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:paddingEnd="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="10dp"
+                android:paddingStart="5dp"
+                android:textStyle="bold"
+                android:text="@string/paydate"
+                 android:textSize="18sp" 
+                    android:textColor="@color/white"
+                android:textIsSelectable="false" />
+        </TableRow>
+    </TableLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5sp"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="@string/norecord" />
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/black"
+            android:dividerHeight="1sp" >
+        </ListView>
+    </RelativeLayout>
+
+</LinearLayout>

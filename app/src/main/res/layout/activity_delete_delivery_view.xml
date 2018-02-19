@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+<LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    <TextView
+        style="@style/style_topbar"
+        android:text="@string/DeleteDeliveryHead" />
+
+    <LinearLayout
+        android:id="@+id/llName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="2dp"
+        android:paddingStart="5dp"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/tvNameHead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:text="@string/routeofficer"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="2dp"
+        android:paddingStart="5dp"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/tvDateHead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:text="@string/datehead"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvDate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llInvoice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="2dp"
+        android:paddingStart="5dp"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/tvInvoiceHead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:text="@string/InvoiceHead"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvInvoice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llVehicle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="2dp"
+        android:paddingStart="5dp"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/tvVehicleHead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:text="@string/VehicleHead"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvVehicle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llCustomer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="2dp"
+        android:paddingStart="5dp"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/tvCustomerHead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:text="@string/CustomerHead"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvCustomer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <TextView
+        style="@style/topbar"
+        android:text="@string/DeliveryQtyHead" />
+
+    <LinearLayout
+        style="@style/style_gridheader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingEnd="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/tvSKU"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:gravity="start"
+            android:text="@string/Item"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvQuantity"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:gravity="end"
+            android:text="@string/Quantity"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".3"
+            android:gravity="end"
+            android:text="@string/Amount"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <lateralpraxis.lpdnd.NonScrollableListView
+        android:id="@+id/listDeliveryView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/black"
+        android:dividerHeight="1sp" />
+
+    <LinearLayout
+        android:id="@+id/llDelTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal"
+        android:paddingEnd="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp" >
+
+        <TextView
+            android:id="@+id/tvDelTotalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvNoRecord"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:gravity="center"
+        android:text="@string/norecord"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        style="@style/topbar"
+        android:text="@string/paymentdetails" />
+
+    <LinearLayout
+        style="@style/style_gridheader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:paddingEnd="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp"
+        android:weightSum="1" >
+
+        <TextView
+            android:id="@+id/tvModeHead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".6"
+            android:gravity="start"
+            android:text="@string/modehead"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvPayAmount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".4"
+            android:gravity="end"
+            android:text="@string/amounthead"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <lateralpraxis.lpdnd.NonScrollableListView
+        android:id="@+id/listPaymanetView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:divider="@color/black"
+        android:dividerHeight="1sp" />
+
+    <LinearLayout
+        android:id="@+id/llPayTotal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:orientation="horizontal"
+        android:paddingEnd="5dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingStart="5dp" >
+
+        <TextView
+            android:id="@+id/tvPayTotalAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvPayNoRecord"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20sp"
+        android:gravity="center"
+        android:text="@string/norecord"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/btnDelivery"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginEnd="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_design"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10sp"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:paddingStart="10sp"
+            android:text="@string/deletedelivery"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnDelete"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_design"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10sp"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:paddingStart="10sp"
+            android:text="@string/delete"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</LinearLayout>
+</ScrollView>

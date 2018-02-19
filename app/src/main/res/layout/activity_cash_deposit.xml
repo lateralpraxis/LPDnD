@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:fillViewport="true" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/tvHeader"
+            style="@style/style_topbar"
+            android:text="@string/cashDeposit" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp" >
+
+            <LinearLayout
+                android:id="@+id/llCashDeposit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/llCompanyDet"
+                    style="@style/style_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/tvCompanyHead"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/comphead"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvCompanyId"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tvCompanyName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llBalance"
+                    style="@style/style_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/tvBalance"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/balancePayable"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvBalanceData"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llColn"
+                    style="@style/style_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/tvColn"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/collection"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvCollectionData"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/llOnline"
+                    style="@style/style_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" >
+
+                    <TextView
+                        android:id="@+id/tvOnline"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/online"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvOnlineData"
+                        android:layout_width="110dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvEmpty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="@string/norecord"
+                android:visibility="gone" />
+
+            <TableLayout
+                android:id="@+id/tableLayout1"
+                style="@style/style_gridheader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1.0dip"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:stretchColumns="0,1,2,3"
+                android:visibility="gone" >
+
+                <TableRow
+                    android:id="@+id/tableRow1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip"
+                    tools:ignore="UselessParent" >
+
+                    <CheckBox
+                        android:id="@+id/chkAll"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".1"                        
+                        android:textIsSelectable="false" />
+
+                    <TextView
+                        android:id="@+id/tvCust"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:textColor="@color/white"
+                        android:text="@string/Customer"
+                        android:textIsSelectable="false" />
+
+                    <TextView
+                        android:id="@+id/tvCheque"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:textColor="@color/white"
+                        android:text="@string/cheque"
+                        android:textIsSelectable="false" />
+
+                    <TextView
+                        android:id="@+id/tvAmountHeader"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:textColor="@color/white"
+                        android:gravity="end"
+                        android:text="@string/Amount"
+                        android:textIsSelectable="false" />
+                </TableRow>
+            </TableLayout>
+
+            <lateralpraxis.lpdnd.NonScrollableListView
+                android:id="@+id/lvCashDepositList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/black"
+                android:dividerHeight="1sp" >
+            </lateralpraxis.lpdnd.NonScrollableListView>
+
+            <TableLayout
+                android:id="@+id/tableLayoutTotal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="1.0dip"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:stretchColumns="0,1,2,3"
+                android:visibility="gone" >
+
+                <TableRow
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip"
+                    tools:ignore="UselessParent" >
+
+                    <TextView
+                        android:id="@+id/tvBlank1"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".1"
+                        android:text="@string/blank"
+                        android:textIsSelectable="false" />
+
+                    <TextView
+                        android:id="@+id/tvBlank2"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:text="@string/blank"
+                        android:textIsSelectable="false" />
+
+                    <TextView
+                        android:id="@+id/tvTotalAmount"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="end"
+                        android:text="@string/total"
+                        android:textIsSelectable="false"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvTotalAmt"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="end"
+                        android:textIsSelectable="false"
+                        android:textStyle="bold" />
+                    <!-- 1/2 -->
+
+                </TableRow>
+            </TableLayout>
+
+            <LinearLayout
+                android:id="@+id/llTotal"
+                style="@style/style_layout"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/totalPayable"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTotalData"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textColor="@color/lpred" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llAmount"
+                style="@style/style_layout"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/deposit"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etAmount"
+                    style="@style/edit_text"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
+                    android:maxLength="8"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llChequeDeposited"
+                style="@style/style_layout"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvTotalChequeDeposited"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/chequeDeposited"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTotalChequeDepositedData"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llTotalDeposited"
+                style="@style/style_layout"
+                android:layout_width="wrap_content"
+                android:visibility="gone"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/tvTotalDeposited"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/totalDeposited"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTotalDepositedData"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llRemarks"
+                style="@style/style_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginBottom="12dip" >
+
+                <TextView
+                    android:id="@+id/tvRemarks"
+                    android:layout_width="110dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:text="@string/remarks"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etRemarks"
+                    style="@style/edit_text"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="top|start"
+                    android:hint="@string/enterRemarks"
+                    android:inputType="textMultiLine|text"
+                    android:lines="5"
+                    android:maxLength="500"
+                    android:singleLine="false"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llNavBtn"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dip"
+                android:orientation="horizontal"
+                android:paddingLeft="17sp"
+                android:paddingRight="17sp"
+                android:visibility="gone"
+                tools:ignore="RtlHardcoded" >
+
+                <Button
+                    android:id="@+id/btnSubmit"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1sp"
+                    android:layout_weight=".5"
+                    android:background="@drawable/button_design"
+                    android:paddingBottom="5sp"
+                    android:paddingLeft="10sp"
+                    android:paddingRight="10sp"
+                    android:paddingTop="5sp"
+                    android:text="@string/submit"
+                    android:textColor="@color/white"
+                    tools:ignore="ButtonStyle" />
+
+                <Button
+                    android:id="@+id/btnNext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="1sp"
+                    android:layout_weight=".5"
+                    android:background="@drawable/button_design"
+                    android:paddingBottom="5sp"
+                    android:paddingLeft="10sp"
+                    android:paddingRight="10sp"
+                    android:paddingTop="5sp"
+                    android:text="@string/saveandnext"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

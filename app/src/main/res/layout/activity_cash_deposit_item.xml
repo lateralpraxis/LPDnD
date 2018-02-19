@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/tvPCDetailId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvUniqueId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+    
+    
+    <TextView
+        android:id="@+id/tvHiddenAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TableLayout
+        android:id="@+id/tableLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="1.0dip"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:stretchColumns="0,1,2,3" >
+
+        <TableRow
+            android:id="@+id/tableRow1"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5.0dip"
+            android:weightSum="1"
+            tools:ignore="UselessParent" >
+
+            <CheckBox
+                android:id="@+id/select"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.1" />
+
+            <TextView
+                android:id="@+id/tvCustomerData"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:text="@string/appFullName"
+                android:textColor="@color/black"
+                android:textIsSelectable="false" />
+
+            <TextView
+                android:id="@+id/tvChequeData"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:textIsSelectable="false" />
+
+            <TextView
+                android:id="@+id/tvAmountData"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".3"
+                android:gravity="end"
+                android:textIsSelectable="false" />
+            <!-- 1/3 -->
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>

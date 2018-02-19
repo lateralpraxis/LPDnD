@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/style_topbar"
+        android:text="@string/appFullName" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5sp"
+        android:orientation="vertical"
+        android:paddingLeft="17sp"
+        android:paddingRight="17sp">
+
+        <ImageView
+            android:layout_width="fill_parent"
+            android:layout_height="120dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_margin="5sp"
+            android:background="@android:color/white"
+            android:contentDescription="@string/app_name"
+            android:gravity="center"
+            android:padding="5dp"
+            android:src="@drawable/ic_fpimg" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dip"
+            android:text="@string/username"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/etUsername"
+            style="@style/edittext"
+            android:hint="@string/enterusername"
+            android:inputType="text"
+            android:maxLength="50" />
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dip"
+            android:text="@string/password"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <EditText
+            android:id="@+id/etPassword"
+            style="@style/edittext"
+            android:hint="@string/enterpassword"
+            android:inputType="textPassword" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dip"
+            android:gravity="right"
+            android:orientation="horizontal"
+            tools:ignore="RtlHardcoded">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/show_password"
+                android:textColor="@color/black" />
+
+            <CheckBox
+                android:id="@+id/ckShowPass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/custom_checkbox_design"
+                android:checked="false"
+                android:focusable="false" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dip"
+            android:gravity="right"
+            android:orientation="horizontal"
+            android:paddingLeft="17sp"
+            android:paddingRight="17sp"
+            tools:ignore="RtlHardcoded">
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/button_design"
+                android:text="@string/login"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_margin="5sp"
+            android:orientation="vertical"
+            android:paddingLeft="17sp"
+            android:paddingRight="17sp">
+
+            <Button
+                android:id="@+id/linkbtnNewUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
+                android:background="@color/white"
+                android:text="@string/newuserregistration"
+                android:textColor="@color/lpblue" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dip"
+            android:background="@color/black"
+            android:gravity="center_horizontal|bottom"
+            android:text="@string/credits"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</LinearLayout>

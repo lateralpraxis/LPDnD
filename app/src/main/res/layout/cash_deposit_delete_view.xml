@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/style_topbar"
+            android:text="@string/paymentdetails" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingEnd="2dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="2dp"
+            android:paddingStart="5dp"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/tvRouteOfficerHead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:gravity="start"
+                android:text="@string/routeofficer"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:gravity="start"
+                android:text="@string/routeofficer"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingEnd="2dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="2dp"
+            android:paddingStart="5dp"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/tvDateHead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:gravity="start"
+                android:text="@string/datehead"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:gravity="start"
+                android:text="@string/datehead"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingEnd="2dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="2dp"
+            android:paddingStart="5dp"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/tvCDCodeHead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:gravity="start"
+                android:text="@string/cdhead"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCode"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:gravity="start"
+                android:text="@string/cdhead"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/style_gridheader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:paddingEnd="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingStart="5dp"
+            android:weightSum="1" >
+
+            <TextView
+                android:id="@+id/tvModeHead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:gravity="start"
+                android:text="@string/modehead"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:gravity="end"
+                android:text="@string/amounthead"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <lateralpraxis.lpdnd.NonScrollableListView
+            android:id="@+id/listViewMain"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/black"
+            android:dividerHeight="1sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:orientation="horizontal"
+            android:paddingEnd="5dp"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:paddingStart="5dp" >
+
+            <TextView
+                android:id="@+id/tvTotalAmount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end" >
+
+            <Button
+                android:id="@+id/btnDelete"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_design"
+                android:paddingBottom="5dp"
+                android:paddingEnd="10sp"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"
+                android:paddingStart="10sp"
+                android:text="@string/delete"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:visibility="visible" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

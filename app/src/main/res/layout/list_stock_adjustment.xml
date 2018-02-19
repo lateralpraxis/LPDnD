@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:id="@+id/tableGridHead"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible" >
+
+        <TableRow
+            android:id="@+id/tableHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <!-- 1/0 -->
+
+            <TextView
+                android:id="@+id/tvCreateBy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:text="@string/label_CreateBy"
+                android:textIsSelectable="false"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- 1/1 -->
+
+            <TextView
+                android:id="@+id/tvProduct"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".37"
+                android:textColor="@color/black"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+            <!-- 1/2 -->
+
+            <TextView
+                android:id="@+id/tvQuantity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".23"
+                android:gravity="end"
+                android:textColor="@color/black"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+        </TableRow>
+    </TableLayout>
+
+</LinearLayout>
