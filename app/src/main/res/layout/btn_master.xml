@@ -8,8 +8,11 @@
     <Button
         android:id="@+id/btnMasters"
         style="@style/style_homeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="fill_vertical"
+        android:layout_weight="0.5"
         android:drawableLeft="@drawable/masters_icon"
         android:text="@string/menu_masters"
-        android:textAllCaps="true"
-        tools:ignore="RtlHardcoded,RtlSymmetry" />
+        android:textAllCaps="true" />
 </LinearLayout>
