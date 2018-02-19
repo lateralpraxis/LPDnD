@@ -62,7 +62,7 @@
     <string name="auction_quantity">Quantity: </string>
     <string name="start_date">Start Date: </string>
     <string name="end_date">End Date: </string>
-    <string name="menu_allocation">ALLOCATION VIEW</string>
+    <string name="menu_allocation">ALLOCATION</string>
     <string name="menu_allocation_report">ALLOCATION</string>
     <string name="menu_SyncMaster">Sync Master</string>
     <string name="menu_demand">DEMAND</string>
