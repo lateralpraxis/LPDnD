@@ -161,7 +161,7 @@ public class ActivityDemandReport  extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		if (id == 999) {
 			DatePickerDialog dialog = new DatePickerDialog(this, dateListener, year, month, day);
-			dialog.getDatePicker().setMaxDate(new Date().getTime());
+			//dialog.getDatePicker().setMaxDate(new Date().getTime());
 			return dialog;
 		}
 		return null;

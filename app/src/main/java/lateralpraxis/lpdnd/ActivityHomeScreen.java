@@ -135,7 +135,10 @@ public class ActivityHomeScreen extends Activity {
 						+ Html.fromHtml(userRole.replace(",", ", ")) + " ]");
 			
 			if (userRole.equalsIgnoreCase("Customer")) {
-                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand,R.layout.btn_report);
+				if(customerType.equalsIgnoreCase("Retail Outlet"))
+                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand,R.layout.btn_report, R.layout.btn_primaryreceipt);
+				else
+					views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand,R.layout.btn_report);
 			}
 			else if(userRole.contains("Route Officer"))
 			{
