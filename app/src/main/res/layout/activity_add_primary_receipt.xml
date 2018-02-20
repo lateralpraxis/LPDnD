@@ -4,6 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="lateralpraxis.lpdnd.primaryreceipt.view_primary_receipt">
+    tools:context="lateralpraxis.lpdnd.primaryreceipt.ActivityAddPrimaryReceipt">
 
 </android.support.constraint.ConstraintLayout>

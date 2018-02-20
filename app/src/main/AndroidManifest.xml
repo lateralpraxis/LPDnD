@@ -290,9 +290,8 @@
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:name=".primaryreceipt.view_primary_receipt" />
-        <activity android:name=".primaryreceipt.primary_receipt_create" />
-        <activity android:name=".primaryreceipt.list_primary_receipt"></activity>
+        <activity android:name=".primaryreceipt.ActivityListPrimaryReceipt" />
+        <activity android:name=".primaryreceipt.ActivityAddPrimaryReceipt"></activity>
     </application>
 
 </manifest>

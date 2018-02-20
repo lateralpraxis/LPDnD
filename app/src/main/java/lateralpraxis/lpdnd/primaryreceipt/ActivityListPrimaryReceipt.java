@@ -5,11 +5,11 @@ import android.os.Bundle;
 
 import lateralpraxis.lpdnd.R;
 
-public class primary_receipt_create extends Activity {
+public class ActivityListPrimaryReceipt extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_primary_receipt_create);
+        setContentView(R.layout.activity_list_primary_receipt);
     }
 }

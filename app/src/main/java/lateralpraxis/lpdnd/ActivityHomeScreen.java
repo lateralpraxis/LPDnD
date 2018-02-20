@@ -55,6 +55,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import lateralpraxis.lpdnd.primaryreceipt.ActivityListPrimaryReceipt;
+
 public class ActivityHomeScreen extends Activity {
 
 	private String userRole, password, userId, loginId;
@@ -365,6 +367,18 @@ public class ActivityHomeScreen extends Activity {
                             common.showAlert(ActivityHomeScreen.this,
                                     "Unable to connect to Internet !", false);
                         }
+                    }
+                });
+                break;
+			case R.layout.btn_primaryreceipt:
+                btn = (Button) btnLayout.findViewById(R.id.btnPrimaryReceipt);
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+						intent = new Intent(context, ActivityListPrimaryReceipt.class);
+						startActivity(intent);
+						finish();
                     }
                 });
                 break;
