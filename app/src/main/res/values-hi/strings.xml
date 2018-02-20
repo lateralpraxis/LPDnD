@@ -88,6 +88,7 @@
     <string name="menu_vehicle">वाहन</string>
     <string name="menu_customer">ग्राहक</string>
     <string name="menu_rate">दर</string>
+    <string name="menu_primaryreceipt">प्राथमिक रसीद</string>
     <string name="place_order">डिमांड बनायें</string>
     <string name="go">जाएँ</string>
     <string name="show_password">पासवर्ड दिखाएं </string>
