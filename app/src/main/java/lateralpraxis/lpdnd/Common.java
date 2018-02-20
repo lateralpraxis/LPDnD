@@ -312,7 +312,6 @@ public class Common {
 				//Close the streams
 				myOutput.flush();
 				myOutput.close();
-				showToast("Backup Done at "+ sdDir+"/"+DBName);
 			}
 			else
 			{

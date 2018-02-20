@@ -102,7 +102,7 @@ public class ActivityHomeScreen extends Activity {
         tl.setColumnStretchable(1, true);
     /*--------End of Code to find controls -----------------------------*/
 		strSyncWhat = "";
-		/*try {
+		try {
 			common.copyDBToSDCard("ganeshdairy.db");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -111,7 +111,7 @@ public class ActivityHomeScreen extends Activity {
 					"DataBackup Issue");
 			dba.close();
 			// e.printStackTrace();
-		}*/
+		}
 
 		// To check user login session is exist or not
 		if (session.checkLogin())
@@ -138,9 +138,9 @@ public class ActivityHomeScreen extends Activity {
 			
 			if (userRole.equalsIgnoreCase("Customer")) {
 				if(customerType.equalsIgnoreCase("Retail Outlet"))
-                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand,R.layout.btn_report, R.layout.btn_primaryreceipt);
+                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand, R.layout.btn_primaryreceipt);
 				else
-					views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand,R.layout.btn_report);
+					views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand);
 			}
 			else if(userRole.contains("Route Officer"))
 			{
@@ -1142,31 +1142,6 @@ public class ActivityHomeScreen extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				// These two need to be declared outside the try/catch
-				// so that they can be closed in the finally block.
-				/*
-				 * HttpURLConnection urlConnection = null; BufferedReader reader
-				 * = null;
-				 * 
-				 * URL url = new URL("http://wtfismyip.com/text");
-				 * 
-				 * // Create the request to OpenWeatherMap, and open the
-				 * connection urlConnection = (HttpURLConnection)
-				 * url.openConnection(); urlConnection.setRequestMethod("GET");
-				 * urlConnection.connect();
-				 * 
-				 * // Read the input stream into a String InputStream
-				 * inputStream = urlConnection.getInputStream(); StringBuffer
-				 * buffer = new StringBuffer(); if (inputStream == null) { //
-				 * Nothing to do. return null; } reader = new BufferedReader(new
-				 * InputStreamReader(inputStream));
-				 * 
-				 * String line; while ((line = reader.readLine()) != null) {
-				 * buffer.append(line); }
-				 * 
-				 * if (buffer.length() == 0) { // Stream was empty. No point in
-				 * parsing. return null; }
-				 */
 
 				JSONObject jsonStockRet = new JSONObject();
 				dba.open();
@@ -1809,6 +1784,7 @@ public class ActivityHomeScreen extends Activity {
 		}
 	}
 
+
 	// Class to handle promotional message web services call as separate thread
 	private class AsyncMsgWSCall extends AsyncTask<String, Void, String> {
 		private ProgressDialog Dialog = new ProgressDialog(
@@ -1959,6 +1935,279 @@ public class ActivityHomeScreen extends Activity {
 		}
 	}
 
+
+	// Class to handle Raw Material web service call as separate thread
+	private class AsyncRawMaterialMasterWSCall extends
+			AsyncTask<String, Void, String> {
+		private ProgressDialog Dialog = new ProgressDialog(
+				ActivityHomeScreen.this);
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				String[] name = { "action", "userId", "role" };
+				String[] value = { "ReadRawMaterial", userId, userRole };
+				responseJSON = "";
+				// Call method of web service to download raw Material master from
+				// server
+				responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+						common.url);
+				return responseJSON;
+			} catch (SocketTimeoutException e) {
+				return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+			} catch (final Exception e) {
+				// TODO: handle exception
+				return "ERROR: " + "Unable to get response from server.";
+			}
+		}
+
+		// After execution of web service to download Raw Material Master
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				if (!result.contains("ERROR")) {
+					// To display message after response from server
+					JSONArray jsonArray = new JSONArray(responseJSON);
+					dba.open();
+					dba.DeleteMasterData("RawMaterialMaster");
+					for (int i = 0; i < jsonArray.length(); ++i) {
+						dba.Insert_RawMaterialMaster(jsonArray.getJSONObject(i)
+								.getString("A"), jsonArray.getJSONObject(i)
+								.getString("B"), jsonArray.getJSONObject(i)
+								.getString("C"), jsonArray.getJSONObject(i)
+								.getString("D"));
+					}
+					dba.close();
+					if (common.isConnected()) {
+						AsyncSKUMasterWSCall task = new AsyncSKUMasterWSCall();
+							task.execute(result);
+
+					}
+				} else {
+					if (result.contains("null") || result == "")
+						result = "Server not responding. Please try again later.";
+					common.showAlert(ActivityHomeScreen.this, result, false);
+				}
+			} catch (Exception e) {
+				common.showAlert(ActivityHomeScreen.this,
+						"Raw Material Downloading failed: "
+								+ "Unable to get response from server.", false);
+			}
+			Dialog.dismiss();
+		}
+
+		// To display message on screen within process
+		@Override
+		protected void onPreExecute() {
+			Dialog.setMessage("Downloading Raw Material..");
+			Dialog.setCancelable(false);
+			Dialog.show();
+		}
+	}
+
+
+	// Class to handle SKUMater web service call as separate thread
+	private class AsyncSKUMasterWSCall extends
+			AsyncTask<String, Void, String> {
+		private ProgressDialog Dialog = new ProgressDialog(
+				ActivityHomeScreen.this);
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				String[] name = { "action", "userId", "role" };
+				String[] value = { "ReadSKU", userId, userRole };
+				responseJSON = "";
+				// Call method of web service to download SKU master from
+				// server
+				responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+						common.url);
+				return responseJSON;
+			} catch (SocketTimeoutException e) {
+				return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+			} catch (final Exception e) {
+				// TODO: handle exception
+				return "ERROR: " + "Unable to get response from server.";
+			}
+		}
+
+		// After execution of web service to download SKU Master
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				if (!result.contains("ERROR")) {
+					// To display message after response from server
+					JSONArray jsonArray = new JSONArray(responseJSON);
+					dba.open();
+					dba.DeleteMasterData("SKUMaster");
+					for (int i = 0; i < jsonArray.length(); ++i) {
+						dba.Insert_SKUMaster(jsonArray.getJSONObject(i)
+								.getString("A"), jsonArray.getJSONObject(i)
+								.getString("B"), jsonArray.getJSONObject(i)
+								.getString("C"), jsonArray.getJSONObject(i)
+								.getString("D"));
+					}
+					dba.close();
+					if (common.isConnected()) {
+						AsyncSaleRateMasterWSCall task = new AsyncSaleRateMasterWSCall();
+						task.execute(result);
+
+					}
+				} else {
+					if (result.contains("null") || result == "")
+						result = "Server not responding. Please try again later.";
+					common.showAlert(ActivityHomeScreen.this, result, false);
+				}
+			} catch (Exception e) {
+				common.showAlert(ActivityHomeScreen.this,
+						"SKU Downloading failed: "
+								+ "Unable to get response from server.", false);
+			}
+			Dialog.dismiss();
+		}
+
+		// To display message on screen within process
+		@Override
+		protected void onPreExecute() {
+			Dialog.setMessage("Downloading SKU..");
+			Dialog.setCancelable(false);
+			Dialog.show();
+		}
+	}
+
+	// Class to handle SaleRateMaster web service call as separate thread
+	private class AsyncSaleRateMasterWSCall extends
+			AsyncTask<String, Void, String> {
+		private ProgressDialog Dialog = new ProgressDialog(
+				ActivityHomeScreen.this);
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				String[] name = { "action", "userId", "role" };
+				String[] value = { "ReadSKUSaleRate", userId, userRole };
+				responseJSON = "";
+				// Call method of web service to download product master from
+				// server
+				responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+						common.url);
+				return responseJSON;
+			} catch (SocketTimeoutException e) {
+				return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+			} catch (final Exception e) {
+				// TODO: handle exception
+				return "ERROR: " + "Unable to get response from server.";
+			}
+		}
+
+		// After execution of web service to download Raw Material Master
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				if (!result.contains("ERROR")) {
+					// To display message after response from server
+					JSONArray jsonArray = new JSONArray(responseJSON);
+					dba.open();
+					dba.DeleteMasterData("SaleRateMaster");
+					for (int i = 0; i < jsonArray.length(); ++i) {
+						dba.Insert_SaleRateMaster(jsonArray.getJSONObject(i)
+								.getString("A"), jsonArray.getJSONObject(i)
+								.getString("B"), jsonArray.getJSONObject(i)
+								.getString("C"), jsonArray.getJSONObject(i)
+								.getString("D"));
+					}
+					dba.close();
+					if (common.isConnected()) {
+						AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+						task.execute(result);
+
+					}
+				} else {
+					if (result.contains("null") || result == "")
+						result = "Server not responding. Please try again later.";
+					common.showAlert(ActivityHomeScreen.this, result, false);
+				}
+			} catch (Exception e) {
+				common.showAlert(ActivityHomeScreen.this,
+						"Sale Rate Downloading failed: "
+								+ "Unable to get response from server.", false);
+			}
+			Dialog.dismiss();
+		}
+
+		// To display message on screen within process
+		@Override
+		protected void onPreExecute() {
+			Dialog.setMessage("Downloading Sale Rate..");
+			Dialog.setCancelable(false);
+			Dialog.show();
+		}
+	}
+
+	private class AsyncRetailOutletInventoryWSCall extends
+			AsyncTask<String, Void, String> {
+		private ProgressDialog Dialog = new ProgressDialog(
+				ActivityHomeScreen.this);
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				String[] name = { "action", "userId", "role" };
+				String[] value = { "ReadOutletInventory", userId, userRole };
+				responseJSON = "";
+				// Call method of web service to download Reatil Outlet Inventory from
+				// server
+				responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+						common.url);
+				return responseJSON;
+			} catch (SocketTimeoutException e) {
+				return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+			} catch (final Exception e) {
+				// TODO: handle exception
+				return "ERROR: " + "Unable to get response from server.";
+			}
+		}
+
+		// After execution of web service to download Retail Outlet Inventory
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				if (!result.contains("ERROR")) {
+					// To display message after response from server
+					JSONArray jsonArray = new JSONArray(responseJSON);
+					dba.open();
+					dba.DeleteMasterData("OutletInventory");
+					for (int i = 0; i < jsonArray.length(); ++i) {
+						dba.Insert_OutletInventory(jsonArray.getJSONObject(i)
+								.getString("A"), jsonArray.getJSONObject(i)
+								.getString("B"), jsonArray.getJSONObject(i)
+								.getString("C"));
+					}
+					dba.close();
+						common.showAlert(ActivityHomeScreen.this,
+								"Synchronization completed successfully.",
+								false);
+				} else {
+					if (result.contains("null") || result == "")
+						result = "Server not responding. Please try again later.";
+					common.showAlert(ActivityHomeScreen.this, result, false);
+				}
+			} catch (Exception e) {
+				common.showAlert(ActivityHomeScreen.this,
+						"Inventory Downloading failed: "
+								+ "Unable to get response from server.", false);
+			}
+			Dialog.dismiss();
+		}
+
+		// To display message on screen within process
+		@Override
+		protected void onPreExecute() {
+			Dialog.setMessage("Downloading Inventory..");
+			Dialog.setCancelable(false);
+			Dialog.show();
+		}
+	}
 	// Class to handle demand / allocated details web service call as separate
 	// thread
 	private class AsyncViewDemandDetailsWSCall extends
@@ -2798,6 +3047,13 @@ public class ActivityHomeScreen extends Activity {
 							AsyncCustomerMasterWSCall task = new AsyncCustomerMasterWSCall();
 							task.execute(result);
 						}
+						else
+						{
+							if(customerType.equalsIgnoreCase("Retail Outlet")) {
+								AsyncRawMaterialMasterWSCall task = new AsyncRawMaterialMasterWSCall();
+								task.execute(result);
+							}
+						}
 					}
 				} else {
 					if (result.contains("null") || result == "")
@@ -2958,31 +3214,6 @@ public class ActivityHomeScreen extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				// These two need to be declared outside the try/catch
-				// so that they can be closed in the finally block.
-				/*
-				 * HttpURLConnection urlConnection = null; BufferedReader reader
-				 * = null;
-				 * 
-				 * URL url = new URL("http://wtfismyip.com/text");
-				 * 
-				 * // Create the request to open the connection urlConnection =
-				 * (HttpURLConnection) url.openConnection();
-				 * urlConnection.setRequestMethod("GET");
-				 * urlConnection.connect();
-				 * 
-				 * // Read the input stream into a String InputStream
-				 * inputStream = urlConnection.getInputStream(); StringBuffer
-				 * buffer = new StringBuffer(); if (inputStream == null) { //
-				 * Nothing to do. return null; } reader = new BufferedReader(new
-				 * InputStreamReader(inputStream));
-				 * 
-				 * String line; while ((line = reader.readLine()) != null) {
-				 * buffer.append(line); }
-				 * 
-				 * if (buffer.length() == 0) { // Stream was empty. No point in
-				 * parsing. return null; }
-				 */
 				dba.open();
 				JSONObject jsonComp = new JSONObject();
 				ArrayList<HashMap<String, String>> cfmast = dba.getComplaint();

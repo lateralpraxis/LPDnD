@@ -87,7 +87,11 @@ public class DatabaseAdapter {
 			TempDocTABLE_CREATE = "CREATE TABLE IF NOT EXISTS TempDoc (FileName TEXT)",
 
 			/********************* Tables used in Delete For System User ******************/
-			CashDepositDeleteDataTABLE_CREATE = "CREATE TABLE IF NOT EXISTS CashDepositDeleteData (CashDepositId TEXT, CashDepositDetailId TEXT, DepositDate TEXT, PCDetailId TEXT, Mode TEXT, Amount TEXT, FullName TEXT)";
+			CashDepositDeleteDataTABLE_CREATE = "CREATE TABLE IF NOT EXISTS CashDepositDeleteData (CashDepositId TEXT, CashDepositDetailId TEXT, DepositDate TEXT, PCDetailId TEXT, Mode TEXT, Amount TEXT, FullName TEXT)",
+	RawMaterialMaster_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialMaster(Id TEXT, Name TEXT, UOM TEXT, NameLocal TEXT);",
+					OutletInventory_CREATE = "CREATE TABLE IF NOT EXISTS OutletInventory(Id INTEGER PRIMARY KEY AUTOINCREMENT,RawMaterialId TEXT, SKUId TEXT, Quantity TEXT);",
+					SKUMaster_CREATE = "CREATE TABLE IF NOT EXISTS SKUMaster(Id TEXT,Name TEXT, NameLocal TEXT, Units TEXT);",
+					SaleRateMaster_CREATE = "CREATE TABLE IF NOT EXISTS SaleRateMaster(Id TEXT,Rate TEXT, FromDate TEXT, ToDate TEXT);";
 
 	/********************* End of Tables used in new Complaint/ feedback ******************/
 
@@ -985,6 +989,82 @@ public class DatabaseAdapter {
 			newValues.put("SkuUnit", skuUnit);
 			newValues.put("Uom", uom);
 			db.insert("ProductMaster", null, newValues);
+			result = "success";
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	// To insert Raw Material records
+	public String Insert_RawMaterialMaster(String id, String name, String uom, String nameLocal) {
+		try {
+			result = "fail";
+			newValues = new ContentValues();
+			newValues.put("Id", id);
+			newValues.put("Name", name);
+			newValues.put("UOM", uom);
+			newValues.put("NameLocal", nameLocal);
+
+			db.insert("RawMaterialMaster", null, newValues);
+			result = "success";
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	// To insert Outlet Inventory records
+	public String Insert_OutletInventory(String rawMaterialId, String skuId, String quantity) {
+		try {
+			result = "fail";
+			newValues = new ContentValues();
+			newValues.put("RawMaterialId", rawMaterialId);
+			newValues.put("SKUId", skuId);
+			newValues.put("Quantity", quantity);
+
+			db.insert("OutletInventory", null, newValues);
+			result = "success";
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	// To insert SKU records in SKUMaster
+	public String Insert_SKUMaster(String id, String name, String nameLocal, String units) {
+		try {
+			result = "fail";
+			newValues = new ContentValues();
+			newValues.put("Id", id);
+			newValues.put("Name", name);
+			newValues.put("NameLocal", nameLocal);
+			newValues.put("Units", units);
+
+			db.insert("SKUMaster", null, newValues);
+			result = "success";
+			return result;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+	// To insert SKU Sale Rate records in SaleRateMaster
+	public String Insert_SaleRateMaster(String id, String rate, String fromDate, String toDate) {
+		try {
+			result = "fail";
+			newValues = new ContentValues();
+			newValues.put("Id", id);
+			newValues.put("Rate", rate);
+			newValues.put("FromDate", fromDate);
+			newValues.put("ToDate", toDate);
+
+			db.insert("SaleRateMaster", null, newValues);
 			result = "success";
 			return result;
 		} catch (Exception e) {

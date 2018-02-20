@@ -77,7 +77,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		_db.execSQL(DatabaseAdapter.CustomerMaster_CREATE);
 		_db.execSQL(DatabaseAdapter.TempDocTABLE_CREATE);
 		_db.execSQL(DatabaseAdapter.CashDepositDeleteDataTABLE_CREATE);
-		
+		//Retail Outlet
+		_db.execSQL(DatabaseAdapter.RawMaterialMaster_CREATE);
+		_db.execSQL(DatabaseAdapter.OutletInventory_CREATE);
+		_db.execSQL(DatabaseAdapter.SKUMaster_CREATE);
+		_db.execSQL(DatabaseAdapter.SaleRateMaster_CREATE);
 
 	}
 
