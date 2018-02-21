@@ -285,5 +285,9 @@
      <string name="label_DelVsRecReport">Delivery Vs. Receipt</string>
      <string name="label_NameReport">नाम</string>
     <string name="label_CollBy">द्वारा एकत्रित</string>
-	
+
+    <!-- Outlet Sale  -->
+    <string name="menu_outlet_sale">बिक्री</string>
+
+    <!-- End of Outlet Sale  -->
 </resources>
