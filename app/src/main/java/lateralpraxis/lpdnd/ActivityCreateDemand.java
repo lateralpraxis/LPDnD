@@ -740,7 +740,6 @@ import lateralpraxis.lpdnd.types.CustomType;
 		protected void onPostExecute(String result) {
 
 			try {
-				Log.i("AsyncDemandWSCall onPostExecute result=", result);
 
 				dba.open();
 				dba.DeleteMasterData("Demand");
