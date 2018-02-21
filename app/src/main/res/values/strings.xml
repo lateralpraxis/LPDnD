@@ -294,6 +294,9 @@
     <string name="label_DelVsRecReport">Delivery Vs. Receipt</string>
     <string name="label_NameReport">Name</string>
     <string name="label_CollBy">Collected By</string>
+    <!-- End of Report Variables-->
 
-
+    <!-- Start of Primary Receipt Variables-->
+    <string name="label_PrimaryReceipt">Primary Receipt</string>
+    <!-- End of Primary Receipt Variables-->
 </resources>
