@@ -55,6 +55,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
 import lateralpraxis.lpdnd.primaryreceipt.ActivityListPrimaryReceipt;
 
 public class ActivityHomeScreen extends Activity {
@@ -138,7 +139,7 @@ public class ActivityHomeScreen extends Activity {
 			
 			if (userRole.equalsIgnoreCase("Customer")) {
 				if(customerType.equalsIgnoreCase("Retail Outlet"))
-                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand, R.layout.btn_primaryreceipt);
+                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale);
 				else
 					views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand);
 			}
@@ -382,6 +383,18 @@ public class ActivityHomeScreen extends Activity {
                     }
                 });
                 break;
+			case R.layout.btn_outlet_sale:
+				btn = (Button) btnLayout.findViewById(R.id.btnOutletSale);
+				btn.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						intent = new Intent(context, ActivityOutletSaleViewSummary.class);
+						startActivity(intent);
+						finish();
+					}
+				});
+				break;
             default:
                 break;
         }
