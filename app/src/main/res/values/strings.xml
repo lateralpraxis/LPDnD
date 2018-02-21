@@ -305,6 +305,9 @@
     <string name="label_item">SKU *</string>
     <string name="label_qty">Quantity *</string>
     <string name="label_amt">Amount\u20B9 *</string>
+    <string name="label_code">Code</string>
+    <string name="label_date">Date</string>
+    <string name="label_quantity">Quantity</string>
     <string name="hintqty">Enter Quantity</string>
     <string name="hintamt">Enter Amount</string>
     <!-- End of Primary Receipt Variables-->

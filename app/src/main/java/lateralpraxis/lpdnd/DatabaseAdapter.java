@@ -82,7 +82,8 @@ public class DatabaseAdapter {
             RawMaterialMaster_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialMaster(Id TEXT, Name TEXT, UOM TEXT, NameLocal TEXT);",
             OutletInventory_CREATE = "CREATE TABLE IF NOT EXISTS OutletInventory(Id INTEGER PRIMARY KEY AUTOINCREMENT,RawMaterialId TEXT, SKUId TEXT, Quantity TEXT);",
             SKUMaster_CREATE = "CREATE TABLE IF NOT EXISTS SKUMaster(Id TEXT,Name TEXT, NameLocal TEXT, Units TEXT, SKU TEXT);",
-            SaleRateMaster_CREATE = "CREATE TABLE IF NOT EXISTS SaleRateMaster(Id TEXT,Rate TEXT, FromDate TEXT, ToDate TEXT);";
+            SaleRateMaster_CREATE = "CREATE TABLE IF NOT EXISTS SaleRateMaster(Id TEXT,Rate TEXT, FromDate TEXT, ToDate TEXT);",
+            OutletPrimaryReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPrimaryReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT, CustomerId TEXT, MaterialId TEXT, SKUId TEXT, Quantity TEXT, Amount TEXT,CreateDate TEXT, IsSync TEXT);";
     // Context of the application using the database.
     private final Context context;
     /********************* End of Tables used in new Complaint/ feedback ******************/
@@ -1064,6 +1065,50 @@ public class DatabaseAdapter {
             newValues.put("ToDate", toDate);
 
             db.insert("SaleRateMaster", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    // To insert Primary Receipt Data records in Primary Receipt And Inventory Table
+    public String Insert_PrimaryReceipt(String customerId, String materialId, String skuId, String quantity, String amount) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("CustomerId", customerId);
+            newValues.put("MaterialId", materialId);
+            newValues.put("SKUId", skuId);
+            newValues.put("Quantity", quantity);
+            newValues.put("Amount", amount);
+            newValues.put("CreateDate", getDateTime());
+
+            db.insert("OutletPrimaryReceipt", null, newValues);
+
+            Boolean dataExists = false;
+            selectQuery = "SELECT Id FROM OutletInventory WHERE RawMaterialId = '" + materialId + "' AND SKUId = '" + skuId + "' ";
+            cursor = db.rawQuery(selectQuery, null);
+
+            if (cursor.getCount() > 0) {
+                dataExists = true;
+            }
+            cursor.close();
+            if (dataExists.equals(false)) {
+                newValues = new ContentValues();
+                newValues.put("RawMaterialId", materialId);
+                newValues.put("SKUId", skuId);
+                newValues.put("Quantity", quantity);
+
+                db.insert("OutletInventory", null, newValues);
+            }
+            else
+            {
+                selectQuery = "UPDATE OutletInventory SET Quantity=Quantity+'" + quantity + "'   WHERE RawMaterialId = '" + materialId + "' AND SKUId = '" + skuId + "' ";
+                db.execSQL(selectQuery);
+            }
             result = "success";
             return result;
         } catch (Exception e) {
@@ -2786,4 +2831,27 @@ public class DatabaseAdapter {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+
+    //<editor-fold desc="Method to Fetch Primary Receipts">
+    public ArrayList<HashMap<String, String>> getPrimaryReceipts() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        if (userlang.equalsIgnoreCase("en"))
+        selectQuery = "SELECT 'PR'||pr.Id , ifnull(rm.Name||' '||rm.UOM, sm.Name) AS Name, pr.Quantity, pr.Amount, pr.CreateDate FROM OutletPrimaryReceipt pr LEFT OUTER JOIN RawMaterialMaster rm ON pr.MaterialId = rm.Id LEFT OUTER JOIN SKUMaster sm ON pr.SKUId = sm.Id ORDER BY SUBSTR(pr.CreateDate,0,11) DESC";
+        else
+            selectQuery = "SELECT 'PR'||pr.Id ,ifnull(rm.NameLocal||' '||rm.UOM, sm.NameLocal) AS Name, pr.Quantity, pr.Amount, pr.CreateDate FROM OutletPrimaryReceipt pr LEFT OUTER JOIN RawMaterialMaster rm ON pr.MaterialId = rm.Id LEFT OUTER JOIN SKUMaster sm ON pr.SKUId = sm.Id ORDER BY SUBSTR(pr.CreateDate,0,11) DESC";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Code", cursor.getString(0));
+            map.put("Name", cursor.getString(1));
+            map.put("Quantity", cursor.getString(2));
+            map.put("Amount", cursor.getString(3));
+            map.put("Date", cursor.getString(4));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
 }
