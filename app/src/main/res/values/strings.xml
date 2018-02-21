@@ -300,4 +300,9 @@
     <string name="label_PrimaryReceipt">Primary Receipt</string>
     <string name="label_linkAdd">Add [ + ]</string>
     <!-- End of Primary Receipt Variables-->
+
+    <!-- Outlet Sale  -->
+    <string name="menu_outlet_sale">Sale</string>
+
+    <!-- End of Outlet Sale  -->
 </resources>
