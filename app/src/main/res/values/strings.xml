@@ -314,6 +314,8 @@
 
     <!-- Outlet Sale  -->
     <string name="menu_outlet_sale">Sale</string>
+    <string name="view_sale">View Sale</string>
+    <string name="create_sale">Create Sale</string>
 
     <!-- End of Outlet Sale  -->
 </resources>
