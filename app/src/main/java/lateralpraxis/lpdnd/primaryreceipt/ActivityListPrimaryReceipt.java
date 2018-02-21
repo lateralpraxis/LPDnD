@@ -2,7 +2,6 @@ package lateralpraxis.lpdnd.primaryreceipt;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +17,6 @@ public class ActivityListPrimaryReceipt extends Activity {
 
     //<editor-fold desc="Code for class declaration">
     private Intent intent;
-    Context context;
     //</editor-fold>
 
     @Override
@@ -40,7 +38,7 @@ public class ActivityListPrimaryReceipt extends Activity {
             //On click of view delivery button
             @Override
             public void onClick(View arg0) {
-                intent = new Intent(context, ActivityAddPrimaryReceipt.class);
+                intent = new Intent(ActivityListPrimaryReceipt.this, ActivityAddPrimaryReceipt.class);
                 startActivity(intent);
                 finish();
             }

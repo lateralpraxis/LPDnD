@@ -294,11 +294,19 @@ public class DatabaseAdapter {
                 else
                     selectQuery = "SELECT Id, NameLocal||' '||Uom FROM RawMaterialMaster ORDER BY Name COLLATE NOCASE ASC";
                 break;
+            case "sku":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT Id||'~'||SKU, Name FROM SKUMaster ORDER BY Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT Id||'~'||SKU, NameLocal FROM SKUMaster ORDER BY Name COLLATE NOCASE ASC";
+                break;
         }
         cursor = db.rawQuery(selectQuery, null);
         if (userlang.equalsIgnoreCase("en")) {
             if (masterType.equalsIgnoreCase("rawmaterial"))
                 labels.add(new CustomType("0", "...Select Raw Material"));
+            else if (masterType.equalsIgnoreCase("sku"))
+                labels.add(new CustomType("0~0", "...Select SKU"));
             else
                 labels.add(new CustomType("0", "...Select"));
         }
@@ -306,6 +314,8 @@ public class DatabaseAdapter {
         {
             if (masterType.equalsIgnoreCase("rawmaterial"))
                 labels.add(new CustomType("0", "...कच्ची सामग्री चयन करें"));
+            else if (masterType.equalsIgnoreCase("sku"))
+                labels.add(new CustomType("0~0", "...एसकेयू चयन करें"));
             else
                 labels.add(new CustomType("0", "...चयन करें"));
         }
