@@ -2058,7 +2058,8 @@ public class ActivityHomeScreen extends Activity {
 								.getString("A"), jsonArray.getJSONObject(i)
 								.getString("B"), jsonArray.getJSONObject(i)
 								.getString("C"), jsonArray.getJSONObject(i)
-								.getString("D"));
+								.getString("D"), jsonArray.getJSONObject(i)
+								.getString("E"));
 					}
 					dba.close();
 					if (common.isConnected()) {

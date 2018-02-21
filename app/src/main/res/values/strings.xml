@@ -299,6 +299,14 @@
     <!-- Start of Primary Receipt Variables-->
     <string name="label_PrimaryReceipt">Primary Receipt</string>
     <string name="label_linkAdd">Add [ + ]</string>
+    <string name="label_type">Type</string>
+    <string name="label_raw">Raw Material</string>
+    <string name="label_rawMat">Raw Material *</string>
+    <string name="label_item">SKU *</string>
+    <string name="label_qty">Quantity *</string>
+    <string name="label_amt">Amount\u20B9 *</string>
+    <string name="hintqty">Enter Quantity</string>
+    <string name="hintamt">Enter Amount</string>
     <!-- End of Primary Receipt Variables-->
 
     <!-- Outlet Sale  -->
