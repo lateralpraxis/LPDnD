@@ -89,7 +89,6 @@
     <string name="menu_DelRec">DELIVERY\n/RECEIPT(C)</string>
     <string name="menu_VehDelRec">DELIVERY\n/RECEIPT(V)</string>
     <string name="menu_primaryreceipt">Primary Receipt</string>
-    <string name="menu_outlet_sale">Sale</string>
     <string name="place_order">Create Demand</string>
     <string name="go">Go</string>
     <string name="show_password">Show Password</string>
