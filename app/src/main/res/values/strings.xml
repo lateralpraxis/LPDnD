@@ -298,5 +298,6 @@
 
     <!-- Start of Primary Receipt Variables-->
     <string name="label_PrimaryReceipt">Primary Receipt</string>
+    <string name="label_linkAdd">Add [ + ]</string>
     <!-- End of Primary Receipt Variables-->
 </resources>
