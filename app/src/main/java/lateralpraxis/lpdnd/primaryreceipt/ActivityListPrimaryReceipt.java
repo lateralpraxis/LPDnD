@@ -1,5 +1,6 @@
 package lateralpraxis.lpdnd.primaryreceipt;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,10 @@ public class ActivityListPrimaryReceipt extends Activity {
         linkAddPrimaryReceipt = (TextView) findViewById(R.id.linkAddPrimaryReceipt);
         //</editor-fold>
 
+        //<editor-fold desc="Code for setting Action Bar">
+        ActionBar ab = getActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);
+        //</editor-fold>
 
         //<editor-fold desc="Code for clicking ob Link Add Click">
         linkAddPrimaryReceipt.setOnClickListener(new View.OnClickListener() {

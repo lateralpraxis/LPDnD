@@ -81,7 +81,7 @@ public class DatabaseAdapter {
     CashDepositDeleteDataTABLE_CREATE = "CREATE TABLE IF NOT EXISTS CashDepositDeleteData (CashDepositId TEXT, CashDepositDetailId TEXT, DepositDate TEXT, PCDetailId TEXT, Mode TEXT, Amount TEXT, FullName TEXT)",
             RawMaterialMaster_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialMaster(Id TEXT, Name TEXT, UOM TEXT, NameLocal TEXT);",
             OutletInventory_CREATE = "CREATE TABLE IF NOT EXISTS OutletInventory(Id INTEGER PRIMARY KEY AUTOINCREMENT,RawMaterialId TEXT, SKUId TEXT, Quantity TEXT);",
-            SKUMaster_CREATE = "CREATE TABLE IF NOT EXISTS SKUMaster(Id TEXT,Name TEXT, NameLocal TEXT, Units TEXT);",
+            SKUMaster_CREATE = "CREATE TABLE IF NOT EXISTS SKUMaster(Id TEXT,Name TEXT, NameLocal TEXT, Units TEXT, SKU TEXT);",
             SaleRateMaster_CREATE = "CREATE TABLE IF NOT EXISTS SaleRateMaster(Id TEXT,Rate TEXT, FromDate TEXT, ToDate TEXT);";
     // Context of the application using the database.
     private final Context context;
@@ -91,6 +91,7 @@ public class DatabaseAdapter {
     public SQLiteDatabase db;
     ContentValues newValues = null;
     HashMap<String, String> map = null;
+    String userlang;
     private String result = null;
     private Cursor cursor;
     private ArrayList<HashMap<String, String>> wordList = null;
@@ -104,6 +105,7 @@ public class DatabaseAdapter {
         dbHelper = new DatabaseHelper(context, DATABASE_NAME, null,
                 DATABASE_VERSION);
         session = new UserSessionManager(_context);
+        userlang = session.getDefaultLang();
     }
 
     public DatabaseAdapter open() throws SQLException {
@@ -275,6 +277,39 @@ public class DatabaseAdapter {
             labels.add(new CustomType("0", "...Select Company"));
         else
             labels.add(new CustomType("0", "...Select"));
+        while (cursor.moveToNext()) {
+            labels.add(new CustomType(cursor.getString(0), cursor.getString(1)));
+        }
+        cursor.close();
+        return labels;
+    }
+
+
+    public List<CustomType> GetCustomerMasterDetails(String masterType, String filter) {
+        List<CustomType> labels = new ArrayList<CustomType>();
+        switch (masterType) {
+            case "rawmaterial":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT Id, Name||' '||Uom FROM RawMaterialMaster ORDER BY Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT Id, NameLocal||' '||Uom FROM RawMaterialMaster ORDER BY Name COLLATE NOCASE ASC";
+                break;
+        }
+        cursor = db.rawQuery(selectQuery, null);
+        if (userlang.equalsIgnoreCase("en")) {
+            if (masterType.equalsIgnoreCase("rawmaterial"))
+                labels.add(new CustomType("0", "...Select Raw Material"));
+            else
+                labels.add(new CustomType("0", "...Select"));
+        }
+        else
+        {
+            if (masterType.equalsIgnoreCase("rawmaterial"))
+                labels.add(new CustomType("0", "...कच्ची सामग्री चयन करें"));
+            else
+                labels.add(new CustomType("0", "...चयन करें"));
+        }
+
         while (cursor.moveToNext()) {
             labels.add(new CustomType(cursor.getString(0), cursor.getString(1)));
         }
@@ -988,7 +1023,7 @@ public class DatabaseAdapter {
     }
 
     // To insert SKU records in SKUMaster
-    public String Insert_SKUMaster(String id, String name, String nameLocal, String units) {
+    public String Insert_SKUMaster(String id, String name, String nameLocal, String units, String sku) {
         try {
             result = "fail";
             newValues = new ContentValues();
@@ -996,6 +1031,7 @@ public class DatabaseAdapter {
             newValues.put("Name", name);
             newValues.put("NameLocal", nameLocal);
             newValues.put("Units", units);
+            newValues.put("SKU", sku);
 
             db.insert("SKUMaster", null, newValues);
             result = "success";
@@ -1737,7 +1773,7 @@ public class DatabaseAdapter {
         cursor.close();
 
 		/*int VehicleCount;
-		// In demand --item online created
+        // In demand --item online created
 		selectQuery = "SELECT * FROM Vehicle";// only in Route Officer
 		cursor = db.rawQuery(selectQuery, null);
 		VehicleCount = cursor.getCount();
