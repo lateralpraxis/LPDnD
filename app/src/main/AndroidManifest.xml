@@ -299,6 +299,11 @@
             android:name=".primaryreceipt.ActivityAddPrimaryReceipt"
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".stockconversion.ActivityCreateStockConversion"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
     </application>
 

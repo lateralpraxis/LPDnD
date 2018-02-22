@@ -57,6 +57,7 @@ import android.widget.TextView;
 
 import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
 import lateralpraxis.lpdnd.primaryreceipt.ActivityListPrimaryReceipt;
+import lateralpraxis.lpdnd.stockconversion.ActivityCreateStockConversion;
 
 public class ActivityHomeScreen extends Activity {
 
@@ -139,7 +140,7 @@ public class ActivityHomeScreen extends Activity {
 			
 			if (userRole.equalsIgnoreCase("Customer")) {
 				if(customerType.equalsIgnoreCase("Retail Outlet"))
-                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale,R.layout.btn_customersync);
+                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale,R.layout.btn_stockconversion,R.layout.btn_customersync);
 				else
 					views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand);
 			}
@@ -371,6 +372,18 @@ public class ActivityHomeScreen extends Activity {
                     }
                 });
                 break;
+			case R.layout.btn_stockconversion:
+				btn = (Button) btnLayout.findViewById(R.id.btnStockConversion);
+				btn.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						intent = new Intent(context,
+								ActivityCreateStockConversion.class);
+						startActivity(intent);
+						finish();
+					}
+				});
+				break;
 			case R.layout.btn_customersync:
 				btn = (Button) btnLayout.findViewById(R.id.btnSync);
 				btn.setOnClickListener(new View.OnClickListener() {

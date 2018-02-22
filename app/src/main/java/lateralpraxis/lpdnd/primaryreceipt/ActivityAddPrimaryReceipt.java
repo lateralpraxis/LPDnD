@@ -40,12 +40,11 @@ import lateralpraxis.lpdnd.types.CustomType;
 
 public class ActivityAddPrimaryReceipt extends Activity {
 
-
-    private final Context mContext = this;
     //<editor-fold desc="Code for class declaration">
     DatabaseAdapter db;
     Common common;
     private UserSessionManager session;
+    private final Context mContext = this;
     String lang = "en";
     String type="Raw";
     //</editor-fold>

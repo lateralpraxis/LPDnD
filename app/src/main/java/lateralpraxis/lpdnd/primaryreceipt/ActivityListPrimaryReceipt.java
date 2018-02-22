@@ -36,16 +36,11 @@ public class ActivityListPrimaryReceipt extends Activity {
     private ListView listReceipt;
     //</editor-fold>
 
-    //<editor-fold desc="Code for class declaration">
-    private Intent intent;
-    //</editor-fold>
-
     //<editor-fold desc="Code for Variable Declaration">
     private ArrayList<HashMap<String, String>> wordList = null;
     private ArrayList<HashMap<String, String>> list;
     private int listSize = 0;
     //</editor-fold>
-
 
     //<editor-fold desc="Code for class declaration">
     DatabaseAdapter db;
@@ -53,6 +48,7 @@ public class ActivityListPrimaryReceipt extends Activity {
     private UserSessionManager session;
     String lang = "en";
     private final Context mContext = this;
+    private Intent intent;
     //</editor-fold>
 
     //<editor-fold desc="Code to be executed on On Create">

@@ -79,7 +79,7 @@ public class DatabaseAdapter {
             TempDocTABLE_CREATE = "CREATE TABLE IF NOT EXISTS TempDoc (FileName TEXT)",
 
     /********************* Tables used in Outlet Sale ******************/
-            OutletSale_CREATE = "CREATE TABLE IF NOT EXISTS OutletSale(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT, CustomerId TEXT, Customer TEXT, SaleType TEXT, CreateBy TEXT, CreateDate TEXT, Imei TEXT, IsSync TEXT);",
+    OutletSale_CREATE = "CREATE TABLE IF NOT EXISTS OutletSale(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT, CustomerId TEXT, Customer TEXT, SaleType TEXT, CreateBy TEXT, CreateDate TEXT, Imei TEXT, IsSync TEXT);",
             OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleUniqueId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
 
     /********************* Tables used in Delete For System User ******************/
@@ -88,7 +88,12 @@ public class DatabaseAdapter {
             OutletInventory_CREATE = "CREATE TABLE IF NOT EXISTS OutletInventory(Id INTEGER PRIMARY KEY AUTOINCREMENT,RawMaterialId TEXT, SKUId TEXT, Quantity TEXT);",
             SKUMaster_CREATE = "CREATE TABLE IF NOT EXISTS SKUMaster(Id TEXT,Name TEXT, NameLocal TEXT, Units TEXT, SKU TEXT);",
             SaleRateMaster_CREATE = "CREATE TABLE IF NOT EXISTS SaleRateMaster(Id TEXT,Rate TEXT, FromDate TEXT, ToDate TEXT);",
-            OutletPrimaryReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPrimaryReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,UniqueId TEXT, CustomerId TEXT, MaterialId TEXT, SKUId TEXT, Quantity TEXT, Amount TEXT,CreateDate TEXT, IsSync TEXT);";
+            OutletPrimaryReceipt_CREATE = "CREATE TABLE IF NOT EXISTS OutletPrimaryReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,UniqueId TEXT, CustomerId TEXT, MaterialId TEXT, SKUId TEXT, Quantity TEXT, Amount TEXT,CreateDate TEXT, IsSync TEXT);",
+            OutletConversionConsumedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
+            OutletConversionProducedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProducedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT,SKUId TEXT, Quantity TEXT);",
+            OutletConversion_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversion(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,CustomerId TEXT, AndroidDate TEXT, IsSync TEXT);",
+            OutletConversionConsumed_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumed(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
+            OutletConversionProduced_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProduced(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,SKUId TEXT, Quantity TEXT);";
     // Context of the application using the database.
     private final Context context;
 
@@ -301,27 +306,44 @@ public class DatabaseAdapter {
                 else
                     selectQuery = "SELECT Id, NameLocal||' '||Uom FROM RawMaterialMaster ORDER BY Name COLLATE NOCASE ASC";
                 break;
+            case "rawmaterialinv":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT rm.Id, rm.Name||' '||rm.Uom FROM RawMaterialMaster rm,OutletInventory inv WHERE rm.Id = inv.RawMaterialId AND inv.Quantity>0 ORDER BY rm.Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT rm.Id, rm.NameLocal||' '||rm.Uom FROM RawMaterialMaster rm,OutletInventory inv WHERE rm.Id = inv.RawMaterialId AND inv.Quantity>0 ORDER BY rm.Name COLLATE NOCASE ASC";
+                break;
             case "sku":
                 if (userlang.equalsIgnoreCase("en"))
                     selectQuery = "SELECT Id||'~'||SKU, Name FROM SKUMaster ORDER BY Name COLLATE NOCASE ASC";
                 else
                     selectQuery = "SELECT Id||'~'||SKU, NameLocal FROM SKUMaster ORDER BY Name COLLATE NOCASE ASC";
+            case "skuinv":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT sm.Id||'~'||sm.SKU, sm.Name FROM SKUMaster sm,OutletInventory inv WHERE sm.Id = inv.SKUId AND inv.Quantity>0 ORDER BY sm.Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT sm.Id||'~'||sm.SKU, sm.NameLocal FROM SKUMaster sm,OutletInventory inv WHERE sm.Id = inv.SKUId AND inv.Quantity>0  ORDER BY sm.Name COLLATE NOCASE ASC";
                 break;
         }
         cursor = db.rawQuery(selectQuery, null);
         if (userlang.equalsIgnoreCase("en")) {
             if (masterType.equalsIgnoreCase("rawmaterial"))
                 labels.add(new CustomType("0", "...Select Raw Material"));
+            else if (masterType.equalsIgnoreCase("rawmaterialinv"))
+                labels.add(new CustomType("0", "...Select Raw Material"));
             else if (masterType.equalsIgnoreCase("sku"))
+                labels.add(new CustomType("0~0", "...Select SKU"));
+            else if (masterType.equalsIgnoreCase("skuinv"))
                 labels.add(new CustomType("0~0", "...Select SKU"));
             else
                 labels.add(new CustomType("0", "...Select"));
-        }
-        else
-        {
+        } else {
             if (masterType.equalsIgnoreCase("rawmaterial"))
                 labels.add(new CustomType("0", "...कच्ची सामग्री चयन करें"));
+            else if (masterType.equalsIgnoreCase("rawmaterialinv"))
+                labels.add(new CustomType("0", "...कच्ची सामग्री चयन करें"));
             else if (masterType.equalsIgnoreCase("sku"))
+                labels.add(new CustomType("0~0", "...एसकेयू चयन करें"));
+            else if (masterType.equalsIgnoreCase("skuinv"))
                 labels.add(new CustomType("0~0", "...एसकेयू चयन करें"));
             else
                 labels.add(new CustomType("0", "...चयन करें"));
@@ -1111,9 +1133,7 @@ public class DatabaseAdapter {
                 newValues.put("Quantity", quantity);
 
                 db.insert("OutletInventory", null, newValues);
-            }
-            else
-            {
+            } else {
                 selectQuery = "UPDATE OutletInventory SET Quantity=Quantity+'" + quantity + "'   WHERE RawMaterialId = '" + materialId + "' AND SKUId = '" + skuId + "' ";
                 db.execSQL(selectQuery);
             }
@@ -1888,7 +1908,7 @@ public class DatabaseAdapter {
         cursor.close();
 
 		/*int DeliveryInputCount;
-		// In demand --item online created
+        // In demand --item online created
 		selectQuery = "SELECT * FROM DeliveryInput";// only in Route Officer
 		cursor = db.rawQuery(selectQuery, null);
 		DeliveryInputCount = cursor.getCount();
@@ -1978,7 +1998,7 @@ public class DatabaseAdapter {
     public boolean IslogoutAllowed() {
         boolean isRequired = true;
 
-        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint;
+        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt;
 
         selectQuery = "SELECT Id FROM Delivery WHERE IsSync = '0'";
         cursor = db.rawQuery(selectQuery, null);
@@ -2003,8 +2023,13 @@ public class DatabaseAdapter {
         selectQuery = "SELECT Id FROM Complaint";
         cursor = db.rawQuery(selectQuery, null);
         countComplaint = cursor.getCount();
+
+        selectQuery = "SELECT Id FROM OutletPrimaryReceipt WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        countPrimaryReceipt = cursor.getCount();
+
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0)
             isRequired = false;
 
         return isRequired;
@@ -2861,7 +2886,7 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> getPrimaryReceipts() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         if (userlang.equalsIgnoreCase("en"))
-        selectQuery = "SELECT 'PR'||pr.Id , ifnull(rm.Name||' '||rm.UOM, sm.Name) AS Name, pr.Quantity, pr.Amount, pr.CreateDate FROM OutletPrimaryReceipt pr LEFT OUTER JOIN RawMaterialMaster rm ON pr.MaterialId = rm.Id LEFT OUTER JOIN SKUMaster sm ON pr.SKUId = sm.Id ORDER BY SUBSTR(pr.CreateDate,0,11) DESC";
+            selectQuery = "SELECT 'PR'||pr.Id , ifnull(rm.Name||' '||rm.UOM, sm.Name) AS Name, pr.Quantity, pr.Amount, pr.CreateDate FROM OutletPrimaryReceipt pr LEFT OUTER JOIN RawMaterialMaster rm ON pr.MaterialId = rm.Id LEFT OUTER JOIN SKUMaster sm ON pr.SKUId = sm.Id ORDER BY SUBSTR(pr.CreateDate,0,11) DESC";
         else
             selectQuery = "SELECT 'PR'||pr.Id ,ifnull(rm.NameLocal||' '||rm.UOM, sm.NameLocal) AS Name, pr.Quantity, pr.Amount, pr.CreateDate FROM OutletPrimaryReceipt pr LEFT OUTER JOIN RawMaterialMaster rm ON pr.MaterialId = rm.Id LEFT OUTER JOIN SKUMaster sm ON pr.SKUId = sm.Id ORDER BY SUBSTR(pr.CreateDate,0,11) DESC";
         cursor = db.rawQuery(selectQuery, null);
@@ -2920,6 +2945,36 @@ public class DatabaseAdapter {
         }
         cursor.close();
         return labels;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to get SKU Inventory by SKU Id">
+    public String getSkuInventory(String skuId) {
+        String total = "";
+        selectQuery = "SELECT Quantity from OutletInventory WHERE SKUId=" + skuId + " AND RawMaterialId='0' ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                total = String.valueOf(cursor.getFloat(0));
+            } while (cursor.moveToNext());
+        }
+        return total;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to get Raw Material Inventory by Raw Material Id">
+    public String getRawMaterialInventory(String rawId) {
+        String total = "";
+        selectQuery = "SELECT Quantity from OutletInventory WHERE RawMaterialId=" + rawId + " AND SKUId='0'  ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                total = String.valueOf(cursor.getFloat(0));
+            } while (cursor.moveToNext());
+        }
+        return total;
     }
     //</editor-fold>
 }
