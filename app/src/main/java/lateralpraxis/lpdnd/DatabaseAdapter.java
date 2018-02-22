@@ -91,7 +91,7 @@ public class DatabaseAdapter {
             OutletPrimaryReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPrimaryReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,UniqueId TEXT, CustomerId TEXT, MaterialId TEXT, SKUId TEXT, Quantity TEXT, Amount TEXT,CreateDate TEXT, IsSync TEXT);";
     // Context of the application using the database.
     private final Context context;
-    //Test
+
     /********************* End of Tables used in new Complaint/ feedback ******************/
 
     // Variable to hold the database instance
