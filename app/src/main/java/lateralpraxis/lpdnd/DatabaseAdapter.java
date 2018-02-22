@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import lateralpraxis.lpdnd.types.CashDeposit;
 import lateralpraxis.lpdnd.types.CustomType;
@@ -83,7 +84,7 @@ public class DatabaseAdapter {
             OutletInventory_CREATE = "CREATE TABLE IF NOT EXISTS OutletInventory(Id INTEGER PRIMARY KEY AUTOINCREMENT,RawMaterialId TEXT, SKUId TEXT, Quantity TEXT);",
             SKUMaster_CREATE = "CREATE TABLE IF NOT EXISTS SKUMaster(Id TEXT,Name TEXT, NameLocal TEXT, Units TEXT, SKU TEXT);",
             SaleRateMaster_CREATE = "CREATE TABLE IF NOT EXISTS SaleRateMaster(Id TEXT,Rate TEXT, FromDate TEXT, ToDate TEXT);",
-            OutletPrimaryReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPrimaryReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT, CustomerId TEXT, MaterialId TEXT, SKUId TEXT, Quantity TEXT, Amount TEXT,CreateDate TEXT, IsSync TEXT);";
+            OutletPrimaryReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPrimaryReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,UniqueId TEXT, CustomerId TEXT, MaterialId TEXT, SKUId TEXT, Quantity TEXT, Amount TEXT,CreateDate TEXT, IsSync TEXT);";
     // Context of the application using the database.
     private final Context context;
     /********************* End of Tables used in new Complaint/ feedback ******************/
@@ -1079,6 +1080,8 @@ public class DatabaseAdapter {
         try {
             result = "fail";
             newValues = new ContentValues();
+
+            newValues.put("UniqueId", UUID.randomUUID().toString());
             newValues.put("CustomerId", customerId);
             newValues.put("MaterialId", materialId);
             newValues.put("SKUId", skuId);
@@ -1553,6 +1556,7 @@ public class DatabaseAdapter {
         cursor.close();
         return wordList;
     }
+
 
     // To Update delivery IsSync flag
     public String Update_DeliveryIsSync() {
@@ -2848,6 +2852,27 @@ public class DatabaseAdapter {
             map.put("Quantity", cursor.getString(2));
             map.put("Amount", cursor.getString(3));
             map.put("Date", cursor.getString(4));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Method to fetch UnSync Primary Receipts">
+    public ArrayList<HashMap<String, String>> getUnSyncPrimaryReceipt() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        selectQuery = "SELECT UniqueId, CustomerId, MaterialId, SKUId, Quantity, Amount, CreateDate FROM OutletPrimaryReceipt WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("CustomerId", cursor.getString(1));
+            map.put("MaterialId", cursor.getString(2));
+            map.put("SKUId", cursor.getString(3));
+            map.put("Quantity", cursor.getString(4));
+            map.put("Amount", cursor.getString(5));
+            map.put("CreateDate", cursor.getString(6));
             wordList.add(map);
         }
         cursor.close();
