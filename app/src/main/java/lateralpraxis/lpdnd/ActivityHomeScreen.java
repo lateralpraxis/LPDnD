@@ -382,7 +382,7 @@ public class ActivityHomeScreen extends Activity {
 							if (common.isConnected()) {
 								String[] myTaskParams = { "transactions" };
 								// call method of get customer json web service
-								AsyncValidatePasswordWSCall task = new AsyncValidatePasswordWSCall();
+								AsyncCustomerValidatePasswordWSCall task = new AsyncCustomerValidatePasswordWSCall();
 								task.execute(myTaskParams);
 							}
 						} else {
@@ -3361,7 +3361,8 @@ public class ActivityHomeScreen extends Activity {
 
 	}
 
-	// Async Method to Validate User Current Credentials from Portal
+
+	//<editor-fold desc="Code to Validate User">
 	private class AsyncValidatePasswordWSCall extends
 	AsyncTask<String, Void, String> {
 		String source = "";
@@ -3552,8 +3553,6 @@ public class ActivityHomeScreen extends Activity {
 										AsyncBankWSCall task = new AsyncBankWSCall();
 										task.execute(result);
 									}
-									/*AsyncValidatePasswordWSCall task = new AsyncValidatePasswordWSCall();
-									task.execute(myTaskParams);*/
 								}
 							}
 							else {
@@ -3591,6 +3590,288 @@ public class ActivityHomeScreen extends Activity {
 		}
 
 	}
+	//</editor-fold>
+
+
+	//<editor-fold desc="Async for Posting Primary Receipt for Retail Outlet">
+	private class AsyncCustomerPrimaryReceiptWSCall extends AsyncTask<String, Void, String> {
+		private ProgressDialog Dialog = new ProgressDialog(
+				ActivityHomeScreen.this);
+
+		@Override
+		protected String doInBackground(String... params) {
+
+			// Will contain the raw JSON response as a string.
+			try {
+
+				responseJSON = "";
+
+				JSONObject jsonPayment = new JSONObject();
+				dba.open();
+				// to get Primary Receipt from database
+				ArrayList<HashMap<String, String>> insmast = dba
+						.getUnSyncPrimaryReceipt();
+				dba.close();
+				if (insmast != null && insmast.size() > 0) {
+					JSONArray array = new JSONArray();
+					// To make json string to post payment
+					for (HashMap<String, String> insp : insmast) {
+						JSONObject jsonins = new JSONObject();
+						jsonins.put("UniqueId", insp.get("UniqueId"));
+						jsonins.put("CustomerId", insp.get("CustomerId"));
+						jsonins.put("MaterialId", insp.get("MaterialId"));
+						jsonins.put("SkuId", insp.get("SKUId"));
+						jsonins.put("Quantity", insp.get("Quantity"));
+						jsonins.put("Amount", insp.get("Amount"));
+						jsonins.put("TransactionDate", insp.get("CreateDate"));
+						jsonins.put("CreateBy", userId);
+						jsonins.put("ipAddress",
+								common.getDeviceIPAddress(true));
+						jsonins.put("Machine", common.getIMEI());
+						array.put(jsonins);
+					}
+					jsonPayment.put("PrimaryReceipt", array);
+
+					sendJSon = jsonPayment.toString();
+
+					// To invoke json web service to create payment
+					responseJSON = common.invokeJSONWS(sendJSon, "json",
+							"InsertPimaryReceipt", common.url);
+				} else {
+					return "No primary receipt pending to be send.";
+				}
+				return responseJSON;
+			} catch (Exception e) {
+				// TODO: handle exception
+				return "ERROR: " + "Unable to get response from server.";
+			} finally {
+				dba.close();
+			}
+		}
+
+		// After execution of json web service to create payment
+		@Override
+		protected void onPostExecute(String result) {
+
+			try {
+				// To display message after response from server
+				if (!result.contains("ERROR")) {
+					if (responseJSON.equalsIgnoreCase("success")) {
+						dba.open();
+						dba.Update_PrimaryReceiptIsSync();
+						dba.close();
+					}
+					if (common.isConnected()) {
+						// call method of get customer json web service
+						AsyncComplaintWSCall task = new AsyncComplaintWSCall();
+						task.execute();
+					}
+				} else {
+					if (result.contains("null"))
+						result = "Server not responding.";
+					common.showAlert(ActivityHomeScreen.this, result, false);
+					common.showToast("Error: " + result);
+				}
+			} catch (Exception e) {
+				common.showAlert(ActivityHomeScreen.this,
+						"Unable to fetch response from server.", false);
+			}
+
+			Dialog.dismiss();
+		}
+
+		// To display message on screen within process
+		@Override
+		protected void onPreExecute() {
+
+			Dialog.setMessage("Posting Primary Receipt...");
+			Dialog.setCancelable(false);
+			Dialog.show();
+		}
+	}
+	//</editor-fold>
+
+	//<editor-fold desc="Code to Validate Retail Outlet Customer">
+	private class AsyncCustomerValidatePasswordWSCall extends
+			AsyncTask<String, Void, String> {
+		String source = "";
+		private ProgressDialog Dialog = new ProgressDialog(
+				ActivityHomeScreen.this);
+
+		@Override
+		protected String doInBackground(String... params) {
+			try { // if this button is clicked, close
+
+				source = params[0];
+				dba.openR();
+				HashMap<String, String> user = session.getLoginUserDetails();
+				// Creation of JSON string for posting validating data
+				JSONObject json = new JSONObject();
+				json.put("username", user.get(UserSessionManager.KEY_CODE));
+				json.put("password", user.get(UserSessionManager.KEY_PWD));
+				json.put("imei", imei);
+				json.put("version", dba.getVersion());
+				String JSONStr = json.toString();
+
+				// Store response fetched from server in responseJSON variable
+				responseJSON = common.invokeJSONWS(JSONStr, "json",
+						"ValidatePassword", common.url);
+
+			} catch (SocketTimeoutException e) {
+				return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+			} catch (final Exception e) {
+				// TODO: handle exception
+				// e.printStackTrace();
+				return "ERROR: Unable to fetch response from server.";
+			}
+			return "";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				// Check if result contains error
+				if (!result.contains("ERROR")) {
+					String passExpired = responseJSON.split("~")[0];
+					String passServer = responseJSON.split("~")[1];
+					String membershipError = responseJSON.split("~")[2];
+					// Check if password is expire and open change password
+					// intent
+					if (passExpired.toLowerCase(Locale.US).equals("yes")) {
+						Intent intent = new Intent(context,
+								ActivityChangePassword.class);
+						intent.putExtra("fromwhere", "login");
+						startActivity(intent);
+						finish();
+					}
+					// Code to check other validations
+					else if (passServer.toLowerCase(Locale.US).equals("no")) {
+						String resp = "";
+
+						if (membershipError.toLowerCase(Locale.US).contains(
+								"NO_USER".toLowerCase(Locale.US))) {
+							resp = "There is no user in the system";
+						} else if (membershipError.toLowerCase(Locale.US)
+								.contains("BARRED".toLowerCase(Locale.US))) {
+							resp = "Your account has been barred by the Administrator.";
+						} else if (membershipError.toLowerCase(Locale.US)
+								.contains("LOCKED".toLowerCase(Locale.US))) {
+							resp = "Your account has been locked out because "
+									+ "you have exceeded the maximum number of incorrect login attempts. "
+									+ "Please contact the System Admin to "
+									+ "unblock your account.";
+						} else if (membershipError.toLowerCase(Locale.US)
+								.contains("LOGINFAILED".toLowerCase(Locale.US))) {
+							resp = "Invalid password. "
+									+ "Password is case-sensitive. "
+									+ "Access to the system will be disabled after "
+									+ responseJSON.split("~")[3] + " "
+									+ "consecutive wrong attempts.\n"
+									+ "Number of Attempts remaining: "
+									+ responseJSON.split("~")[4];
+						} else {
+							resp = "Password mismatched. Enter latest password!";
+						}
+
+						showChangePassWindow(source, resp);
+					}
+
+					// Code to check source of request
+					else if (source.equals("transactions")) {
+						// If version does not match logout user
+						if (responseJSON.contains("NOVERSION")) {
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									context);
+							builder.setMessage(
+									"Application is running an older version. Please install latest version.!")
+									.setCancelable(false)
+									.setPositiveButton(
+											"OK",
+											new DialogInterface.OnClickListener() {
+												public void onClick(
+														DialogInterface dialog,
+														int id) {
+													// Code to call async method
+													// for posting transactions
+													if (common.isConnected()) {
+														AsyncCustomerPrimaryReceiptWSCall task = new AsyncCustomerPrimaryReceiptWSCall();
+														task.execute();
+													}
+												}
+											});
+							AlertDialog alert = builder.create();
+							alert.show();
+
+						} else {
+							if (common.isConnected()) {
+								AsyncCustomerPrimaryReceiptWSCall task = new AsyncCustomerPrimaryReceiptWSCall();
+								task.execute();
+							}
+						}
+
+					} else {
+						if (responseJSON.contains("NOVERSION")) {
+							// Calling async method for master synchronization
+							AlertDialog.Builder builder = new AlertDialog.Builder(
+									context);
+							builder.setMessage(
+									"Application is running an older version. Please install latest version.!")
+									.setCancelable(false)
+									.setPositiveButton(
+											"OK",
+											new DialogInterface.OnClickListener() {
+												public void onClick(
+														DialogInterface dialog,
+														int id) {
+													if (dba.IslogoutAllowed()) {
+														AsyncLogOutWSCall task = new AsyncLogOutWSCall();
+														task.execute();
+													} else
+														common.showAlert(
+																ActivityHomeScreen.this,
+																"There are transactions(s) pending to be sync with the server. Kindly Sync the pending transaction(s).",
+																false);
+												}
+											});
+							AlertDialog alert = builder.create();
+							alert.show();
+						} else {
+							String[] params = { "1" };
+
+							dba.openR();
+							if (dba.IsSyncRequiredForCustomer()) {
+								AsyncComplaintCategoryWSCall task = new AsyncComplaintCategoryWSCall();
+								task.execute(params);
+							}
+						}
+					}
+				} else {
+					common.showAlert(ActivityHomeScreen.this,
+							"Unable to fetch response from server.", false);
+				}
+
+			} catch (Exception e) {
+				common.showAlert(ActivityHomeScreen.this,
+						"Validating credentials failed: " + e.toString(), false);
+			}
+			Dialog.dismiss();
+		}
+
+		@Override
+		protected void onPreExecute() {
+			Dialog.setMessage("Validating your credentials..");
+			Dialog.setCancelable(false);
+			Dialog.show();
+
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+
+		}
+
+	}
+	//</editor-fold>
 
 	// Method to display change password dialog
 	private void showChangePassWindow(final String source, final String resp) {

@@ -59,7 +59,6 @@ public class ActivityAddPrimaryReceipt extends Activity {
     private Button btnSave;
     //</editor-fold>
 
-
     //<editor-fold desc="Code to be executed on On Create">
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,6 +196,7 @@ public class ActivityAddPrimaryReceipt extends Activity {
                                     db.open();
                                     db.Insert_PrimaryReceipt(customerId,  ((CustomType)spRawMaterial.getSelectedItem()).getId(), ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0], etQty.getText().toString(), etAmt.getText().toString());
                                     db.close();
+                                    common.showToast(lang.equalsIgnoreCase("hi") ?"प्राथमिक रसीद को सफलतापूर्वक सहेजा गया":"Primary Receipt saved successfully.");
                                    Intent intent = new Intent(ActivityAddPrimaryReceipt.this, ActivityListPrimaryReceipt.class);
                                     startActivity(intent);
                                     finish();

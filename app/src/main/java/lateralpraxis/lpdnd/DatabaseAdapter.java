@@ -1590,6 +1590,21 @@ public class DatabaseAdapter {
         }
     }
 
+
+    //<editor-fold desc="Code to Updated Primary Receipt IsSYnc Flag">
+    public String Update_PrimaryReceiptIsSync() {
+        try {
+            String query = "UPDATE OutletPrimaryReceipt SET IsSync = '1'";
+            db.execSQL(query);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
     public void DeleteDemand(String orderId) {
         db.execSQL("DELETE FROM Demand WHERE Id = '" + orderId + "'");
         db.execSQL("DELETE FROM DemandDetails WHERE DemandId = '" + orderId
