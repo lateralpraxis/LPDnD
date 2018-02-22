@@ -77,6 +77,10 @@ public class DatabaseAdapter {
             Complaint_CREATE = "CREATE TABLE IF NOT EXISTS Complaint(Id INTEGER PRIMARY KEY AUTOINCREMENT,ComplaintDate DATETIME,CustomerId TEXT,ComplaintType TEXT,DeviceUniqueId TEXT, ComplaintCategoryId TEXT, FeedBackRating TEXT, CustomerRemark TEXT, IsSync);",
             TempDocTABLE_CREATE = "CREATE TABLE IF NOT EXISTS TempDoc (FileName TEXT)",
 
+    /********************* Tables used in Outlet Sale ******************/
+            OutletSale_CREATE = "CREATE TABLE IF NOT EXISTS OutletSale(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT, CustomerId TEXT, Customer TEXT, SaleType TEXT, CreateBy TEXT, CreateDate TEXT, Imei TEXT, IsSync TEXT);",
+            OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleUniqueId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
+
     /********************* Tables used in Delete For System User ******************/
     CashDepositDeleteDataTABLE_CREATE = "CREATE TABLE IF NOT EXISTS CashDepositDeleteData (CashDepositId TEXT, CashDepositDetailId TEXT, DepositDate TEXT, PCDetailId TEXT, Mode TEXT, Amount TEXT, FullName TEXT)",
             RawMaterialMaster_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialMaster(Id TEXT, Name TEXT, UOM TEXT, NameLocal TEXT);",
@@ -2786,4 +2790,27 @@ public class DatabaseAdapter {
         Date date = new Date();
         return dateFormat.format(date);
     }
+
+    //<editor-fold desc="GetOutletSaleDetailsByLang">
+    //Method to Get Outlet Sale Details By Lang
+    public List<CustomType> GetOutletSaleDetailsByLang(String masterType, String filter, String langOption) {
+        List<CustomType> labels = new ArrayList<CustomType>();
+        if (masterType == "customer" && langOption.equalsIgnoreCase("hi"))
+            selectQuery = "SELECT DISTINCT mas.CustomerId,(CASE WHEN mas.CustomerLocal='' THEN mas.Customer ELSE mas.CustomerLocal END) FROM CustomerMaster mas, OutletSale os WHERE mas.CustomerId = os.CustomerId ORDER BY LOWER(mas.Customer)";
+        else if (masterType == "customer" && langOption.equalsIgnoreCase("en"))
+            selectQuery = "SELECT DISTINCT mas.CustomerId, mas.Customer FROM CustomerMaster mas, OutletSale os WHERE mas.CustomerId = os.CustomerId ORDER BY LOWER(mas.Customer)";
+        //Log.i("LPDND", "selectQuery="+masterType+":"+selectQuery);
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (masterType == "customer" && langOption.equalsIgnoreCase("en"))
+            labels.add(new CustomType("0", "...Select Customer"));
+        else if (masterType == "customer" && langOption.equalsIgnoreCase("hi"))
+            labels.add(new CustomType("0", "...ग्राहक चुनें"));
+        while (cursor.moveToNext()) {
+            labels.add(new CustomType(cursor.getString(0), cursor.getString(1)));
+        }
+        cursor.close();
+        return labels;
+    }
+    //</editor-fold>
 }
