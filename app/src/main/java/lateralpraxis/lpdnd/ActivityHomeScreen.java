@@ -139,7 +139,7 @@ public class ActivityHomeScreen extends Activity {
 			
 			if (userRole.equalsIgnoreCase("Customer")) {
 				if(customerType.equalsIgnoreCase("Retail Outlet"))
-                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale);
+                views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale,R.layout.btn_customersync);
 				else
 					views = Arrays.asList( R.layout.btn_product,R.layout.btn_demand);
 			}
@@ -371,6 +371,28 @@ public class ActivityHomeScreen extends Activity {
                     }
                 });
                 break;
+			case R.layout.btn_customersync:
+				btn = (Button) btnLayout.findViewById(R.id.btnSync);
+				btn.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if (common.isConnected()) {
+
+							if (common.isConnected()) {
+								String[] myTaskParams = { "transactions" };
+								// call method of get customer json web service
+								AsyncValidatePasswordWSCall task = new AsyncValidatePasswordWSCall();
+								task.execute(myTaskParams);
+							}
+						} else {
+							common.showAlert(ActivityHomeScreen.this,
+									"Unable to connect to Internet !", false);
+						}
+					}
+				});
+				break;
+
 			case R.layout.btn_primaryreceipt:
                 btn = (Button) btnLayout.findViewById(R.id.btnPrimaryReceipt);
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -517,33 +539,7 @@ public class ActivityHomeScreen extends Activity {
 						AsyncTransCustomerLedgerWSCall task = new AsyncTransCustomerLedgerWSCall();
 						task.execute();
 					}
-					/*
-					 * if(strSyncWhat.equalsIgnoreCase("masters")) {
-					 * AlertDialog.Builder alertDialogBuilder = new
-					 * AlertDialog.Builder(context); // set title
-					 * alertDialogBuilder.setTitle("Sync Successful"); // set
-					 * dialog message alertDialogBuilder .setMessage(
-					 * "Transaction Synchronization completed successfully. It is recommended to synchronize master data. Do you want to continue?"
-					 * ) .setCancelable(false) .setPositiveButton("Yes",new
-					 * DialogInterface.OnClickListener() { public void
-					 * onClick(DialogInterface dialog,int id) {
-					 * 
-					 * if(common.isConnected()) { String[] params = { "0" };
-					 * AsyncRouteWSCall task = new AsyncRouteWSCall ();
-					 * task.execute(params); } } }) .setNegativeButton("No",new
-					 * DialogInterface.OnClickListener() { public void
-					 * onClick(DialogInterface dialog,int id) { // if this
-					 * button is clicked, just close dialog.cancel(); } }); //
-					 * create alert dialog AlertDialog alertDialog =
-					 * alertDialogBuilder.create(); // show it
-					 * alertDialog.show(); } else { if(common.isConnected()) {
-					 * 
-					 * //To call web services to get cash deposit details
-					 * AsyncCashDepositWSCall task = new
-					 * AsyncCashDepositWSCall(); task.execute(); } else{ intent
-					 * = new Intent(context,ActivityHomeScreen.class);
-					 * startActivity(intent); finish(); } }
-					 */
+
 				} else {
 					if (result.contains("null") || result == "")
 						result = "Server not responding. Please try again later.";
