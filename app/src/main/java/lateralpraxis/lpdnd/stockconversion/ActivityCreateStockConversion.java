@@ -234,6 +234,10 @@ public class ActivityCreateStockConversion extends Activity {
                 {
                     db.open();
                     db.Insert_OutletConversionConsumedTemp(((CustomType)spRawMaterial.getSelectedItem()).getId(), ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0],etConsumedQty.getText().toString());
+                    db.close();
+                    spRawMaterial.setSelection(0);
+                    spSKU.setSelection(0);
+                    etConsumedQty.setText("");
                 }
 
             }
