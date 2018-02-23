@@ -1844,6 +1844,43 @@ public class DatabaseAdapter {
         }
     }
 
+
+
+    //<editor-fold desc="Code to insert Consumed Data in Temporary Table">
+    public String Insert_OutletConversionConsumedTemp(String materialId, String skuId, String quantity) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("MaterialId", materialId);
+            newValues.put("SKUId", skuId);
+            newValues.put("Quantity", quantity);
+            db.insert("OutletConversionConsumedTemp", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Produced Data in Temporary Table">
+    public String Insert_OutletConversionProducedTemp(String skuId, String quantity) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("SKUId", skuId);
+            newValues.put("Quantity", quantity);
+            db.insert("OutletConversionProducedTemp", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
     // To get all offers
     public ArrayList<HashMap<String, String>> getMsg() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
@@ -2716,6 +2753,13 @@ public class DatabaseAdapter {
         db.execSQL("DELETE FROM CashDepositTransaction");
     }
 
+    //<editor-fold desc="Code to delete data from Temporary Conversion Table">
+    public void DeleteTempConversion() {
+        db.execSQL("DELETE FROM OutletConversionConsumedTemp");
+        db.execSQL("DELETE FROM OutletConversionProducedTemp");
+    }
+    //</editor-fold>
+
     /******End of Cash Deposit************/
     //Method to get pending Payment by customer id
     public HashMap<String, String> GetPendingPaymentByCustomerId(String custId) {
@@ -2975,6 +3019,34 @@ public class DatabaseAdapter {
             } while (cursor.moveToNext());
         }
         return total;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to check if Consumed Item is already added">
+    public Boolean isConsumedAlreadyAdded(String materialId, String skuId) {
+        Boolean dataExists = false;
+        selectQuery = "SELECT Id FROM OutletConversionConsumedTemp WHERE MaterialId = '" + materialId + "' AND SKUId ='" + skuId + "' ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.getCount() > 0) {
+            dataExists = true;
+        }
+        cursor.close();
+        return dataExists;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to check if Produced Item is already added">
+    public Boolean isProducedAlreadyAdded(String materialId, String skuId) {
+        Boolean dataExists = false;
+        selectQuery = "SELECT Id FROM OutletConversionProducedTemp WHERE SKUId ='" + skuId + "' ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.getCount() > 0) {
+            dataExists = true;
+        }
+        cursor.close();
+        return dataExists;
     }
     //</editor-fold>
 }

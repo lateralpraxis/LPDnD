@@ -338,6 +338,64 @@ public class ActivityPaymentOnly   extends Activity{
 				}
 				else
 				{
+					//-------------Newly Added
+					customerId=String.valueOf(((CustomType)spCustomer.getSelectedItem()).getId());
+					if(customerId.equalsIgnoreCase("0"))
+					{
+						//Code to show / Hide layouts on basis of customer id
+						llCustSelection.setVisibility(View.VISIBLE);
+						llPayment.setVisibility(View.GONE);
+						btnGo.setVisibility(View.VISIBLE);
+						//Code to delete all data from temporary table
+						db.open();
+						db.DeleteTempPaymentDetails("0");
+						db.close();
+					}
+					else
+					{
+						//Code to show / Hide layouts on basis of customer id
+						llCustSelection.setVisibility(View.GONE);
+						llPayment.setVisibility(View.VISIBLE);
+						btnGo.setVisibility(View.GONE);
+						db.openR();
+						tvCustId.setText(customerId);
+						tvCustName.setText(customerName);
+						HashMap<String,String> PayDetailMap = db.GetPendingPaymentByCustomerId(customerId);
+						tvCompanyId.setText(PayDetailMap.get("CompanyId"));
+						tvCompanyName.setText(PayDetailMap.get("CompanyName"));
+
+						if(Double.valueOf(PayDetailMap.get("Balance"))<0)
+						{
+							tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f",Double.valueOf(PayDetailMap.get("Balance"))).replace("-", "")));
+							tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f",Double.valueOf(PayDetailMap.get("Balance"))).replace("-", "")));
+						}
+						else
+						{
+							tvPayableAmount.setText("("+common.stringToTwoDecimal(String.format("%.2f",Double.valueOf(PayDetailMap.get("Balance"))))+")");
+							tvBalanceData.setText("("+common.stringToTwoDecimal(String.format("%.2f",Double.valueOf(PayDetailMap.get("Balance"))))+")");
+						}
+						/*	tvPayableAmount.setText(common.stringToTwoDecimal(PayDetailMap.get("Balance")));
+						tvBalanceData.setText(common.stringToTwoDecimal(PayDetailMap.get("Balance")));*/
+						companyCount=db.GetCompanyCountByCustomer(customerId);
+						db.close();
+						paymentCount=paymentCount+1;
+					}
+
+					//Code to decide whether to display next button or submit button
+					if(paymentCount==companyCount && !customerId.equalsIgnoreCase("0"))
+					{
+						btnSubmit.setVisibility(View.VISIBLE);
+						btnNext.setVisibility(View.GONE);
+						btnSkip.setVisibility(View.GONE);
+					}
+					else
+					{
+						btnSubmit.setVisibility(View.GONE);
+						btnNext.setVisibility(View.VISIBLE);
+						btnSkip.setVisibility(View.VISIBLE);
+					}
+
+					//-------------Newly Added
 					//Code to bind customer details
 					tvCustName.setText(String.valueOf(((CustomType)spCustomer.getSelectedItem()).getName()));
 					tvCustId.setText(String.valueOf(((CustomType)spCustomer.getSelectedItem()).getId()));

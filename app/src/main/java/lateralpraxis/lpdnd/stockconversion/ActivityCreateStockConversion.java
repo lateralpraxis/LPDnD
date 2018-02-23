@@ -68,6 +68,12 @@ public class ActivityCreateStockConversion extends Activity {
         session = new UserSessionManager(getApplicationContext());
         //</editor-fold>
 
+        //<editor-fold desc="Code to Delete Data from Temporary Table">
+        db.open();
+        db.DeleteTempConversion();
+        db.close();
+        //</editor-fold>
+
         //<editor-fold desc="Code to Set Language">
         lang = session.getDefaultLang();
         Locale myLocale = new Locale(lang);
@@ -81,6 +87,7 @@ public class ActivityCreateStockConversion extends Activity {
         //<editor-fold desc="Code to find controls">
         llRawMaterial = (LinearLayout) findViewById(R.id.llRawMaterial);
         llSKU = (LinearLayout) findViewById(R.id.llSKU);
+        llProduced= (LinearLayout) findViewById(R.id.llProduced);
         RadioType = (RadioGroup) findViewById(R.id.RadioType);
         RadioRaw = (RadioButton) findViewById(R.id.RadioRaw);
         RadioSKU = (RadioButton) findViewById(R.id.RadioSKU);
@@ -209,6 +216,28 @@ public class ActivityCreateStockConversion extends Activity {
 
         });
         //</editor-fold>
+
+        btnAddConsumed.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+                if (type.equalsIgnoreCase ("Raw") && spRawMaterial.getSelectedItemPosition() == 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कच्ची सामग्री अनिवार्य है।":"Raw Material is mandatory.");
+                else if (type.equalsIgnoreCase ("SKU") && spSKU.getSelectedItemPosition() == 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"एसकेयू अनिवार्य है।":"SKU is mandatory.");
+                else if(String.valueOf(etConsumedQty.getText()).trim().equals(""))
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"उपभोग मात्रा अनिवार्य है।":"Consumed quantity is mandatory.");
+                else if(Double.valueOf(etConsumedQty.getText().toString())> Double.valueOf(tvInventory.getText().toString()))
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"उपभोग मात्रा उपलब्ध मात्रा से अधिक नहीं हो सकती।":"Consumed quantity cannot exceed available quantity.");
+                else
+                {
+                    db.open();
+                    db.Insert_OutletConversionConsumedTemp(((CustomType)spRawMaterial.getSelectedItem()).getId(), ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0],etConsumedQty.getText().toString());
+                }
+
+            }
+        });
     }
     //</editor-fold>
 
