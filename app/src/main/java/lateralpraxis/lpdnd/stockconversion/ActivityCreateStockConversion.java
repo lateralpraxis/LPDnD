@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -13,6 +14,9 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -33,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
 import lateralpraxis.lpdnd.DecimalDigitsInputFilter;
@@ -346,6 +351,16 @@ public class ActivityCreateStockConversion extends Activity {
             }
         });
         //</editor-fold>
+
+        //<editor-fold desc="Code to be executed on Button Submit Click">
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+            }
+        });
+        //</editor-fold>
     }
     //</editor-fold>
 
@@ -601,6 +616,88 @@ public class ActivityCreateStockConversion extends Activity {
             arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return arg1;
         }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to Set Home Button in Action Bar">
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return true;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to be executed on Action Bar Menu Item">
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
+                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
+                builder1.setCancelable(true);
+                builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(i);
+                                finish();
+                            }
+                        }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                // if this button is clicked, just close
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertnew = builder1.create();
+                alertnew.show();
+                return true;
+
+            case R.id.action_go_to_home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to b executed on Back Press">
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+        builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
+        builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
+        builder1.setCancelable(true);
+        builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+                        Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                        startActivity(i);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
+                    }
+                }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+                        // if this button is clicked, just close
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertnew = builder1.create();
+        alertnew.show();
+
     }
     //</editor-fold>
 

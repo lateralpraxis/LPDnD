@@ -283,7 +283,7 @@ public class ActivityAddPrimaryReceipt extends Activity {
     public void onBackPressed() {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
         builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-        builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप प्राथमिक रसीद छोड़ना चाहते हैं, यह भुगतान लेनदेन को छोड़ देगा?" : "Are you sure, you want to leave primary receipt module it will discard primary receipt transaction?");
+        builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप प्राथमिक रसीद मॉड्यूल छोड़ना चाहते हैं, यह प्राथमिक रसीद को छोड़ देगा?" : "Are you sure, you want to leave primary receipt module it will discard primary receipt transaction?");
         builder1.setCancelable(true);
         builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
                 new DialogInterface.OnClickListener() {
