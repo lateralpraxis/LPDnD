@@ -3037,7 +3037,7 @@ public class DatabaseAdapter {
     //</editor-fold>
 
     //<editor-fold desc="Code to check if Produced Item is already added">
-    public Boolean isProducedAlreadyAdded(String materialId, String skuId) {
+    public Boolean isProducedAlreadyAdded(String skuId) {
         Boolean dataExists = false;
         selectQuery = "SELECT Id FROM OutletConversionProducedTemp WHERE SKUId ='" + skuId + "' ";
         cursor = db.rawQuery(selectQuery, null);
@@ -3047,6 +3047,58 @@ public class DatabaseAdapter {
         }
         cursor.close();
         return dataExists;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Method to Fetch Temporary Consumed Items">
+    public ArrayList<HashMap<String, String>> getTempConsumed() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT tmp.Id, ifnull(sm.Name,rm.Name||' '||rm.Uom) AS Name, tmp.Quantity FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN SKUMaster sm ON tmp.SKUId = sm.Id LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
+        else
+            selectQuery = "SELECT tmp.Id, ifnull(sm.NameLocal,rm.NameLocal||' '||rm.Uom) AS Name, tmp.Quantity FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN SKUMaster sm ON tmp.SKUId = sm.Id LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Id", cursor.getString(0));
+            map.put("Name", cursor.getString(1));
+            map.put("Quantity", cursor.getString(2));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Method to Fetch Temporary Produced Items">
+    public ArrayList<HashMap<String, String>> getTempProduced() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT tmp.Id, sm.Name , tmp.Quantity FROM OutletConversionProducedTemp tmp LEFT OUTER JOIN SKUMaster sm ON tmp.SKUId = sm.Id ORDER BY sm.Name";
+        else
+            selectQuery = "SELECT tmp.Id, sm.NameLocal , tmp.Quantity FROM OutletConversionProducedTemp tmp LEFT OUTER JOIN SKUMaster sm ON tmp.SKUId = sm.Id ORDER BY sm.Name";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Id", cursor.getString(0));
+            map.put("Name", cursor.getString(1));
+            map.put("Quantity", cursor.getString(2));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to delete consumption from temporary table by Id">
+    public void deleteTempConsumption(String id) {
+        db.execSQL("Delete FROM OutletConversionConsumedTemp WHERE Id ='"+id+"';");
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to delete production from temporary table by Id">
+    public void deleteTempProduction(String id) {
+        db.execSQL("Delete FROM OutletConversionProducedTemp WHERE Id ='"+id+"';");
     }
     //</editor-fold>
 }

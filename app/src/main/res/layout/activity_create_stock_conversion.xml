@@ -176,7 +176,57 @@
                     android:textColor="@color/white" />
             </LinearLayout>
 
+            <TableLayout
+                android:id="@+id/tableGridHeadConsumed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" >
 
+                <TableRow
+                    android:id="@+id/tableHeaderDet"
+                    style="@style/style_gridheader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip" >
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".5"
+                        android:textColor="@color/white"
+                        android:text="@string/label_NameReport"
+                        android:textIsSelectable="false"
+                        android:paddingStart="2dp"
+                        android:paddingLeft="2dp"
+                        android:textStyle="bold"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="end"
+                        android:textColor="@color/white"
+                        android:text="@string/label_quantity"
+                        android:textStyle="bold"
+                        android:textIsSelectable="false"
+                        android:paddingEnd="2dp"
+                        android:paddingRight="2dp"
+                        android:textSize="18sp" />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".2"
+                        android:gravity="end"
+                        android:textColor="@color/white"
+                        android:text="@string/blank"
+                        android:textStyle="bold"
+                        android:textIsSelectable="false"
+                        android:paddingEnd="2dp"
+                        android:paddingRight="2dp"
+                        android:textSize="18sp" />
+                </TableRow>
+            </TableLayout>
             <lateralpraxis.lpdnd.NonScrollableListView
                 android:id="@+id/listConsumed"
                 android:layout_width="fill_parent"
@@ -281,7 +331,56 @@
                         android:text="@string/stradd"
                         android:textColor="@color/white" />
                 </LinearLayout>
+                <TableLayout
+                    android:id="@+id/tableGridHeadProduced"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" >
 
+                    <TableRow
+                        style="@style/style_gridheader"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5.0dip" >
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".5"
+                            android:textColor="@color/white"
+                            android:text="@string/label_NameReport"
+                            android:textIsSelectable="false"
+                            android:paddingStart="2dp"
+                            android:paddingLeft="2dp"
+                            android:textStyle="bold"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".3"
+                            android:gravity="end"
+                            android:textColor="@color/white"
+                            android:text="@string/label_quantity"
+                            android:textStyle="bold"
+                            android:textIsSelectable="false"
+                            android:paddingEnd="2dp"
+                            android:paddingRight="2dp"
+                            android:textSize="18sp" />
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".2"
+                            android:gravity="end"
+                            android:textColor="@color/white"
+                            android:text="@string/blank"
+                            android:textStyle="bold"
+                            android:textIsSelectable="false"
+                            android:paddingEnd="2dp"
+                            android:paddingRight="2dp"
+                            android:textSize="18sp" />
+                    </TableRow>
+                </TableLayout>
                 <lateralpraxis.lpdnd.NonScrollableListView
                     android:id="@+id/listProduced"
                     android:layout_width="fill_parent"
@@ -296,6 +395,32 @@
                     android:gravity="center_vertical|center_horizontal"
                     android:text="@string/norecord"
                     android:textColor="@color/black" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:weightSum="1">
+
+                    <Button
+                        android:id="@+id/btnSubmit"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_margin="1sp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/button_design"
+                        android:paddingBottom="5sp"
+                        android:paddingLeft="10sp"
+                        android:paddingRight="10sp"
+                        android:paddingTop="5sp"
+                        android:visibility="gone"
+                        android:text="@string/submit"
+                        android:textColor="@color/white" />
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

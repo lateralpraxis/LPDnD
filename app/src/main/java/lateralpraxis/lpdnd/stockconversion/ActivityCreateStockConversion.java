@@ -2,24 +2,34 @@ package lateralpraxis.lpdnd.stockconversion;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -41,14 +51,26 @@ public class ActivityCreateStockConversion extends Activity {
     private UserSessionManager session;
     //</editor-fold>
 
+    //<editor-fold desc="Code for Variable Declaration">
+    private ArrayList<HashMap<String, String>> wordListCons = null;
+    private ArrayList<HashMap<String, String>> listCons;
+    private int conslistSize = 0;
+
+    private ArrayList<HashMap<String, String>> wordListProd = null;
+    private ArrayList<HashMap<String, String>> listProd;
+    private int prodlistSize = 0;
+    //</editor-fold>
+
     //<editor-fold desc="Code for Control Declaration">
     private RadioGroup RadioType;
     private RadioButton RadioRaw, RadioSKU;
     private Spinner spRawMaterial, spSKU, spProdSKU;
     private LinearLayout llRawMaterial, llSKU, llProduced;
     private EditText etConsumedQty, etProducedQty;
-    private Button btnAddConsumed, btnAddProduced;
-    private TextView tvProdEmpty, tvConsEmpty,tvInventory;
+    private Button btnAddConsumed, btnAddProduced,btnSubmit;
+    private TextView tvProdEmpty, tvConsEmpty, tvInventory;
+    private ListView listConsumed, listProduced;
+    private TableLayout tableGridHeadConsumed, tableGridHeadProduced;
     //</editor-fold>
 
     //<editor-fold desc="Code to be executed on On Create Method">
@@ -87,7 +109,7 @@ public class ActivityCreateStockConversion extends Activity {
         //<editor-fold desc="Code to find controls">
         llRawMaterial = (LinearLayout) findViewById(R.id.llRawMaterial);
         llSKU = (LinearLayout) findViewById(R.id.llSKU);
-        llProduced= (LinearLayout) findViewById(R.id.llProduced);
+        llProduced = (LinearLayout) findViewById(R.id.llProduced);
         RadioType = (RadioGroup) findViewById(R.id.RadioType);
         RadioRaw = (RadioButton) findViewById(R.id.RadioRaw);
         RadioSKU = (RadioButton) findViewById(R.id.RadioSKU);
@@ -98,9 +120,14 @@ public class ActivityCreateStockConversion extends Activity {
         etProducedQty = (EditText) findViewById(R.id.etProducedQty);
         btnAddConsumed = (Button) findViewById(R.id.btnAddConsumed);
         btnAddProduced = (Button) findViewById(R.id.btnAddProduced);
+        btnSubmit = (Button) findViewById(R.id.btnSubmit);
         tvProdEmpty = (TextView) findViewById(R.id.tvProdEmpty);
         tvConsEmpty = (TextView) findViewById(R.id.tvConsEmpty);
         tvInventory = (TextView) findViewById(R.id.tvInventory);
+        listConsumed = (ListView) findViewById(R.id.listConsumed);
+        listProduced = (ListView) findViewById(R.id.listProduced);
+        tableGridHeadConsumed = (TableLayout) findViewById(R.id.tableGridHeadConsumed);
+        tableGridHeadProduced = (TableLayout) findViewById(R.id.tableGridHeadProduced);
         //</editor-fold>
 
         //<editor-fold desc="Code to set Input Filter">
@@ -130,11 +157,11 @@ public class ActivityCreateStockConversion extends Activity {
                     llSKU.setVisibility(View.GONE);
                     etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
                     etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                    type="Raw";
+                    type = "Raw";
                 } else {
                     llRawMaterial.setVisibility(View.GONE);
                     llSKU.setVisibility(View.VISIBLE);
-                    type="SKU";
+                    type = "SKU";
                 }
             }
         });
@@ -217,31 +244,108 @@ public class ActivityCreateStockConversion extends Activity {
         });
         //</editor-fold>
 
+        //<editor-fold desc="Code to be executed on Click ob Button Add Consumed Click">
         btnAddConsumed.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
 
-                if (type.equalsIgnoreCase ("Raw") && spRawMaterial.getSelectedItemPosition() == 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"कच्ची सामग्री अनिवार्य है।":"Raw Material is mandatory.");
-                else if (type.equalsIgnoreCase ("SKU") && spSKU.getSelectedItemPosition() == 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"एसकेयू अनिवार्य है।":"SKU is mandatory.");
-                else if(String.valueOf(etConsumedQty.getText()).trim().equals(""))
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"उपभोग मात्रा अनिवार्य है।":"Consumed quantity is mandatory.");
-                else if(Double.valueOf(etConsumedQty.getText().toString())> Double.valueOf(tvInventory.getText().toString()))
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"उपभोग मात्रा उपलब्ध मात्रा से अधिक नहीं हो सकती।":"Consumed quantity cannot exceed available quantity.");
-                else
-                {
-                    db.open();
-                    db.Insert_OutletConversionConsumedTemp(((CustomType)spRawMaterial.getSelectedItem()).getId(), ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0],etConsumedQty.getText().toString());
-                    db.close();
-                    spRawMaterial.setSelection(0);
-                    spSKU.setSelection(0);
-                    etConsumedQty.setText("");
+                if (type.equalsIgnoreCase("Raw") && spRawMaterial.getSelectedItemPosition() == 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "कच्ची सामग्री अनिवार्य है।" : "Raw Material is mandatory.");
+                else if (type.equalsIgnoreCase("SKU") && spSKU.getSelectedItemPosition() == 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
+                else if (String.valueOf(etConsumedQty.getText()).trim().equals(""))
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा अनिवार्य है।" : "Consumed quantity is mandatory.");
+                else if (Double.valueOf(etConsumedQty.getText().toString()) > Double.valueOf(tvInventory.getText().toString()))
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा उपलब्ध मात्रा से अधिक नहीं हो सकती।" : "Consumed quantity cannot exceed available quantity.");
+                else {
+                    db.openR();
+                    Boolean alreadyAdded = db.isConsumedAlreadyAdded(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0]);
+                    if (alreadyAdded)
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "खपत आइटम पहले ही जोड़ दिया गया है।" : "Consumed item already added.");
+                    else {
+                        db.open();
+                        db.Insert_OutletConversionConsumedTemp(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0], etConsumedQty.getText().toString());
+                        db.close();
+                        spRawMaterial.setSelection(0);
+                        spSKU.setSelection(0);
+                        etConsumedQty.setText("");
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "खपत किया गया आइटम सफलतापूर्वक जोड़ा गया।" : "Consumed item added successfully.");
+
+                        wordListCons = new ArrayList<HashMap<String, String>>();
+                        db.openR();
+                        wordListCons = db.getTempConsumed();
+                        conslistSize = wordListCons.size();
+                        if (conslistSize != 0) {
+                            listConsumed.setAdapter(new CustomAdapter(mContext, wordListCons));
+
+                            ViewGroup.LayoutParams params = listConsumed.getLayoutParams();
+                            listConsumed.setLayoutParams(params);
+                            listConsumed.requestLayout();
+                            tvConsEmpty.setVisibility(View.GONE);
+                            tableGridHeadConsumed.setVisibility(View.VISIBLE);
+                            llProduced.setVisibility(View.VISIBLE);
+                        } else {
+                            listConsumed.setAdapter(null);
+                            tvConsEmpty.setVisibility(View.VISIBLE);
+                            tableGridHeadConsumed.setVisibility(View.GONE);
+                            llProduced.setVisibility(View.GONE);
+                        }
+                    }
                 }
 
             }
         });
+        //</editor-fold>
+
+        //<editor-fold desc="Code to be executed on Click ob Button Add Produced Click">
+        btnAddProduced.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+                if (spProdSKU.getSelectedItemPosition() == 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
+                else if (String.valueOf(etProducedQty.getText()).trim().equals(""))
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित मात्रा अनिवार्य है।" : "Produced quantity is mandatory.");
+                else {
+                    db.openR();
+                    Boolean alreadyAdded = db.isProducedAlreadyAdded(((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[0]);
+                    if (alreadyAdded)
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित आइटम पहले ही जोड़ दिया गया है।" : "Produced item already added.");
+                    else {
+                        db.open();
+                        db.Insert_OutletConversionProducedTemp(((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[0], etProducedQty.getText().toString());
+                        db.close();
+                        spProdSKU.setSelection(0);
+                        etProducedQty.setText("");
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित किया गया आइटम सफलतापूर्वक जोड़ा गया।" : "Produced item added successfully.");
+
+                        wordListProd = new ArrayList<HashMap<String, String>>();
+                        db.openR();
+                        wordListProd = db.getTempProduced();
+                        prodlistSize = wordListProd.size();
+                        if (prodlistSize != 0) {
+                            listProduced.setAdapter(new CustomAdapterProduced(mContext, wordListProd));
+
+                            ViewGroup.LayoutParams params = listProduced.getLayoutParams();
+                            listProduced.setLayoutParams(params);
+                            listProduced.requestLayout();
+                            tvProdEmpty.setVisibility(View.GONE);
+                            tableGridHeadProduced.setVisibility(View.VISIBLE);
+                            btnSubmit.setVisibility(View.VISIBLE);
+                        } else {
+                            listProduced.setAdapter(null);
+                            tvProdEmpty.setVisibility(View.VISIBLE);
+                            tableGridHeadProduced.setVisibility(View.GONE);
+                            btnSubmit.setVisibility(View.GONE);
+                        }
+                    }
+                }
+
+            }
+        });
+        //</editor-fold>
     }
     //</editor-fold>
 
@@ -255,4 +359,249 @@ public class ActivityCreateStockConversion extends Activity {
         return dataAdapter;
     }
     //</editor-fold>
+
+    //<editor-fold desc="Code to be Bind Data in consumed list view">
+    public static class ViewHolder {
+        TextView tvId, tvName, tvQty;
+        Button btnDelete;
+    }
+
+    public class CustomAdapter extends BaseAdapter {
+        private Context docContext;
+        private LayoutInflater mInflater;
+
+        public CustomAdapter(Context context, ArrayList<HashMap<String, String>> lvList) {
+            this.docContext = context;
+            mInflater = LayoutInflater.from(docContext);
+            listCons = lvList;
+        }
+
+        @Override
+        public int getCount() {
+            return listCons.size();
+        }
+
+        @Override
+        public Object getItem(int arg0) {
+            return listCons.get(arg0);
+        }
+
+        @Override
+        public long getItemId(int arg0) {
+            return arg0;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+
+            return getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+
+            return position;
+        }
+
+        @Override
+        public View getView(final int arg0, View arg1, ViewGroup arg2) {
+
+
+            final ViewHolder holder;
+            if (arg1 == null) {
+                arg1 = mInflater.inflate(R.layout.list_consumed_items, null);
+                holder = new ViewHolder();
+
+                holder.tvName = (TextView) arg1.findViewById(R.id.tvName);
+                holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
+                holder.tvQty = (TextView) arg1.findViewById(R.id.tvQty);
+                holder.btnDelete = (Button) arg1.findViewById(R.id.btnDelete);
+                arg1.setTag(holder);
+
+            } else {
+                holder = (ViewHolder) arg1.getTag();
+            }
+            holder.tvId.setText(listCons.get(arg0).get("Id"));
+            holder.tvName.setText(listCons.get(arg0).get("Name"));
+            holder.tvQty.setText(listCons.get(arg0).get("Quantity"));
+
+            holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                    builder1.setTitle(lang.equalsIgnoreCase("hi") ? "खपत वस्तु को हटाएं" : "Delete Consumed Item");
+                    builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप इस खपत वस्तु को हटाना चाहते हैं" : "Are you sure you want to delete this consumed item?");
+                    builder1.setCancelable(true);
+                    builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    db.open();
+                                    db.deleteTempConsumption(holder.tvId.getText().toString());
+                                    db.close();
+                                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत वस्तु सफलतापूर्वक हटा दिया गया" : "Consumed item deleted successfully.");
+                                    wordListCons = new ArrayList<HashMap<String, String>>();
+                                    db.openR();
+                                    wordListCons = db.getTempConsumed();
+                                    conslistSize = wordListCons.size();
+                                    if (conslistSize != 0) {
+                                        listConsumed.setAdapter(new CustomAdapter(mContext, wordListCons));
+
+                                        ViewGroup.LayoutParams params = listConsumed.getLayoutParams();
+                                        listConsumed.setLayoutParams(params);
+                                        listConsumed.requestLayout();
+                                        tvConsEmpty.setVisibility(View.GONE);
+                                        tableGridHeadConsumed.setVisibility(View.VISIBLE);
+                                        llProduced.setVisibility(View.VISIBLE);
+                                    } else {
+                                        listConsumed.setAdapter(null);
+                                        tvConsEmpty.setVisibility(View.VISIBLE);
+                                        tableGridHeadConsumed.setVisibility(View.GONE);
+                                        llProduced.setVisibility(View.GONE);
+                                    }
+                                }
+                            })
+                            .setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं"
+                                    : "No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // if this button is clicked, just close
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alertnew = builder1.create();
+                    alertnew.show();
+
+                }
+            });
+
+            arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
+            return arg1;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to be Bind Data in produced list view">
+    public static class ProducedViewHolder {
+        TextView tvId, tvName, tvQty;
+        Button btnDelete;
+    }
+
+    public class CustomAdapterProduced extends BaseAdapter {
+        private Context docContext;
+        private LayoutInflater mInflater;
+
+        public CustomAdapterProduced(Context context, ArrayList<HashMap<String, String>> lvList) {
+            this.docContext = context;
+            mInflater = LayoutInflater.from(docContext);
+            listProd = lvList;
+        }
+
+        @Override
+        public int getCount() {
+            return listProd.size();
+        }
+
+        @Override
+        public Object getItem(int arg0) {
+            return listProd.get(arg0);
+        }
+
+        @Override
+        public long getItemId(int arg0) {
+            return arg0;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+
+            return getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+
+            return position;
+        }
+
+        @Override
+        public View getView(final int arg0, View arg1, ViewGroup arg2) {
+
+
+            final ProducedViewHolder holder;
+            if (arg1 == null) {
+                arg1 = mInflater.inflate(R.layout.list_produced_items, null);
+                holder = new ProducedViewHolder();
+
+                holder.tvName = (TextView) arg1.findViewById(R.id.tvName);
+                holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
+                holder.tvQty = (TextView) arg1.findViewById(R.id.tvQty);
+                holder.btnDelete = (Button) arg1.findViewById(R.id.btnDelete);
+                arg1.setTag(holder);
+
+            } else {
+                holder = (ProducedViewHolder) arg1.getTag();
+            }
+            holder.tvId.setText(listProd.get(arg0).get("Id"));
+            holder.tvName.setText(listProd.get(arg0).get("Name"));
+            holder.tvQty.setText(listProd.get(arg0).get("Quantity"));
+
+            holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                    builder1.setTitle(lang.equalsIgnoreCase("hi") ? "उत्पादित वस्तु को हटाएं" : "Delete Produced Item");
+                    builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप इस उत्पादित वस्तु को हटाना चाहते हैं" : "Are you sure you want to delete this produced item?");
+                    builder1.setCancelable(true);
+                    builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    db.open();
+                                    db.deleteTempProduction(holder.tvId.getText().toString());
+                                    db.close();
+                                    common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित वस्तु सफलतापूर्वक हटा दिया गया" : "Produced item deleted successfully.");
+                                    wordListProd = new ArrayList<HashMap<String, String>>();
+                                    db.openR();
+                                    wordListProd = db.getTempProduced();
+                                    prodlistSize = wordListProd.size();
+                                    if (prodlistSize != 0) {
+                                        listProduced.setAdapter(new CustomAdapterProduced(mContext, wordListProd));
+
+                                        ViewGroup.LayoutParams params = listProduced.getLayoutParams();
+                                        listProduced.setLayoutParams(params);
+                                        listProduced.requestLayout();
+                                        tvProdEmpty.setVisibility(View.GONE);
+                                        tableGridHeadProduced.setVisibility(View.VISIBLE);
+                                        btnSubmit.setVisibility(View.VISIBLE);
+                                    } else {
+                                        listProduced.setAdapter(null);
+                                        tvProdEmpty.setVisibility(View.VISIBLE);
+                                        tableGridHeadProduced.setVisibility(View.GONE);
+                                        btnSubmit.setVisibility(View.GONE);
+                                    }
+                                }
+                            })
+                            .setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं"
+                                    : "No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int id) {
+                                    // if this button is clicked, just close
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alertnew = builder1.create();
+                    alertnew.show();
+
+                }
+            });
+
+            arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
+            return arg1;
+        }
+    }
+    //</editor-fold>
+
 }
