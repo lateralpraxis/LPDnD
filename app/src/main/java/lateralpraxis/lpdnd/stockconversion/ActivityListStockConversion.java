@@ -120,11 +120,16 @@ public class ActivityListStockConversion extends Activity {
             //On click of view delivery button
             @Override
             public void onClick(View arg0) {
-               Intent intent = new Intent(ActivityListStockConversion.this,
+               /*Intent intent = new Intent(ActivityListStockConversion.this,
                         ActivityCreateStockConversion.class);
                 intent.putExtra("UniqueId", UUID.randomUUID().toString());
                 startActivity(intent);
-                finish();
+                finish();*/
+               if(common.isConnected())
+               {
+                   AsyncPendingDeliveryStatusWSCall task= new AsyncPendingDeliveryStatusWSCall();
+                   task.execute();
+               }
             }
         });
         //</editor-fold>
@@ -382,4 +387,79 @@ public class ActivityListStockConversion extends Activity {
         }
     }
     //</editor-fold>
+
+    private class AsyncPendingDeliveryStatusWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityListStockConversion.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String[] name = { "action", "userId", "role" };
+                String[] value = { "CheckPendingDelivery", userId, "Customer" };
+                responseJSON = "";
+                // Call method of web service to download Reatil Outlet Inventory from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        // After execution of web service to download Retail Outlet Inventory
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    db.open();
+                    db.DeleteMasterData("DeliveryConfirmStatus");
+                    String status="";
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        db.Insert_DeliveryConfirmStatus(jsonArray.getJSONObject(i)
+                                .getString("A"));
+                        status=jsonArray.getJSONObject(i).getString("A");
+                    }
+                    db.close();
+                    if(status.equalsIgnoreCase("0"))
+                    {
+                        Intent intent = new Intent(ActivityListStockConversion.this,
+                                ActivityCreateStockConversion.class);
+                        intent.putExtra("UniqueId", UUID.randomUUID().toString());
+                        startActivity(intent);
+                        finish();
+                    }
+                    else
+                    {
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए स्टॉक रूपांतरण की अनुमति नहीं है।":"Deliveries are pending for confirmation hence stock conversion is not allowed.");
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityListStockConversion.this, result, false);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityListStockConversion.this,
+                        "Pending Delivery Status Downloading failed: "
+                                + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Pending Delivery Status..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
 }
