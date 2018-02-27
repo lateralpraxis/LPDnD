@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="lateralpraxis.lpdnd.stockconversion.ActivityStockConversionDetail">
+
+    <TextView
+        style="@style/style_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="@string/label_StockConversion" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:text="@string/label_code"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCode"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:weightSum="1">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:text="@string/label_date"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/style_sectionHead"
+                android:paddingLeft="4dp"
+                android:paddingStart="4dp"
+                android:text="@string/label_Consumed" />
+
+            <TableLayout
+                android:id="@+id/tableGridHeadConsumed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:id="@+id/tableHeaderDet"
+                    style="@style/style_gridheader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".7"
+                        android:paddingLeft="2dp"
+                        android:paddingStart="2dp"
+                        android:text="@string/label_NameReport"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="end"
+                        android:paddingEnd="2dp"
+                        android:paddingRight="2dp"
+                        android:text="@string/label_quantity"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+            </TableLayout>
+
+            <lateralpraxis.lpdnd.NonScrollableListView
+                android:id="@+id/listConsumed"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/black"
+                android:dividerHeight="1sp" />
+
+            <TextView
+                style="@style/style_sectionHead"
+                android:paddingLeft="4dp"
+                android:paddingStart="4dp"
+                android:text="@string/label_Produced" />
+
+            <TableLayout
+                android:id="@+id/tableGridHeadProduced"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    style="@style/style_gridheader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5.0dip">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".7"
+                        android:paddingLeft="2dp"
+                        android:paddingStart="2dp"
+                        android:text="@string/label_NameReport"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:gravity="end"
+                        android:paddingEnd="2dp"
+                        android:paddingRight="2dp"
+                        android:text="@string/label_quantity"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </TableRow>
+            </TableLayout>
+
+            <lateralpraxis.lpdnd.NonScrollableListView
+                android:id="@+id/listProduced"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="@color/black"
+                android:dividerHeight="1sp" />
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -423,6 +423,7 @@ public class ActivityCreateStockConversion extends Activity {
         inflater.inflate(R.menu.menu_home, menu);
         return true;
     }
+    //</editor-fold>
 
     //<editor-fold desc="Code to be executed on Action Bar Menu Item">
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -476,7 +477,7 @@ public class ActivityCreateStockConversion extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog,
                                         int id) {
-                        Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                        Intent i = new Intent(ActivityCreateStockConversion.this, ActivityListStockConversion.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
                         finish();
@@ -494,13 +495,13 @@ public class ActivityCreateStockConversion extends Activity {
         alertnew.show();
 
     }
+    //</editor-fold>
 
     //<editor-fold desc="Code to be Bind Data in consumed list view">
     public static class ViewHolder {
         TextView tvId, tvName, tvQty;
         Button btnDelete;
     }
-    //</editor-fold>
 
     //<editor-fold desc="Code to be Bind Data in produced list view">
     public static class ProducedViewHolder {
@@ -623,7 +624,6 @@ public class ActivityCreateStockConversion extends Activity {
             return arg1;
         }
     }
-    //</editor-fold>
 
     public class CustomAdapterProduced extends BaseAdapter {
         private Context docContext;
@@ -741,6 +741,7 @@ public class ActivityCreateStockConversion extends Activity {
     }
     //</editor-fold>
 
+
     //<editor-fold desc="Async Method to Post Outlet Conversion Details">
     private class AsyncOutletConversionWSCall extends AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -846,7 +847,7 @@ public class ActivityCreateStockConversion extends Activity {
     }
     //</editor-fold>
 
-
+    //<editor-fold desc="Code to fetch Updated Invetory">
     private class AsyncRetailOutletInventoryWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -855,12 +856,12 @@ public class ActivityCreateStockConversion extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String userId = "",userRole="";
+                String userId = "", userRole = "";
                 HashMap<String, String> user = session.getLoginUserDetails();
                 userId = user.get(UserSessionManager.KEY_ID);
                 userRole = user.get(UserSessionManager.KEY_ROLES);
-                String[] name = { "action", "userId", "role" };
-                String[] value = { "ReadOutletInventory", userId, userRole };
+                String[] name = {"action", "userId", "role"};
+                String[] value = {"ReadOutletInventory", userId, userRole};
                 responseJSON = "";
                 // Call method of web service to download Reatil Outlet Inventory from
                 // server
@@ -917,4 +918,5 @@ public class ActivityCreateStockConversion extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 }

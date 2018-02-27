@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -80,6 +81,7 @@ public class ActivityListStockConversion extends Activity {
             };
     //</editor-fold>
 
+    //<editor-fold desc="Code to be executed on On Create Method">
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -149,7 +151,19 @@ public class ActivityListStockConversion extends Activity {
             }
         });
         //</editor-fold>
+
+        //<editor-fold desc="Code to be executed on click of List View">
+        listConvert.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> lv, View item, int position, long id) {
+                Intent intent = new Intent(ActivityListStockConversion.this, ActivityStockConversionDetail.class);
+                intent.putExtra("Id", String.valueOf(((TextView) item.findViewById(R.id.tvId)).getText().toString()));
+                startActivity(intent);
+                finish();
+            }
+        });
+        //</editor-fold>
     }
+    //</editor-fold>
 
 
     //<editor-fold desc="Methods to Display Selected Date in TextView">
@@ -219,7 +233,7 @@ public class ActivityListStockConversion extends Activity {
 
     //<editor-fold desc="Code to be Bind Data in list view">
     public static class ViewHolder {
-        TextView tvCode, tvDate;
+        TextView tvCode, tvDate,tvId;
     }
 
     public class CustomAdapter extends BaseAdapter {
@@ -267,7 +281,7 @@ public class ActivityListStockConversion extends Activity {
             if (arg1 == null) {
                 arg1 = mInflater.inflate(R.layout.list_stock_conversion, null);
                 holder = new ViewHolder();
-
+                holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
                 holder.tvCode = (TextView) arg1.findViewById(R.id.tvCode);
                 holder.tvDate = (TextView) arg1.findViewById(R.id.tvDate);
 
@@ -277,7 +291,7 @@ public class ActivityListStockConversion extends Activity {
             } else {
                 holder = (ViewHolder) arg1.getTag();
             }
-
+            holder.tvId.setText(list.get(arg0).get("Id"));
             holder.tvCode.setText(list.get(arg0).get("Code"));
             holder.tvDate.setText(common.convertToDisplayDateFormat(list.get(arg0).get("Date")));
 
@@ -323,10 +337,12 @@ public class ActivityListStockConversion extends Activity {
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); ++i) {
                             map = new HashMap<String, String>();
-                            map.put("Code", jsonArray.getJSONObject(i)
+                            map.put("Id", jsonArray.getJSONObject(i)
                                     .getString("A"));
-                            map.put("Date", jsonArray.getJSONObject(i)
+                            map.put("Code", jsonArray.getJSONObject(i)
                                     .getString("B"));
+                            map.put("Date", jsonArray.getJSONObject(i)
+                                    .getString("C"));
                             wordList.add(map);
                         }
 
