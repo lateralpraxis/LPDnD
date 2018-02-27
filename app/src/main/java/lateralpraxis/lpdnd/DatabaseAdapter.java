@@ -93,7 +93,8 @@ public class DatabaseAdapter {
             OutletConversionProducedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProducedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT,SKUId TEXT, Quantity TEXT);",
             OutletConversion_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversion(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,CustomerId TEXT, AndroidDate TEXT, IsSync TEXT);",
             OutletConversionConsumed_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumed(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
-            OutletConversionProduced_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProduced(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,SKUId TEXT, Quantity TEXT);";
+            OutletConversionProduced_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProduced(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,SKUId TEXT, Quantity TEXT);",
+    DeliveryConfirmStatus_CREATE = "CREATE TABLE IF NOT EXISTS DeliveryConfirmStatus(Status TEXT);";
     // Context of the application using the database.
     private final Context context;
 
@@ -317,6 +318,7 @@ public class DatabaseAdapter {
                     selectQuery = "SELECT Id||'~'||SKU, Name FROM SKUMaster ORDER BY Name COLLATE NOCASE ASC";
                 else
                     selectQuery = "SELECT Id||'~'||SKU, NameLocal FROM SKUMaster ORDER BY Name COLLATE NOCASE ASC";
+                break;
             case "skuinv":
                 if (userlang.equalsIgnoreCase("en"))
                     selectQuery = "SELECT sm.Id||'~'||sm.SKU, sm.Name FROM SKUMaster sm,OutletInventory inv WHERE sm.Id = inv.SKUId AND inv.Quantity>0 ORDER BY sm.Name COLLATE NOCASE ASC";
@@ -3118,6 +3120,23 @@ public class DatabaseAdapter {
         }
         cursor.close();
         return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert pending delivery status">
+    public String Insert_DeliveryConfirmStatus(String status) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Status", status);
+
+            db.insert("DeliveryConfirmStatus", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            //e.printStackTrace();
+            return null;
+        }
     }
     //</editor-fold>
 }

@@ -816,12 +816,18 @@ public class ActivityCreateStockConversion extends Activity {
                         //<editor-fold desc="Code to Delete Data from Temporary Table">
                         db.open();
                         db.DeleteTempConversion();
+                        db.DeleteMasterData("OutletInventory");
                         db.close();
                         //</editor-fold>
-                        if (common.isConnected()) {
+                     /*   if (common.isConnected()) {
                             AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
                             task.execute();
-                        }
+                        }*/
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "स्टॉक कनवर्ज़न सफलतापूर्वक सहेजा गया" : "Stock Conversion saved successfully.");
+                        Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
                     }
 
                 } else {
