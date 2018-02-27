@@ -12,7 +12,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,6 +58,7 @@ import android.widget.TextView;
 import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
 import lateralpraxis.lpdnd.primaryreceipt.ActivityListPrimaryReceipt;
 import lateralpraxis.lpdnd.stockconversion.ActivityCreateStockConversion;
+import lateralpraxis.lpdnd.stockconversion.ActivityListStockConversion;
 
 public class ActivityHomeScreen extends Activity {
 
@@ -378,9 +378,7 @@ public class ActivityHomeScreen extends Activity {
 				btn.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						intent = new Intent(context,
-								ActivityCreateStockConversion.class);
-						intent.putExtra("UniqueId", UUID.randomUUID().toString());
+						intent = new Intent(context,ActivityListStockConversion.class);
 						startActivity(intent);
 						finish();
 					}
