@@ -3,12 +3,14 @@ package lateralpraxis.lpdnd.stockconversion;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -32,6 +34,10 @@ import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,14 +54,15 @@ import lateralpraxis.lpdnd.types.CustomType;
 public class ActivityCreateStockConversion extends Activity {
 
     private final Context mContext = this;
+
     //<editor-fold desc="Code for class declaration">
     DatabaseAdapter db;
     Common common;
     String lang = "en";
     String type = "Raw";
+    String responseJSON, sendJSon;
     private UserSessionManager session;
     //</editor-fold>
-
     //<editor-fold desc="Code for Variable Declaration">
     private ArrayList<HashMap<String, String>> wordListCons = null;
     private ArrayList<HashMap<String, String>> listCons;
@@ -64,6 +71,7 @@ public class ActivityCreateStockConversion extends Activity {
     private ArrayList<HashMap<String, String>> wordListProd = null;
     private ArrayList<HashMap<String, String>> listProd;
     private int prodlistSize = 0;
+    private String uniqueId = "";
     //</editor-fold>
 
     //<editor-fold desc="Code for Control Declaration">
@@ -72,7 +80,7 @@ public class ActivityCreateStockConversion extends Activity {
     private Spinner spRawMaterial, spSKU, spProdSKU;
     private LinearLayout llRawMaterial, llSKU, llProduced;
     private EditText etConsumedQty, etProducedQty;
-    private Button btnAddConsumed, btnAddProduced,btnSubmit;
+    private Button btnAddConsumed, btnAddProduced, btnSubmit;
     private TextView tvProdEmpty, tvConsEmpty, tvInventory;
     private ListView listConsumed, listProduced;
     private TableLayout tableGridHeadConsumed, tableGridHeadProduced;
@@ -99,6 +107,13 @@ public class ActivityCreateStockConversion extends Activity {
         db.open();
         db.DeleteTempConversion();
         db.close();
+        //</editor-fold>
+
+        //<editor-fold desc="Code to set Unique Id">
+        Bundle extras = this.getIntent().getExtras();
+        if (extras != null) {
+            uniqueId = extras.getString("UniqueId");
+        }
         //</editor-fold>
 
         //<editor-fold desc="Code to Set Language">
@@ -358,6 +373,32 @@ public class ActivityCreateStockConversion extends Activity {
             @Override
             public void onClick(View arg0) {
 
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
+                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक कन्वर्सन सुरक्षित करना चाहते हैं?" : "Are you sure, you want to save stock conversion transaction?");
+                builder1.setCancelable(true);
+                builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                if (common.isConnected()) {
+                                    AsyncOutletConversionWSCall task = new AsyncOutletConversionWSCall();
+                                    task.execute();
+                                }
+                            }
+                        }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                // if this button is clicked, just close
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertnew = builder1.create();
+                alertnew.show();
+
             }
         });
         //</editor-fold>
@@ -375,11 +416,98 @@ public class ActivityCreateStockConversion extends Activity {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to Set Home Button in Action Bar">
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    //<editor-fold desc="Code to be executed on Action Bar Menu Item">
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
+                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
+                builder1.setCancelable(true);
+                builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(i);
+                                finish();
+                            }
+                        }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int id) {
+                                // if this button is clicked, just close
+                                dialog.cancel();
+                            }
+                        });
+                AlertDialog alertnew = builder1.create();
+                alertnew.show();
+                return true;
+
+            case R.id.action_go_to_home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to b executed on Back Press">
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+        builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
+        builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
+        builder1.setCancelable(true);
+        builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+                        Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
+                    }
+                }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog,
+                                        int id) {
+                        // if this button is clicked, just close
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alertnew = builder1.create();
+        alertnew.show();
+
+    }
+
     //<editor-fold desc="Code to be Bind Data in consumed list view">
     public static class ViewHolder {
         TextView tvId, tvName, tvQty;
         Button btnDelete;
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to be Bind Data in produced list view">
+    public static class ProducedViewHolder {
+        TextView tvId, tvName, tvQty;
+        Button btnDelete;
+    }
+    //</editor-fold>
 
     public class CustomAdapter extends BaseAdapter {
         private Context docContext;
@@ -497,12 +625,6 @@ public class ActivityCreateStockConversion extends Activity {
     }
     //</editor-fold>
 
-    //<editor-fold desc="Code to be Bind Data in produced list view">
-    public static class ProducedViewHolder {
-        TextView tvId, tvName, tvQty;
-        Button btnDelete;
-    }
-
     public class CustomAdapterProduced extends BaseAdapter {
         private Context docContext;
         private LayoutInflater mInflater;
@@ -619,86 +741,180 @@ public class ActivityCreateStockConversion extends Activity {
     }
     //</editor-fold>
 
-    //<editor-fold desc="Code to Set Home Button in Action Bar">
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_home, menu);
-        return true;
-    }
-    //</editor-fold>
+    //<editor-fold desc="Async Method to Post Outlet Conversion Details">
+    private class AsyncOutletConversionWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityCreateStockConversion.this);
 
-    //<editor-fold desc="Code to be executed on Action Bar Menu Item">
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-                builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(i);
-                                finish();
-                            }
-                        }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                // if this button is clicked, just close
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alertnew = builder1.create();
-                alertnew.show();
-                return true;
+        @Override
+        protected String doInBackground(String... params) {
 
-            case R.id.action_go_to_home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonMaster = new JSONObject();
+
+                String customerId = "";
+                HashMap<String, String> user = session.getLoginUserDetails();
+                customerId = user.get(UserSessionManager.KEY_ID);
+                JSONArray array = new JSONArray();
+                // To make json string to post delivery
+
+                JSONObject jsonins = new JSONObject();
+                jsonins.put("UniqueId", uniqueId);
+                jsonins.put("CustomerId", customerId);
+                jsonins.put("ipAddress", common.getDeviceIPAddress(true));
+                jsonins.put("Machine", common.getIMEI());
+                jsonins.put("CreateBy", customerId);
+                array.put(jsonins);
+                jsonMaster.put("Master", array);
+
+                JSONObject jsonDetails = new JSONObject();
+                // To get Conversion details from database
+                db.open();
+                ArrayList<HashMap<String, String>> insdet = db.getConversionForSync();
+                db.close();
+                if (insdet != null && insdet.size() > 0) {
+
+                    // To make json string to post delivery details
+                    JSONArray arraydet = new JSONArray();
+                    for (HashMap<String, String> insd : insdet) {
+                        JSONObject jsondet = new JSONObject();
+                        jsondet.put("MaterialId", insd.get("RawMaterialId"));
+                        jsondet.put("SkuId", insd.get("SkuId"));
+                        jsondet.put("Quantity", insd.get("Quantity"));
+                        jsondet.put("SkuType", insd.get("SKUType"));
+                        arraydet.put(jsondet);
+                    }
+                    jsonDetails.put("Detail", arraydet);
+                }
+                sendJSon = jsonMaster + "~" + jsonDetails;
+                // To invoke json web service to create delivery
+                responseJSON = common.invokeJSONWS(sendJSon, "json",
+                        "InsertOutletStockConversion", common.url);
+
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                db.close();
+            }
+
+        }
+
+        // After execution of json web service to create delivery
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        //<editor-fold desc="Code to Delete Data from Temporary Table">
+                        db.open();
+                        db.DeleteTempConversion();
+                        db.close();
+                        //</editor-fold>
+                        if (common.isConnected()) {
+                            AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+                            task.execute();
+                        }
+                    }
+
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showToast("Error: " + result);
+                }
+
+            } catch (Exception e) {
+
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Stock Conversion...");
+            Dialog.setCancelable(false);
+            Dialog.show();
         }
     }
     //</editor-fold>
 
-    //<editor-fold desc="Code to b executed on Back Press">
-    @Override
-    public void onBackPressed() {
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-        builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-        builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
-        builder1.setCancelable(true);
-        builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int id) {
-                        Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
-                        startActivity(i);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    }
-                }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int id) {
-                        // if this button is clicked, just close
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertnew = builder1.create();
-        alertnew.show();
 
+    private class AsyncRetailOutletInventoryWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityCreateStockConversion.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String userId = "",userRole="";
+                HashMap<String, String> user = session.getLoginUserDetails();
+                userId = user.get(UserSessionManager.KEY_ID);
+                userRole = user.get(UserSessionManager.KEY_ROLES);
+                String[] name = { "action", "userId", "role" };
+                String[] value = { "ReadOutletInventory", userId, userRole };
+                responseJSON = "";
+                // Call method of web service to download Reatil Outlet Inventory from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        // After execution of web service to download Retail Outlet Inventory
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    db.open();
+                    db.DeleteMasterData("OutletInventory");
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        db.Insert_OutletInventory(jsonArray.getJSONObject(i)
+                                .getString("A"), jsonArray.getJSONObject(i)
+                                .getString("B"), jsonArray.getJSONObject(i)
+                                .getString("C"));
+                    }
+                    db.close();
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "स्टॉक कनवर्ज़न सफलतापूर्वक सहेजा गया" : "Stock Conversion saved successfully.");
+                    Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityCreateStockConversion.this, result, false);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityCreateStockConversion.this,
+                        "Inventory Downloading failed: "
+                                + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Inventory..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
     }
-    //</editor-fold>
-
 }

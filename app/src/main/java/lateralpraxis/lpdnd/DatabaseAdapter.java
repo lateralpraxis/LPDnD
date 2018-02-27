@@ -3101,4 +3101,23 @@ public class DatabaseAdapter {
         db.execSQL("Delete FROM OutletConversionProducedTemp WHERE Id ='"+id+"';");
     }
     //</editor-fold>
+
+    //<editor-fold desc="Method to Fetch Data For Synchronizing Stock Conversion">
+    public ArrayList<HashMap<String, String>> getConversionForSync() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+            selectQuery = "SELECT MaterialId, SKUId, Quantity,'C' FROM OutletConversionConsumedTemp UNION ALL SELECT 0, SKUId, Quantity,'P'  FROM OutletConversionProducedTemp";
+
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("RawMaterialId", cursor.getString(0));
+            map.put("SkuId", cursor.getString(1));
+            map.put("Quantity", cursor.getString(2));
+            map.put("SKUType", cursor.getString(3));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
 }
