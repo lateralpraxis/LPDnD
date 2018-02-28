@@ -1,4 +1,4 @@
-package lateralpraxis.lpdnd.stockconversion;
+package lateralpraxis.lpdnd.StockAdjustment;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -50,7 +50,7 @@ import lateralpraxis.lpdnd.R;
 import lateralpraxis.lpdnd.UserSessionManager;
 import lateralpraxis.lpdnd.types.CustomType;
 
-public class ActivityCreateStockConversion extends Activity {
+public class StockAdjustmentList extends Activity {
 
     private final Context mContext = this;
 
@@ -436,7 +436,7 @@ public class ActivityCreateStockConversion extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                                Intent i = new Intent(StockAdjustmentList.this, ActivityHomeScreen.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
                                 finish();
@@ -475,7 +475,7 @@ public class ActivityCreateStockConversion extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog,
                                         int id) {
-                        Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                        Intent i = new Intent(StockAdjustmentList.this, ActivityHomeScreen.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
                         finish();
@@ -743,7 +743,7 @@ public class ActivityCreateStockConversion extends Activity {
     //<editor-fold desc="Async Method to Post Outlet Conversion Details">
     private class AsyncOutletConversionWSCall extends AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
-                ActivityCreateStockConversion.this);
+                StockAdjustmentList.this);
 
         @Override
         protected String doInBackground(String... params) {
@@ -817,7 +817,7 @@ public class ActivityCreateStockConversion extends Activity {
                         db.close();
                         //</editor-fold>
                         common.showToast(lang.equalsIgnoreCase("hi") ? "स्टॉक कनवर्ज़न सफलतापूर्वक सहेजा गया" : "Stock Conversion saved successfully.");
-                        Intent i = new Intent(ActivityCreateStockConversion.this, ActivityHomeScreen.class);
+                        Intent i = new Intent(StockAdjustmentList.this, ActivityHomeScreen.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
                         finish();

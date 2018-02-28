@@ -12,6 +12,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -379,6 +380,7 @@ public class ActivityHomeScreen extends Activity {
 					public void onClick(View v) {
 						intent = new Intent(context,
 								ActivityCreateStockConversion.class);
+						intent.putExtra("UniqueId", UUID.randomUUID().toString());
 						startActivity(intent);
 						finish();
 					}

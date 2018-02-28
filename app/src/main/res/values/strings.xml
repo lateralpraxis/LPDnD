@@ -325,4 +325,13 @@
     <string name="create_sale">Create Sale</string>
 
     <!-- End of Outlet Sale  -->
+
+
+    <!-- Start of Stock Adjustment Variables-->
+    <string name="label_StockAdjustment">Stock Adjustment</string>
+    <string name="label_Remarks">Remarks</string>
+    <string name="label_RemarksMandatory">Remarks *</string>
+    <string name="hintRemarks">Enter Remarks</string>
+
+    <!-- End of Stock Adjustment Variables-->
 </resources>
