@@ -1631,6 +1631,21 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to Updated Outlet Payment Receipt IsSYnc Flag">
+    public String Update_PaymentReceiptIsSync() {
+        try {
+            String query = "UPDATE OutletPaymentReceipt SET IsSync = '1'";
+            db.execSQL(query);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+
     public void DeleteDemand(String orderId) {
         db.execSQL("DELETE FROM Demand WHERE Id = '" + orderId + "'");
         db.execSQL("DELETE FROM DemandDetails WHERE DemandId = '" + orderId
@@ -3241,7 +3256,6 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
-
     //<editor-fold desc="Method to Fetch Outlet Payment Receipts">
     public ArrayList<HashMap<String, String>> getOutletPayments() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
@@ -3252,6 +3266,25 @@ public class DatabaseAdapter {
             map = new HashMap<String, String>();
             map.put("Date", cursor.getString(0));
             map.put("Amount", cursor.getString(1));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Method to fetch UnSync Outlet Payments">
+    public ArrayList<HashMap<String, String>> getUnSyncOutletPayment() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+
+        selectQuery = "SELECT UniqueId, CustomerId,  Amount, AndroidDate FROM OutletPaymentReceipt WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("CustomerId", cursor.getString(1));
+            map.put("Amount", cursor.getString(2));
+            map.put("AndroidDate", cursor.getString(3));
             wordList.add(map);
         }
         cursor.close();

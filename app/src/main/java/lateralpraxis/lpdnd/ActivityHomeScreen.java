@@ -2452,8 +2452,7 @@ public class ActivityHomeScreen extends Activity {
                     dba.open();
                     dba.DeleteMasterData("OutletLedger");
                     for (int i = 0; i < jsonArray.length(); ++i) {
-                        dba.Insert_OutletLedger(jsonArray.getJSONObject(i)
-                                .getString("A"), jsonArray.getJSONObject(i)
+                        dba.Insert_OutletLedger(userId, jsonArray.getJSONObject(i)
                                 .getString("B"));
                     }
                     dba.close();
@@ -3351,7 +3350,7 @@ public class ActivityHomeScreen extends Activity {
     }
     //</editor-fold>
 
-    // Class to handle product web services call as separate thread
+    //<editor-fold desc="Class to handle product web services call as separate thread">
     private class AsyncCashDepositWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -3461,7 +3460,7 @@ public class ActivityHomeScreen extends Activity {
     }
     //</editor-fold>
 
-    // Class to handle complaint web service call as separate thread
+    //<editor-fold desc="Class to handle complaint web service call as separate thread">
     private class AsyncComplaintWSCall extends AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
                 ActivityHomeScreen.this);
@@ -3832,6 +3831,7 @@ public class ActivityHomeScreen extends Activity {
         }
 
     }
+    //</editor-fold>
 
     //<editor-fold desc="Async for Posting Primary Receipt for Retail Outlet">
     private class AsyncCustomerPrimaryReceiptWSCall extends AsyncTask<String, Void, String> {
@@ -3889,7 +3889,7 @@ public class ActivityHomeScreen extends Activity {
             }
         }
 
-        // After execution of json web service to create payment
+        // After execution of json web service to create Primary Receipt
         @Override
         protected void onPostExecute(String result) {
 
@@ -3902,8 +3902,8 @@ public class ActivityHomeScreen extends Activity {
                         dba.close();
                     }
                     if (common.isConnected()) {
-                        // call method of get customer json web service
-                        AsyncComplaintWSCall task = new AsyncComplaintWSCall();
+                        // call method of Sync Pending Outlet Payments
+                        AsyncCustomerPaymentsWSCall task = new AsyncCustomerPaymentsWSCall();
                         task.execute();
                     }
                 } else {
@@ -3929,6 +3929,102 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Async method for Posting Outlet Payment for Retail Outlet">
+    private class AsyncCustomerPaymentsWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Will contain the raw JSON response as a string.
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonPayment = new JSONObject();
+                dba.open();
+                // to get Primary Receipt from database
+                ArrayList<HashMap<String, String>> insmast = dba
+                        .getUnSyncOutletPayment();
+                dba.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to post payment
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("CustomerId", insp.get("CustomerId"));
+                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("TransactionDate", insp.get("AndroidDate"));
+                        jsonins.put("CreateBy", userId);
+                        jsonins.put("ipAddress",
+                                common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", common.getIMEI());
+                        array.put(jsonins);
+                    }
+                    jsonPayment.put("Payments", array);
+
+                    sendJSon = jsonPayment.toString();
+
+                    // To invoke json web service to create payment
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "InsertOutletPayment", common.url);
+                } else {
+                    return "No outlet payment pending to be send.";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                dba.close();
+            }
+        }
+
+        // After execution of json web service to create payment
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        dba.open();
+                        dba.Update_PaymentReceiptIsSync();
+                        dba.close();
+                    }
+                    if (common.isConnected()) {
+                        // call method of get customer json web service
+                        AsyncComplaintWSCall task = new AsyncComplaintWSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                    common.showToast("Error: " + result);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Unable to fetch response from server.", false);
+            }
+
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Outlet Payment...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Code to Validate Retail Outlet Customer">
     private class AsyncCustomerValidatePasswordWSCall extends
@@ -4110,4 +4206,5 @@ public class ActivityHomeScreen extends Activity {
         }
 
     }
+    //</editor-fold>
 }
