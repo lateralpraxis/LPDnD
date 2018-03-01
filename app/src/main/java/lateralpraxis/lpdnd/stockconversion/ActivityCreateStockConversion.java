@@ -194,9 +194,9 @@ public class ActivityCreateStockConversion extends Activity {
                                        int arg2, long arg3) {
                 etProducedQty.setText("");
                 db.open();
-                tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId().split("~")[0]));
+                tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
                 db.close();
-                if (((CustomType) spSKU.getSelectedItem()).getId().split("~")[1].equalsIgnoreCase("0")) {
+                if (((CustomType) spSKU.getSelectedItem()).getId().split("-")[1].equalsIgnoreCase("0")) {
                     etProducedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
                     etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 } else {
@@ -280,12 +280,12 @@ public class ActivityCreateStockConversion extends Activity {
                     common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा उपलब्ध मात्रा से अधिक नहीं हो सकती।" : "Consumed quantity cannot exceed available quantity.");
                 else {
                     db.openR();
-                    Boolean alreadyAdded = db.isConsumedAlreadyAdded(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0]);
+                    Boolean alreadyAdded = db.isConsumedAlreadyAdded(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("-")[0]);
                     if (alreadyAdded)
                         common.showToast(lang.equalsIgnoreCase("hi") ? "खपत आइटम पहले ही जोड़ दिया गया है।" : "Consumed item already added.");
                     else {
                         db.open();
-                        db.Insert_OutletConversionConsumedTemp(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0], etConsumedQty.getText().toString());
+                        db.Insert_OutletConversionConsumedTemp(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("-")[0], etConsumedQty.getText().toString());
                         db.close();
                         spRawMaterial.setSelection(0);
                         spSKU.setSelection(0);
@@ -429,6 +429,10 @@ public class ActivityCreateStockConversion extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.action_go_to_home:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                 builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
                 builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
@@ -454,10 +458,6 @@ public class ActivityCreateStockConversion extends Activity {
                         });
                 AlertDialog alertnew = builder1.create();
                 alertnew.show();
-                return true;
-
-            case R.id.action_go_to_home:
-                onBackPressed();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

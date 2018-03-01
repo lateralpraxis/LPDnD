@@ -323,6 +323,9 @@
     <string name="menu_outlet_sale">Sale</string>
     <string name="view_sale">View Sale</string>
     <string name="create_sale">Create Sale</string>
-
     <!-- End of Outlet Sale  -->
+
+    <!-- Start of Outlet Payment Variables-->
+
+    <!-- End of Outlet Payment Variables-->
 </resources>

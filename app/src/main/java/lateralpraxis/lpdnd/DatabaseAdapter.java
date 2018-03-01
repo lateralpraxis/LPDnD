@@ -94,7 +94,11 @@ public class DatabaseAdapter {
             OutletConversion_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversion(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,CustomerId TEXT, AndroidDate TEXT, IsSync TEXT);",
             OutletConversionConsumed_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumed(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
             OutletConversionProduced_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProduced(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,SKUId TEXT, Quantity TEXT);",
-    DeliveryConfirmStatus_CREATE = "CREATE TABLE IF NOT EXISTS DeliveryConfirmStatus(Status TEXT);";
+    DeliveryConfirmStatus_CREATE = "CREATE TABLE IF NOT EXISTS DeliveryConfirmStatus(Status TEXT);",
+            SKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS SKULiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
+            RawMaterialLiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialLiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
+            OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
+    OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);";
     // Context of the application using the database.
     private final Context context;
 
@@ -309,9 +313,9 @@ public class DatabaseAdapter {
                 break;
             case "rawmaterialinv":
                 if (userlang.equalsIgnoreCase("en"))
-                    selectQuery = "SELECT rm.Id, rm.Name||' '||rm.Uom FROM RawMaterialMaster rm,OutletInventory inv WHERE rm.Id = inv.RawMaterialId AND inv.Quantity>0 ORDER BY rm.Name COLLATE NOCASE ASC";
+                    selectQuery = "SELECT Id, Name FROM RawMaterialLiveInventory ORDER BY Name COLLATE NOCASE ASC";
                 else
-                    selectQuery = "SELECT rm.Id, rm.NameLocal||' '||rm.Uom FROM RawMaterialMaster rm,OutletInventory inv WHERE rm.Id = inv.RawMaterialId AND inv.Quantity>0 ORDER BY rm.Name COLLATE NOCASE ASC";
+                    selectQuery = "SELECT Id, Name FROM RawMaterialLiveInventory ORDER BY Name COLLATE NOCASE ASC";
                 break;
             case "sku":
                 if (userlang.equalsIgnoreCase("en"))
@@ -321,9 +325,9 @@ public class DatabaseAdapter {
                 break;
             case "skuinv":
                 if (userlang.equalsIgnoreCase("en"))
-                    selectQuery = "SELECT sm.Id||'~'||sm.SKU, sm.Name FROM SKUMaster sm,OutletInventory inv WHERE sm.Id = inv.SKUId AND inv.Quantity>0 ORDER BY sm.Name COLLATE NOCASE ASC";
+                    selectQuery = "SELECT Id, Name FROM SKULiveInventory ORDER BY Name COLLATE NOCASE ASC";
                 else
-                    selectQuery = "SELECT sm.Id||'~'||sm.SKU, sm.NameLocal FROM SKUMaster sm,OutletInventory inv WHERE sm.Id = inv.SKUId AND inv.Quantity>0  ORDER BY sm.Name COLLATE NOCASE ASC";
+                    selectQuery = "SELECT Id, Name FROM SKULiveInventory ORDER BY Name COLLATE NOCASE ASC";
                 break;
         }
         cursor = db.rawQuery(selectQuery, null);
@@ -335,7 +339,7 @@ public class DatabaseAdapter {
             else if (masterType.equalsIgnoreCase("sku"))
                 labels.add(new CustomType("0~0", "...Select SKU"));
             else if (masterType.equalsIgnoreCase("skuinv"))
-                labels.add(new CustomType("0~0", "...Select SKU"));
+                labels.add(new CustomType("0-0", "...Select SKU"));
             else
                 labels.add(new CustomType("0", "...Select"));
         } else {
@@ -346,7 +350,7 @@ public class DatabaseAdapter {
             else if (masterType.equalsIgnoreCase("sku"))
                 labels.add(new CustomType("0~0", "...एसकेयू चयन करें"));
             else if (masterType.equalsIgnoreCase("skuinv"))
-                labels.add(new CustomType("0~0", "...एसकेयू चयन करें"));
+                labels.add(new CustomType("0-0", "...एसकेयू चयन करें"));
             else
                 labels.add(new CustomType("0", "...चयन करें"));
         }
@@ -1671,6 +1675,9 @@ public class DatabaseAdapter {
             db.execSQL("DELETE FROM CustomerPaymentDetail;");
             db.execSQL("DELETE FROM ComplaintCategory;");
             db.execSQL("DELETE FROM Complaint;");
+
+            db.execSQL("DELETE FROM OutletPrimaryReceipt;");
+            db.execSQL("DELETE FROM OutletPaymentReceipt;");
             result = "success";
         } catch (Exception e) {
             e.printStackTrace();
@@ -1845,7 +1852,6 @@ public class DatabaseAdapter {
             return null;
         }
     }
-
 
 
     //<editor-fold desc="Code to insert Consumed Data in Temporary Table">
@@ -2037,7 +2043,7 @@ public class DatabaseAdapter {
     public boolean IslogoutAllowed() {
         boolean isRequired = true;
 
-        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt;
+        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment;
 
         selectQuery = "SELECT Id FROM Delivery WHERE IsSync = '0'";
         cursor = db.rawQuery(selectQuery, null);
@@ -2067,8 +2073,12 @@ public class DatabaseAdapter {
         cursor = db.rawQuery(selectQuery, null);
         countPrimaryReceipt = cursor.getCount();
 
+        selectQuery = "SELECT Id FROM OutletPaymentReceipt WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        countoutletPayment = cursor.getCount();
+
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment>0)
             isRequired = false;
 
         return isRequired;
@@ -2997,7 +3007,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Code to get SKU Inventory by SKU Id">
     public String getSkuInventory(String skuId) {
         String total = "";
-        selectQuery = "SELECT Quantity from OutletInventory WHERE SKUId=" + skuId + " AND RawMaterialId='0' ";
+        selectQuery = "SELECT Quantity from SKULiveInventory WHERE Id='" + skuId + "' ";
         cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
@@ -3012,7 +3022,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Code to get Raw Material Inventory by Raw Material Id">
     public String getRawMaterialInventory(String rawId) {
         String total = "";
-        selectQuery = "SELECT Quantity from OutletInventory WHERE RawMaterialId=" + rawId + " AND SKUId='0'  ";
+        selectQuery = "SELECT Quantity from RawMaterialLiveInventory WHERE Id=" + rawId + "  ";
         cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
@@ -3092,6 +3102,21 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to fetch current Credit Amount">
+    public String getCreditAmount(String userId) {
+        String creditAmount="0.00";
+        selectQuery = "SELECT Quantity FROM OutletLedger WHERE Id = '" + userId + "' ";
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                creditAmount = String.valueOf(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        return creditAmount;
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Code to delete consumption from temporary table by Id">
     public void deleteTempConsumption(String id) {
         db.execSQL("Delete FROM OutletConversionConsumedTemp WHERE Id ='"+id+"';");
@@ -3139,4 +3164,99 @@ public class DatabaseAdapter {
         }
     }
     //</editor-fold>
+
+    //<editor-fold desc="Code to insert Inventory Data in RawMaterialLiveInventory Table">
+    public String Insert_RawMaterialLiveInventory(String id, String name, String quantity) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+            newValues.put("Quantity", quantity);
+            db.insert("RawMaterialLiveInventory", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Inventory Data in SKULiveInventory Table">
+    public String Insert_SKULiveInventory(String id, String name, String quantity) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+            newValues.put("Quantity", quantity);
+            db.insert("SKULiveInventory", null, newValues);
+
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Credit Ledger Data in OutletLedger Table">
+    public String Insert_OutletLedger(String id, String quantity) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Quantity", quantity);
+            db.insert("OutletLedger", null, newValues);
+
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Outlet Payment Receipt Data in OutletPaymentReceipt Table">
+    public String Insert_OutletPaymentReceipt(String customerId, String amount,String uniqueId) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("CustomerId", customerId);
+            newValues.put("Amount", amount);
+            newValues.put("AndroidDate", getDateTime());
+            newValues.put("UniqueId", uniqueId);
+            db.insert("OutletPaymentReceipt", null, newValues);
+
+            db.execSQL("UPDATE OutletLedger SET Quantity = Quantity + " + Double.parseDouble(amount) + " WHERE Id = '" + customerId + "' ");
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+
+    //<editor-fold desc="Method to Fetch Outlet Payment Receipts">
+    public ArrayList<HashMap<String, String>> getOutletPayments() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+            selectQuery = "SELECT AndroidDate, Amount FROM OutletPaymentReceipt ORDER BY AndroidDate DESC";
+
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Date", cursor.getString(0));
+            map.put("Amount", cursor.getString(1));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
 }

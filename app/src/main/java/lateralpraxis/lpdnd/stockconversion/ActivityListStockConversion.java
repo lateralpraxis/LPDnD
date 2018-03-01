@@ -388,6 +388,7 @@ public class ActivityListStockConversion extends Activity {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to Download Pending Delivery Status">
     private class AsyncPendingDeliveryStatusWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -430,11 +431,10 @@ public class ActivityListStockConversion extends Activity {
                     db.close();
                     if(status.equalsIgnoreCase("0"))
                     {
-                        Intent intent = new Intent(ActivityListStockConversion.this,
-                                ActivityCreateStockConversion.class);
-                        intent.putExtra("UniqueId", UUID.randomUUID().toString());
-                        startActivity(intent);
-                        finish();
+                        if(common.isConnected()) {
+                            AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
+                            task.execute();
+                        }
                     }
                     else
                     {
@@ -462,4 +462,105 @@ public class ActivityListStockConversion extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to Fetch LiveInventory Fro Retail Outlet">
+    private class AsyncLiveInventoryDetailWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityListStockConversion.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+                String[] name = {"action","lang","customerId" };
+                String[] value = { "GetProductRawMaterial",lang,userId };
+                // Call method of web service to Read Conversion Details
+                responseJSON = "";
+                responseJSON = common.CallJsonWS(name, value,"ReadRetailOutletLiveInventory", common.url);
+                return "";
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                return "ERROR: " + e.getMessage();
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    String data="";
+                    // To display message after response from server
+                    JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
+                    JSONArray jsonRaw = new JSONArray(responseJSON.split("~")[1]);
+                    if(jsonSKU.length() > 0 || jsonRaw.length() > 0) {
+                        if (jsonSKU.length() > 0) {
+                            db.open();
+                            db.DeleteMasterData("SKULiveInventory");
+                            db.close();
+                            if (jsonSKU.length() > 0) {
+                                for (int i = 0; i < jsonSKU.length(); ++i) {
+                                    db.open();
+                                    db.Insert_SKULiveInventory(jsonSKU.getJSONObject(i)
+                                            .getString("A"), jsonSKU.getJSONObject(i)
+                                            .getString("B"), jsonSKU.getJSONObject(i)
+                                            .getString("C").replace(".00", ""));
+                                    db.close();
+
+                                }
+
+                            }
+                        }
+                        if (jsonRaw.length() > 0) {
+                            db.open();
+                            db.DeleteMasterData("RawMaterialLiveInventory");
+                            db.close();
+                            for (int i = 0; i < jsonRaw.length(); ++i) {
+                                db.open();
+                                db.Insert_RawMaterialLiveInventory(jsonRaw.getJSONObject(i)
+                                        .getString("A"), jsonRaw.getJSONObject(i)
+                                        .getString("B"), jsonRaw.getJSONObject(i)
+                                        .getString("C").replace(".00", ""));
+                                db.close();
+                            }
+
+                        }
+                        Intent intent = new Intent(ActivityListStockConversion.this,
+                                ActivityCreateStockConversion.class);
+                        intent.putExtra("UniqueId", UUID.randomUUID().toString());
+                        startActivity(intent);
+                        finish();
+                    }
+                     else {
+                        common.showToast("There is no data available for Inventory!");
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                common.showToast("Outlet Inventory Downloading failed: " + e.toString());
+                Intent intent = new Intent(mContext, ActivityListStockConversion.class);
+                startActivity(intent);
+                finish();
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Outlet Inventory..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
 }

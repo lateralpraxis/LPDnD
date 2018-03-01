@@ -423,7 +423,7 @@ public class ActivityPaymentOnly   extends Activity{
 					}
 					companyCount=db.GetCompanyCountByCustomer(String.valueOf(((CustomType)spCustomer.getSelectedItem()).getId()));
 					db.close();
-					paymentCount=paymentCount+1;
+
 				}
 			}
 		});

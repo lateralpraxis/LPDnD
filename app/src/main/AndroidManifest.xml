@@ -310,7 +310,18 @@
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:name=".stockconversion.ActivityStockConversionDetail"
+        <activity
+            android:name=".stockconversion.ActivityStockConversionDetail"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OutletPayment.ActivityListPayments"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".OutletPayment.ActivityCreatePayments"
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
