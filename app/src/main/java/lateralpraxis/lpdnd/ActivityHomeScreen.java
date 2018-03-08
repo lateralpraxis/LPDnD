@@ -58,6 +58,7 @@ import java.util.Locale;
 import lateralpraxis.lpdnd.ExpenseBooking.ActivityListBooking;
 import lateralpraxis.lpdnd.OutletPayment.ActivityListPayments;
 import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
+import lateralpraxis.lpdnd.StockAdjustment.StockAdjustmentList;
 import lateralpraxis.lpdnd.primaryreceipt.ActivityListPrimaryReceipt;
 import lateralpraxis.lpdnd.stockconversion.ActivityListStockConversion;
 
@@ -140,7 +141,7 @@ public class ActivityHomeScreen extends Activity {
 
             if (userRole.equalsIgnoreCase("Customer")) {
                 if (customerType.equalsIgnoreCase("Retail Outlet"))
-                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_stockconversion, R.layout.btn_outletpayment,R.layout.btn_expensebooking, R.layout.btn_customersync);
+                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_stockconversion,R.layout.btn_stockadjustment, R.layout.btn_outletpayment,R.layout.btn_expensebooking, R.layout.btn_customersync);
                 else
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand);
             } else if (userRole.contains("Route Officer")) {
@@ -428,6 +429,17 @@ public class ActivityHomeScreen extends Activity {
                     @Override
                     public void onClick(View v) {
                         intent = new Intent(context, ActivityListPayments.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                break;
+            case R.layout.btn_stockadjustment:
+                btn = (Button) btnLayout.findViewById(R.id.btnStockAdjustment);
+                btn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        intent = new Intent(context, StockAdjustmentList.class);
                         startActivity(intent);
                         finish();
                     }

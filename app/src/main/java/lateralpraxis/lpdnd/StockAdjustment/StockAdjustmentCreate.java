@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import lateralpraxis.lpdnd.ActivityDeleteDeliveryList;
 import lateralpraxis.lpdnd.ActivityDeleteDeliveryView;
@@ -65,11 +66,49 @@ public class StockAdjustmentCreate extends Activity {
     String type = "Raw";
     String responseJSON, sendJSon;
     private UserSessionManager session;
+
     //</editor-fold>
     //<editor-fold desc="Code for Variable Declaration">
     private ArrayList<HashMap<String, String>> wordListCons = null;
     private ArrayList<HashMap<String, String>> listCons;
-    private int conslistSize = 0;
+    final String Digits     = "(\\p{Digit}+)";
+    final String HexDigits  = "(\\p{XDigit}+)";
+    // an exponent is 'e' or 'E' followed by an optionally
+    // signed decimal integer.
+    final String Exp        = "[eE][+-]?"+Digits;
+    final String fpRegex    =
+            ("[\\x00-\\x20]*"+ // Optional leading "whitespace"
+                    "[+-]?(" +         // Optional sign character
+                    "NaN|" +           // "NaN" string
+                    "Infinity|" +      // "Infinity" string
+
+                    // A decimal floating-point string representing a finite positive
+                    // number without a leading sign has at most five basic pieces:
+                    // Digits . Digits ExponentPart FloatTypeSuffix
+                    //
+                    // Since this method allows integer-only strings as input
+                    // in addition to strings of floating-point literals, the
+                    // two sub-patterns below are simplifications of the grammar
+                    // productions from the Java Language Specification, 2nd
+                    // edition, section 3.10.2.
+
+                    // Digits ._opt Digits_opt ExponentPart_opt FloatTypeSuffix_opt
+                    "((("+Digits+"(\\.)?("+Digits+"?)("+Exp+")?)|"+
+
+                    // . Digits ExponentPart_opt FloatTypeSuffix_opt
+                    "(\\.("+Digits+")("+Exp+")?)|"+
+
+                    // Hexadecimal strings
+                    "((" +
+                    // 0[xX] HexDigits ._opt BinaryExponent FloatTypeSuffix_opt
+                    "(0[xX]" + HexDigits + "(\\.)?)|" +
+
+                    // 0[xX] HexDigits_opt . HexDigits BinaryExponent FloatTypeSuffix_opt
+                    "(0[xX]" + HexDigits + "?(\\.)" + HexDigits + ")" +
+
+                    ")[pP][+-]?" + Digits + "))" +
+                    "[fFdD]?))" +
+                    "[\\x00-\\x20]*");
 
     private ArrayList<HashMap<String, String>> wordListProd = null;
     private ArrayList<HashMap<String, String>> listProd;
@@ -80,13 +119,11 @@ public class StockAdjustmentCreate extends Activity {
     //<editor-fold desc="Code for Control Declaration">
     private RadioGroup RadioType;
     private RadioButton RadioRaw, RadioSKU;
-    private Spinner spRawMaterial, spSKU, spProdSKU;
-    private LinearLayout llRawMaterial, llSKU, llProduced;
+    private Spinner spRawMaterial, spSKU;
+    private LinearLayout llRawMaterial, llSKU;
     private EditText etAdjustedQty, etRemarks;
-    private Button btnAdd, btnAddProduced, btnSubmit;
-    private TextView tvProdEmpty, tvConsEmpty, tvInventory;
-    private ListView listConsumed, listProduced;
-    private TableLayout tableGridHeadConsumed, tableGridHeadProduced;
+    private Button btnAdd;
+    private TextView tvInventory, tvAvailable, tvAdjusted;
     //</editor-fold>
 
     //<editor-fold desc="Code to be executed on On Create Method">
@@ -135,6 +172,8 @@ public class StockAdjustmentCreate extends Activity {
         etRemarks= (EditText) findViewById(R.id.etRemarks);
         btnAdd = (Button) findViewById(R.id.btnAdd);
         tvInventory = (TextView) findViewById(R.id.tvInventory);
+        tvAvailable = (TextView) findViewById(R.id.tvAvailable);
+        tvAdjusted = (TextView) findViewById(R.id.tvAdjusted);
         //</editor-fold>
 
         //<editor-fold desc="Code to set Input Filter">
@@ -156,6 +195,8 @@ public class StockAdjustmentCreate extends Activity {
                 spRawMaterial.setSelection(0);
                 spSKU.setSelection(0);
                 etAdjustedQty.setText("");
+                etRemarks.setText("");
+                tvAdjusted.setText("");
                 if (index == 0) {
                     llRawMaterial.setVisibility(View.VISIBLE);
                     llSKU.setVisibility(View.GONE);
@@ -178,6 +219,7 @@ public class StockAdjustmentCreate extends Activity {
                                        int arg2, long arg3) {
                 db.open();
                 tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId().split("~")[0]));
+                tvAvailable.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId().split("~")[0]));
                 db.close();
             }
 
@@ -190,14 +232,36 @@ public class StockAdjustmentCreate extends Activity {
         });
         //</editor-fold>
 
+
+        //On change of Return Quantity
+        etAdjustedQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            public void onFocusChange(View v, boolean gainFocus) {
+                // onFocus
+                if (gainFocus) { }
+                // onBlur
+                else {
+                    if(etAdjustedQty.getText().toString().trim().length() > 0)
+                    {
+                        if(Double.valueOf(etAdjustedQty.getText().toString().trim()) > Double.valueOf(tvInventory.getText().toString().trim()))
+                            tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
+                                    Double.valueOf(tvInventory.getText().toString().trim())))) + "( Gain )");
+                        else
+                            tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(tvInventory.getText().toString().trim()) -
+                                    Double.valueOf(etAdjustedQty.getText().toString().trim())))) + "( Loss )");
+                    }
+                }
+            }
+        });
+
+
         //<editor-fold desc="Code to be executed on Selected Index change on Consumed Raw Material Spinner">
         spRawMaterial.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-
                 db.open();
                 tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
+                tvAvailable.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
                 db.close();
             }
 
@@ -221,11 +285,13 @@ public class StockAdjustmentCreate extends Activity {
                 else if (type.equalsIgnoreCase("SKU") && spSKU.getSelectedItemPosition() == 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
                 else if (String.valueOf(etAdjustedQty.getText()).trim().equals(""))
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा अनिवार्य है।" : "Adjusted quantity is mandatory.");
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "मात्रा अनिवार्य है।" : "Quantity is mandatory.");
+                else if (String.valueOf(etRemarks.getText()).trim().equals(""))
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "रिमॉर्क्स अनिवार्य है।" : "Remarks is mandatory.");
                 else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                     builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-                    builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक कन्वर्सन सुरक्षित करना चाहते हैं?" : "Are you sure, you want to save stock conversion transaction?");
+                    builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक समायोजन सुरक्षित करना चाहते हैं?" : "Are you sure, you want to save stock adjustment transaction?");
                     builder1.setCancelable(true);
                     builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
                             new DialogInterface.OnClickListener() {
@@ -248,10 +314,6 @@ public class StockAdjustmentCreate extends Activity {
                             });
                     AlertDialog alertnew = builder1.create();
                     alertnew.show();
-                    spRawMaterial.setSelection(0);
-                    spSKU.setSelection(0);
-                    etAdjustedQty.setText("");
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत किया गया आइटम सफलतापूर्वक जोड़ा गया।" : "Consumed item added successfully.");
                 }
 
             }
@@ -285,7 +347,7 @@ public class StockAdjustmentCreate extends Activity {
             case android.R.id.home:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                 builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
+                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक समायोजन मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक समायोजन को छोड़ देगा?" : "Are you sure, you want to leave stock adjustment module it will discard stock adjustment transaction?");
                 builder1.setCancelable(true);
                 builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
                         new DialogInterface.OnClickListener() {
@@ -324,7 +386,7 @@ public class StockAdjustmentCreate extends Activity {
     public void onBackPressed() {
         AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
         builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-        builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
+        builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक समायोजन मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock adjustment module it will discard stock adjustment transaction?");
         builder1.setCancelable(true);
         builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
                 new DialogInterface.OnClickListener() {
@@ -359,12 +421,22 @@ public class StockAdjustmentCreate extends Activity {
                 String customerId = "";
                 HashMap<String, String> user = session.getLoginUserDetails();
                 customerId = user.get(UserSessionManager.KEY_ID);
-                String[] name = {"customerId", "rawMaterialId", "skuId", "currentInventory", "newInventory", "remarks", "userId", "ipAddress", "machine" };
-                String[] value = { customerId, customerId, ((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0], "0", etAdjustedQty.getText().toString(), etRemarks.getText().toString(),  common.getDeviceIPAddress(true),common.getIMEI() };
+                String rmId = "";
+                String skuId = "";
+                if (type.equalsIgnoreCase("Raw")) {
+                    rmId =  ((CustomType) spRawMaterial.getSelectedItem()).getId();
+                    skuId = "0";
+                }
+                else {
+                    rmId =  "0";
+                    skuId = ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0];
+                }
+
+                String[] name = {"uniqueId","customerId", "rawMaterialId", "skuId", "currentInventory", "newInventory", "remarks", "userId", "ipAddress", "machine" };
+                String[] value = { uniqueId, customerId, rmId, skuId, tvInventory.getText().toString(), etAdjustedQty.getText().toString(), etRemarks.getText().toString(), customerId,  common.getDeviceIPAddress(true),common.getIMEI() };
                 responseJSON = "";
-                // Call method of web service to delete Delivery Detail from server
-                responseJSON = common.CallJsonWS(name, value, "CreateStockAdjustment",
-                        common.url);
+                // Call method of web service to stock adjustment from server
+                responseJSON = common.CallJsonWS(name, value, "CreateStockAdjustment",                   common.url);
                 return responseJSON;
             } catch (SocketTimeoutException e) {
                 return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
@@ -405,5 +477,5 @@ public class StockAdjustmentCreate extends Activity {
             Dialog.show();
         }
     }
-    //</editor-fold>
+//</editor-fold>
 }

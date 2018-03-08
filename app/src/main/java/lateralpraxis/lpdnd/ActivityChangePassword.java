@@ -313,10 +313,10 @@ public class ActivityChangePassword extends Activity {
 		userRole = user.get(UserSessionManager.KEY_ROLES);
 		Intent homeScreenIntent;
 		if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant"))) {
-			homeScreenIntent = new Intent(this, ActivityHomeScreen.class);
+			homeScreenIntent = new Intent(this, ActivityAdminHomeScreen.class);
 		}
 		else {
-			homeScreenIntent = new Intent(this, ActivityAdminHomeScreen.class);
+			homeScreenIntent = new Intent(this, ActivityHomeScreen.class);
 		}
 		homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(homeScreenIntent);

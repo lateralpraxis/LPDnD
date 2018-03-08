@@ -90,6 +90,8 @@
     <string name="menu_VehDelRec">DELIVERY\n/RECEIPT(V)</string>
     <string name="menu_primaryreceipt">Primary Receipt</string>
     <string name="menu_expense">Expense</string>
+    <string name="menu_stockAdjustment">ADJUST</string>
+    <string name="menu_expenseconfirmation">CONFIRM</string>
     <string name="place_order">Create Demand</string>
     <string name="go">Go</string>
     <string name="show_password">Show Password</string>
@@ -339,6 +341,23 @@
     <string name="label_Remarks">Remarks</string>
     <string name="label_RemarksMandatory">Remarks *</string>
     <string name="hintRemarks">Enter Remarks</string>
-
+    <string name="label_availqty">Available</string>
+    <string name="label_Adjustedqty">Adjusted</string>
     <!-- End of Stock Adjustment Variables-->
+
+    <!-- Start of Expense Confirmation Variables-->
+    <string name="expenseConfirmation">Expense Confirmation</string>
+    <string name="expenseConfirmationHead">Customer - Expense Head - Amount</string>
+    <string name="expenseDetails">Expense Details</string>
+    <string name="ExpenseHead">Expense Head</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="label_FromDate">From Date:</string>
+    <string name="label_AdjDate">Adj. Date</string>
+    <string name="label_Item">Item</string>
+    <string name="label_ExistInventory">Exis. Inv.</string>
+    <string name="label_AdjQty">Qty</string>
+    <string name="label_NewInventory">New Inv.</string>
+    <string name="label_Adjtype">Type:</string>
+    <!-- End of Expense Confirmation Variables-->
 </resources>

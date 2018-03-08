@@ -90,6 +90,8 @@
     <string name="menu_rate">दर</string>
     <string name="menu_primaryreceipt">प्राथमिक रसीद</string>
     <string name="menu_expense">व्यय</string>
+    <string name="menu_stockAdjustment">समायोजन</string>
+    <string name="menu_expenseconfirmation">पुष्टि</string>
     <string name="place_order">डिमांड बनायें</string>
     <string name="go">जाएँ</string>
     <string name="show_password">पासवर्ड दिखाएं </string>
@@ -287,9 +289,21 @@
     <string name="label_NameReport">नाम</string>
     <string name="label_CollBy">द्वारा एकत्रित</string>
 
+
     <!-- Start of Primary Receipt Variables-->
     <string name="label_PrimaryReceipt">प्राथमिक रसीद</string>
     <string name="label_linkAdd">जोड़ें [ + ]</string>
+    <string name="label_type">प्रकार</string>
+    <string name="label_raw">कच्ची सामग्री</string>
+    <string name="label_rawMat">कच्ची सामग्री *</string>
+    <string name="label_item">उत्पाद *</string>
+    <string name="label_qty">मात्रा *</string>
+    <string name="label_amt">राशि\u20B9 *</string>
+    <string name="label_code">कोड</string>
+    <string name="label_date">दिनांक</string>
+    <string name="label_quantity">मात्रा</string>
+    <string name="hintqty">मात्रा दर्ज करें</string>
+    <string name="hintamt">राशि दर्ज करें</string>
     <!-- End of Primary Receipt Variables-->
 
     <!-- Start of Stock Conversion Variables-->
@@ -299,14 +313,34 @@
     <!-- End of Stock Conversion Variables-->
 
     <!-- Outlet Sale  -->
-    <string name="menu_outlet_sale">Sale</string>
-    <string name="view_sale">View Sale</string>
-    <string name="create_sale">Create Sale</string>
+    <string name="menu_outlet_sale">बिक्री</string>
+    <string name="view_sale">बिक्री देखें</string>
+    <string name="create_sale">बिक्री बनाएं</string>
     <!-- End of Outlet Sale  -->
 
     <!-- Start of Stock Adjustment Variables-->
     <string name="label_StockAdjustment">स्टॉक समायोजन</string>
+    <string name="label_Remarks">टिप्पणी</string>
+    <string name="label_RemarksMandatory">टिप्पणी *</string>
+    <string name="hintRemarks">टिप्पणी दर्ज करें</string>
+    <string name="label_availqty">उपलब्ध</string>
+    <string name="label_Adjustedqty">समायोजित</string>
     <!-- End of Stock Adjustment Variables-->
+
+    <!-- Start of Expense Confirmation Variables-->
+    <string name="expenseConfirmation">व्यय पुष्टि</string>
+    <string name="expenseDetails">व्यय विवरण</string>
+    <string name="ExpenseHead">व्यय हेड</string>
+    <string name="accept">स्वीकृत</string>
+    <string name="reject">अस्वीकृत</string>
+    <string name="label_FromDate">तिथि से:</string>
+    <string name="label_AdjDate">समायोजित तिथि</string>
+    <string name="label_Item">उत्पाद</string>
+    <string name="label_ExistInventory">मौजूदा इन्वेंटरी</string>
+    <string name="label_AdjQty">मात्रा</string>
+    <string name="label_NewInventory">नया इन्वेंटरी</string>
+    <string name="label_Adjtype">प्रकार:</string>
+    <!-- End of Expense Confirmation Variables-->
 
     <!-- Start of Expense Booking Variables-->
     <string name="label_Expense">व्यय बुकिंग</string>

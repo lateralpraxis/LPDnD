@@ -2,18 +2,17 @@ package lateralpraxis.lpdnd.StockAdjustment;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputFilter;
-import android.text.InputType;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,101 +20,142 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 
 import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
-import lateralpraxis.lpdnd.DecimalDigitsInputFilter;
 import lateralpraxis.lpdnd.R;
 import lateralpraxis.lpdnd.UserSessionManager;
-import lateralpraxis.lpdnd.types.CustomType;
 
 public class StockAdjustmentList extends Activity {
 
-    private final Context mContext = this;
 
-    //<editor-fold desc="Code for class declaration">
+    private final Context mContext = this;
+    HashMap<String, String> map = null;
+    //<editor-fold desc="Code to declare Class">
     DatabaseAdapter db;
     Common common;
-    String lang = "en";
-    String type = "Raw";
-    String responseJSON, sendJSon;
+    /*Start of code for Variable Declaration*/
+    private String lang, userId, responseJSON, rdButtonSelectedText;
+    private int listSize = 0;
+    /*End of code for Variable Declaration*/
+    private int year, month, day;
+    private ArrayList<HashMap<String, String>> list;
+    private ArrayList<HashMap<String, String>> wordList = null;
     private UserSessionManager session;
-    //</editor-fold>
-    //<editor-fold desc="Code for Variable Declaration">
-    private ArrayList<HashMap<String, String>> wordListCons = null;
-    private ArrayList<HashMap<String, String>> listCons;
-    private int conslistSize = 0;
-
-    private ArrayList<HashMap<String, String>> wordListProd = null;
-    private ArrayList<HashMap<String, String>> listProd;
-    private int prodlistSize = 0;
-    private String uniqueId = "";
+    private Calendar calendar;
+    private SimpleDateFormat dateFormatter_display, dateFormatter_database;
     //</editor-fold>
 
-    //<editor-fold desc="Code for Control Declaration">
+    //<editor-fold desc="Code to declare Controls">
+    private TextView tvFromDate, tvEmpty,linkAddStockAdjustment, tvToDate, tvItem, tvAdjDate, tvExistInv, tvAdjQty, tvNewInv, tvReason;
+    private ListView listConvert;
+    private Button btnGo;
+    private TableLayout tableGridHead;
     private RadioGroup RadioType;
-    private RadioButton RadioRaw, RadioSKU;
-    private Spinner spRawMaterial, spSKU, spProdSKU;
-    private LinearLayout llRawMaterial, llSKU, llProduced;
-    private EditText etConsumedQty, etProducedQty;
-    private Button btnAddConsumed, btnAddProduced, btnSubmit;
-    private TextView tvProdEmpty, tvConsEmpty, tvInventory;
-    private ListView listConsumed, listProduced;
-    private TableLayout tableGridHeadConsumed, tableGridHeadProduced;
+    private RadioButton RadioRaw, RadioProduct;
+    //</editor-fold>
+
+    //<editor-fold desc="Methods to display the Calendar">
+    private DatePickerDialog.OnDateSetListener fromDateListener = new
+            DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+                    calendar.set(arg1, arg2, arg3);
+                    FromDate(dateFormatter_display.format(calendar.getTime()));
+                }
+            };
+    private DatePickerDialog.OnDateSetListener toDateListener = new
+            DatePickerDialog.OnDateSetListener() {
+                @Override
+                public void onDateSet(DatePicker arg0, int arg1, int arg2, int arg3) {
+                    calendar.set(arg1, arg2, arg3);
+                    ToDate(dateFormatter_display.format(calendar.getTime()));
+                }
+            };
     //</editor-fold>
 
     //<editor-fold desc="Code to be executed on On Create Method">
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_stock_conversion);
+        setContentView(R.layout.activity_list_stock_adjustment);
 
-        //<editor-fold desc="Code for setting Action Bar">
+        //<editor-fold desc="Code to set Action Bar">
         ActionBar ab = getActionBar();
         ab.setDisplayHomeAsUpEnabled(true);
         //</editor-fold>
 
-        //<editor-fold desc="Code for creating Instance of Class">
         db = new DatabaseAdapter(this);
         common = new Common(this);
         session = new UserSessionManager(getApplicationContext());
+
+
+        final HashMap<String, String> user = session.getLoginUserDetails();
+        userId = user.get(UserSessionManager.KEY_ID);
+
+        //<editor-fold desc="Code to find Controls">
+        listConvert = (ListView) findViewById(R.id.listConvert);
+        tvFromDate = (TextView) findViewById(R.id.tvFromDate);
+        tvToDate = (TextView) findViewById(R.id.tvToDate);
+        tvEmpty = (TextView) findViewById(R.id.tvEmpty);
+        tvAdjDate = (TextView) findViewById(R.id.tvAdjDate);
+        tvItem = (TextView) findViewById(R.id.tvItem);
+        tvAdjQty = (TextView) findViewById(R.id.tvAdjQty);
+        tvExistInv = (TextView) findViewById(R.id.tvExistInv);
+        tvNewInv = (TextView) findViewById(R.id.tvNewInv);
+        tvReason = (TextView) findViewById(R.id.tvReason);
+        linkAddStockAdjustment= (TextView) findViewById(R.id.linkAddStockAdjustment);
+        btnGo = (Button) findViewById(R.id.btnGo);
+        tableGridHead = (TableLayout) findViewById(R.id.tableGridHead);
+        dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+        dateFormatter_database = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        RadioType = (RadioGroup) findViewById(R.id.RadioType);
+        RadioRaw = (RadioButton) findViewById(R.id.RadioRaw);
+        RadioProduct = (RadioButton) findViewById(R.id.RadioProduct);
         //</editor-fold>
 
-        //<editor-fold desc="Code to Delete Data from Temporary Table">
-        db.open();
-        db.DeleteTempConversion();
-        db.close();
+        calendar = Calendar.getInstance();
+        year = calendar.get(Calendar.YEAR);
+        month = calendar.get(Calendar.MONTH);
+        day = calendar.get(Calendar.DAY_OF_MONTH);
+        FromDate(dateFormatter_display.format(calendar.getTime()));
+        ToDate(dateFormatter_display.format(calendar.getTime()));
+        //<editor-fold desc="Code for clicking ob Link Add Click">
+        linkAddStockAdjustment.setOnClickListener(new View.OnClickListener() {
+            //On click of view delivery button
+            @Override
+            public void onClick(View arg0) {
+                if(common.isConnected())
+                {
+                    AsyncPendingDeliveryStatusWSCall task= new AsyncPendingDeliveryStatusWSCall();
+                    task.execute();
+                }
+            }
+        });
         //</editor-fold>
 
-        //<editor-fold desc="Code to set Unique Id">
-        Bundle extras = this.getIntent().getExtras();
-        if (extras != null) {
-            uniqueId = extras.getString("UniqueId");
-        }
-        //</editor-fold>
-
-        //<editor-fold desc="Code to Set Language">
+        //<editor-fold desc="Code to set default language">
         lang = session.getDefaultLang();
         Locale myLocale = new Locale(lang);
         Resources res = getResources();
@@ -125,388 +165,118 @@ public class StockAdjustmentList extends Activity {
         res.updateConfiguration(conf, dm);
         //</editor-fold>
 
-        //<editor-fold desc="Code to find controls">
-        llRawMaterial = (LinearLayout) findViewById(R.id.llRawMaterial);
-        llSKU = (LinearLayout) findViewById(R.id.llSKU);
-        llProduced = (LinearLayout) findViewById(R.id.llProduced);
-        RadioType = (RadioGroup) findViewById(R.id.RadioType);
-        RadioRaw = (RadioButton) findViewById(R.id.RadioRaw);
-        RadioSKU = (RadioButton) findViewById(R.id.RadioSKU);
-        spRawMaterial = (Spinner) findViewById(R.id.spRawMaterial);
-        spSKU = (Spinner) findViewById(R.id.spSKU);
-        spProdSKU = (Spinner) findViewById(R.id.spProdSKU);
-        etConsumedQty = (EditText) findViewById(R.id.etConsumedQty);
-        etProducedQty = (EditText) findViewById(R.id.etProducedQty);
-        btnAddConsumed = (Button) findViewById(R.id.btnAddConsumed);
-        btnAddProduced = (Button) findViewById(R.id.btnAddProduced);
-        btnSubmit = (Button) findViewById(R.id.btnSubmit);
-        tvProdEmpty = (TextView) findViewById(R.id.tvProdEmpty);
-        tvConsEmpty = (TextView) findViewById(R.id.tvConsEmpty);
-        tvInventory = (TextView) findViewById(R.id.tvInventory);
-        listConsumed = (ListView) findViewById(R.id.listConsumed);
-        listProduced = (ListView) findViewById(R.id.listProduced);
-        tableGridHeadConsumed = (TableLayout) findViewById(R.id.tableGridHeadConsumed);
-        tableGridHeadProduced = (TableLayout) findViewById(R.id.tableGridHeadProduced);
-        //</editor-fold>
+        //<editor-fold desc="Code to be executed on Click of Go Button">
+        btnGo.setOnClickListener(new View.OnClickListener() {
+            //On click of add button
 
-        //<editor-fold desc="Code to set Input Filter">
-        etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-        etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        etProducedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(6, 2)});
-        etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        //</editor-fold>
 
-        //<editor-fold desc="Code to Bind Spinners">
-        spRawMaterial.setAdapter(DataAdapter("rawmaterialinv", ""));
-        spSKU.setAdapter(DataAdapter("skuinv", ""));
-        spProdSKU.setAdapter(DataAdapter("sku", ""));
-        //</editor-fold>
-
-        //<editor-fold desc="Code to be exceuted on change of Radio Button">
-        RadioType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                View radioButton = RadioType.findViewById(checkedId);
-                int index = RadioType.indexOfChild(radioButton);
-                spRawMaterial.setSelection(0);
-                spSKU.setSelection(0);
-                etConsumedQty.setText("");
-                if (index == 0) {
-                    llRawMaterial.setVisibility(View.VISIBLE);
-                    llSKU.setVisibility(View.GONE);
-                    etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                    type = "Raw";
-                } else {
-                    llRawMaterial.setVisibility(View.GONE);
-                    llSKU.setVisibility(View.VISIBLE);
-                    type = "SKU";
-                }
-            }
-        });
-        //</editor-fold>
-
-        //<editor-fold desc="Code to be executed on Selected Index change on Consumed SKU Spinner">
-        spSKU.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                etProducedQty.setText("");
-                db.open();
-                tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId().split("~")[0]));
-                db.close();
-                if (((CustomType) spSKU.getSelectedItem()).getId().split("~")[1].equalsIgnoreCase("0")) {
-                    etProducedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-                    etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                } else {
-                    int maxLength = 4;
-                    InputFilter[] FilterArray = new InputFilter[1];
-                    FilterArray[0] = new InputFilter.LengthFilter(maxLength);
-                    etProducedQty.setFilters(FilterArray);
-                    etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
-        //</editor-fold>
-
-        //<editor-fold desc="Code to be executed on Selected Index change on Consumed Raw Material Spinner">
-        spRawMaterial.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                etProducedQty.setText("");
-                db.open();
-                tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
-                db.close();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
-        //</editor-fold>
-
-        //<editor-fold desc="Code to be executed on Selected Index change on Produced SKU Spinner">
-        spProdSKU.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                etConsumedQty.setText("");
-                if (((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[1].equalsIgnoreCase("0")) {
-                    etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                } else {
-                    int maxLength = 4;
-                    InputFilter[] FilterArray = new InputFilter[1];
-                    FilterArray[0] = new InputFilter.LengthFilter(maxLength);
-                    etConsumedQty.setFilters(FilterArray);
-                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
-        //</editor-fold>
-
-        //<editor-fold desc="Code to be executed on Click ob Button Add Consumed Click">
-        btnAddConsumed.setOnClickListener(new View.OnClickListener() {
-
-            @Override
+          @Override
             public void onClick(View arg0) {
 
-                if (type.equalsIgnoreCase("Raw") && spRawMaterial.getSelectedItemPosition() == 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कच्ची सामग्री अनिवार्य है।" : "Raw Material is mandatory.");
-                else if (type.equalsIgnoreCase("SKU") && spSKU.getSelectedItemPosition() == 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
-                else if (String.valueOf(etConsumedQty.getText()).trim().equals(""))
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा अनिवार्य है।" : "Consumed quantity is mandatory.");
-                else if (Double.valueOf(etConsumedQty.getText().toString()) > Double.valueOf(tvInventory.getText().toString()))
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा उपलब्ध मात्रा से अधिक नहीं हो सकती।" : "Consumed quantity cannot exceed available quantity.");
-                else {
-                    db.openR();
-                    Boolean alreadyAdded = db.isConsumedAlreadyAdded(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0]);
-                    if (alreadyAdded)
-                        common.showToast(lang.equalsIgnoreCase("hi") ? "खपत आइटम पहले ही जोड़ दिया गया है।" : "Consumed item already added.");
-                    else {
-                        db.open();
-                        db.Insert_OutletConversionConsumedTemp(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0], etConsumedQty.getText().toString());
-                        db.close();
-                        spRawMaterial.setSelection(0);
-                        spSKU.setSelection(0);
-                        etConsumedQty.setText("");
-                        common.showToast(lang.equalsIgnoreCase("hi") ? "खपत किया गया आइटम सफलतापूर्वक जोड़ा गया।" : "Consumed item added successfully.");
+              // get selected radio button from radioGroup
+              int selectedId = RadioType.getCheckedRadioButtonId();
 
-                        wordListCons = new ArrayList<HashMap<String, String>>();
-                        db.openR();
-                        wordListCons = db.getTempConsumed();
-                        conslistSize = wordListCons.size();
-                        if (conslistSize != 0) {
-                            listConsumed.setAdapter(new CustomAdapter(mContext, wordListCons));
-
-                            ViewGroup.LayoutParams params = listConsumed.getLayoutParams();
-                            listConsumed.setLayoutParams(params);
-                            listConsumed.requestLayout();
-                            tvConsEmpty.setVisibility(View.GONE);
-                            tableGridHeadConsumed.setVisibility(View.VISIBLE);
-                            llProduced.setVisibility(View.VISIBLE);
-                        } else {
-                            listConsumed.setAdapter(null);
-                            tvConsEmpty.setVisibility(View.VISIBLE);
-                            tableGridHeadConsumed.setVisibility(View.GONE);
-                            llProduced.setVisibility(View.GONE);
-                        }
-                    }
+              // find the radiobutton by returned id
+              RadioButton radioButton = (RadioButton) findViewById(selectedId);
+              rdButtonSelectedText = radioButton.getText().toString();
+              //Call method to get Adjustment List
+                if (common.isConnected()) {
+                    AsyncStockReturnListWSCall task = new AsyncStockReturnListWSCall();
+                    task.execute();
                 }
-
-            }
-        });
-        //</editor-fold>
-
-        //<editor-fold desc="Code to be executed on Click ob Button Add Produced Click">
-        btnAddProduced.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-
-                if (spProdSKU.getSelectedItemPosition() == 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
-                else if (String.valueOf(etProducedQty.getText()).trim().equals(""))
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित मात्रा अनिवार्य है।" : "Produced quantity is mandatory.");
-                else {
-                    db.openR();
-                    Boolean alreadyAdded = db.isProducedAlreadyAdded(((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[0]);
-                    if (alreadyAdded)
-                        common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित आइटम पहले ही जोड़ दिया गया है।" : "Produced item already added.");
-                    else {
-                        db.open();
-                        db.Insert_OutletConversionProducedTemp(((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[0], etProducedQty.getText().toString());
-                        db.close();
-                        spProdSKU.setSelection(0);
-                        etProducedQty.setText("");
-                        common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित किया गया आइटम सफलतापूर्वक जोड़ा गया।" : "Produced item added successfully.");
-
-                        wordListProd = new ArrayList<HashMap<String, String>>();
-                        db.openR();
-                        wordListProd = db.getTempProduced();
-                        prodlistSize = wordListProd.size();
-                        if (prodlistSize != 0) {
-                            listProduced.setAdapter(new CustomAdapterProduced(mContext, wordListProd));
-
-                            ViewGroup.LayoutParams params = listProduced.getLayoutParams();
-                            listProduced.setLayoutParams(params);
-                            listProduced.requestLayout();
-                            tvProdEmpty.setVisibility(View.GONE);
-                            tableGridHeadProduced.setVisibility(View.VISIBLE);
-                            btnSubmit.setVisibility(View.VISIBLE);
-                        } else {
-                            listProduced.setAdapter(null);
-                            tvProdEmpty.setVisibility(View.VISIBLE);
-                            tableGridHeadProduced.setVisibility(View.GONE);
-                            btnSubmit.setVisibility(View.GONE);
-                        }
-                    }
-                }
-
-            }
-        });
-        //</editor-fold>
-
-        //<editor-fold desc="Code to be executed on Button Submit Click">
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-                builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक कन्वर्सन सुरक्षित करना चाहते हैं?" : "Are you sure, you want to save stock conversion transaction?");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                if (common.isConnected()) {
-                                    AsyncOutletConversionWSCall task = new AsyncOutletConversionWSCall();
-                                    task.execute();
-                                }
-                            }
-                        }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                // if this button is clicked, just close
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alertnew = builder1.create();
-                alertnew.show();
-
             }
         });
         //</editor-fold>
     }
     //</editor-fold>
 
-    //<editor-fold desc="Code for Binding Data In Spinner">
-    private ArrayAdapter<CustomType> DataAdapter(String masterType, String filter) {
-        db.open();
-        List<CustomType> lables = db.GetCustomerMasterDetails(masterType, filter);
-        ArrayAdapter<CustomType> dataAdapter = new ArrayAdapter<CustomType>(this, android.R.layout.simple_spinner_item, lables);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        db.close();
-        return dataAdapter;
+
+    //<editor-fold desc="Methods to Display Selected Date in TextView">
+    private void FromDate(String date) {
+        tvFromDate.setText(date.replace(" ", "-"));
+    }
+    private void ToDate(String date) {
+        tvToDate.setText(date.replace(" ", "-"));
     }
     //</editor-fold>
 
-    //<editor-fold desc="Code to Set Home Button in Action Bar">
+    //<editor-fold desc="Methods to open Calendar">
+    @SuppressWarnings("deprecation")
+    public void setFromDate(View view) {
+        showDialog(999);
+
+    }
+
+    public void setToDate(View view) {
+        showDialog(998);
+
+    }
+
+    @Override
+    protected Dialog onCreateDialog(int id) {
+        if (id == 999) {
+            DatePickerDialog dialog = new DatePickerDialog(this, fromDateListener, year, month, day);
+            dialog.getDatePicker().setMaxDate(new Date().getTime());
+            return dialog;
+        }
+
+        else if (id == 998) {
+
+                DatePickerDialog dialog = new DatePickerDialog(this, toDateListener, year, month, day);
+                dialog.getDatePicker().setMaxDate(new Date().getTime());
+                return dialog;
+            }
+        return null;
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Code to be executed on Back and Home Button">
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.action_go_to_home:
+                String userRole = "";
+                final HashMap<String, String> user = session.getLoginUserDetails();
+                userRole = user.get(UserSessionManager.KEY_ROLES);
+                Intent i;
+                i = new Intent(StockAdjustmentList.this, ActivityHomeScreen.class);
+                startActivity(i);
+                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //Event Triggered on Clicking Back
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(StockAdjustmentList.this, ActivityHomeScreen.class);
+        startActivity(i);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        finish();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_home, menu);
         return true;
     }
-
-    //<editor-fold desc="Code to be executed on Action Bar Menu Item">
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-                builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                Intent i = new Intent(StockAdjustmentList.this, ActivityHomeScreen.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                startActivity(i);
-                                finish();
-                            }
-                        }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                // if this button is clicked, just close
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alertnew = builder1.create();
-                alertnew.show();
-                return true;
-
-            case R.id.action_go_to_home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
     //</editor-fold>
 
-    //<editor-fold desc="Code to b executed on Back Press">
-    @Override
-    public void onBackPressed() {
-        AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-        builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-        builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप स्टॉक रूपांतरण मॉड्यूल छोड़ना चाहते हैं, यह स्टॉक रूपांतरण को छोड़ देगा?" : "Are you sure, you want to leave stock conversion module it will discard stock conversion transaction?");
-        builder1.setCancelable(true);
-        builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int id) {
-                        Intent i = new Intent(StockAdjustmentList.this, ActivityHomeScreen.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
-                    }
-                }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog,
-                                        int id) {
-                        // if this button is clicked, just close
-                        dialog.cancel();
-                    }
-                });
-        AlertDialog alertnew = builder1.create();
-        alertnew.show();
-
-    }
-
-    //<editor-fold desc="Code to be Bind Data in consumed list view">
+    //<editor-fold desc="Code to be Bind Data in list view">
     public static class ViewHolder {
-        TextView tvId, tvName, tvQty;
-        Button btnDelete;
+        TextView tvAdjDate, tvItem, tvAdjQty, tvExistInv, tvNewInv, tvReason;
+        TableRow tableHeader;
     }
-    //</editor-fold>
-
-    //<editor-fold desc="Code to be Bind Data in produced list view">
-    public static class ProducedViewHolder {
-        TextView tvId, tvName, tvQty;
-        Button btnDelete;
-    }
-    //</editor-fold>
 
     public class CustomAdapter extends BaseAdapter {
         private Context docContext;
@@ -515,17 +285,17 @@ public class StockAdjustmentList extends Activity {
         public CustomAdapter(Context context, ArrayList<HashMap<String, String>> lvList) {
             this.docContext = context;
             mInflater = LayoutInflater.from(docContext);
-            listCons = lvList;
+            list = lvList;
         }
 
         @Override
         public int getCount() {
-            return listCons.size();
+            return list.size();
         }
 
         @Override
         public Object getItem(int arg0) {
-            return listCons.get(arg0);
+            return list.get(arg0);
         }
 
         @Override
@@ -551,72 +321,31 @@ public class StockAdjustmentList extends Activity {
 
             final ViewHolder holder;
             if (arg1 == null) {
-                arg1 = mInflater.inflate(R.layout.list_consumed_items, null);
+                arg1 = mInflater.inflate(R.layout.activity_list_stock_adjustment_data, null);
                 holder = new ViewHolder();
+                holder.tvAdjDate = (TextView) arg1.findViewById(R.id.tvAdjDate);
+                holder.tvItem = (TextView) arg1.findViewById(R.id.tvItem);
+                holder.tvAdjQty = (TextView) arg1.findViewById(R.id.tvAdjQty);
+                holder.tvExistInv = (TextView) arg1.findViewById(R.id.tvExistInv);
+                holder.tvNewInv = (TextView) arg1.findViewById(R.id.tvNewInv);
+                holder.tvReason = (TextView) arg1.findViewById(R.id.tvReason);
+                holder.tableHeader = (TableRow) arg1.findViewById(R.id.tableHeader);
 
-                holder.tvName = (TextView) arg1.findViewById(R.id.tvName);
-                holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
-                holder.tvQty = (TextView) arg1.findViewById(R.id.tvQty);
-                holder.btnDelete = (Button) arg1.findViewById(R.id.btnDelete);
                 arg1.setTag(holder);
 
             } else {
                 holder = (ViewHolder) arg1.getTag();
             }
-            holder.tvId.setText(listCons.get(arg0).get("Id"));
-            holder.tvName.setText(listCons.get(arg0).get("Name"));
-            holder.tvQty.setText(listCons.get(arg0).get("Quantity"));
-
-            holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View arg0) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-                    builder1.setTitle(lang.equalsIgnoreCase("hi") ? "खपत वस्तु को हटाएं" : "Delete Consumed Item");
-                    builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप इस खपत वस्तु को हटाना चाहते हैं" : "Are you sure you want to delete this consumed item?");
-                    builder1.setCancelable(true);
-                    builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    db.open();
-                                    db.deleteTempConsumption(holder.tvId.getText().toString());
-                                    db.close();
-                                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत वस्तु सफलतापूर्वक हटा दिया गया" : "Consumed item deleted successfully.");
-                                    wordListCons = new ArrayList<HashMap<String, String>>();
-                                    db.openR();
-                                    wordListCons = db.getTempConsumed();
-                                    conslistSize = wordListCons.size();
-                                    if (conslistSize != 0) {
-                                        listConsumed.setAdapter(new CustomAdapter(mContext, wordListCons));
-
-                                        ViewGroup.LayoutParams params = listConsumed.getLayoutParams();
-                                        listConsumed.setLayoutParams(params);
-                                        listConsumed.requestLayout();
-                                        tvConsEmpty.setVisibility(View.GONE);
-                                        tableGridHeadConsumed.setVisibility(View.VISIBLE);
-                                        llProduced.setVisibility(View.VISIBLE);
-                                    } else {
-                                        listConsumed.setAdapter(null);
-                                        tvConsEmpty.setVisibility(View.VISIBLE);
-                                        tableGridHeadConsumed.setVisibility(View.GONE);
-                                        llProduced.setVisibility(View.GONE);
-                                    }
-                                }
-                            })
-                            .setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं"
-                                    : "No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // if this button is clicked, just close
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alertnew = builder1.create();
-                    alertnew.show();
-
-                }
-            });
+            holder.tvAdjDate.setText(common.convertToDisplayDateFormat(list.get(arg0).get("AdjustDate")));
+            holder.tvItem.setText(list.get(arg0).get("Item"));
+            holder.tvExistInv.setText(list.get(arg0).get("ExistingInventory"));
+            holder.tvAdjQty.setText(list.get(arg0).get("Quantity"));
+            holder.tvNewInv.setText(list.get(arg0).get("NewInventory"));
+            holder.tvReason.setText(Html.fromHtml("<b>Remarks: </b>") + list.get(arg0).get("Reason"));
+            if(list.get(arg0).get("Flag").equalsIgnoreCase("1"))
+                holder.tableHeader.setVisibility(View.GONE);
+            else
+                holder.tableHeader.setVisibility(View.VISIBLE);
 
             arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return arg1;
@@ -624,213 +353,168 @@ public class StockAdjustmentList extends Activity {
     }
     //</editor-fold>
 
-    public class CustomAdapterProduced extends BaseAdapter {
-        private Context docContext;
-        private LayoutInflater mInflater;
-
-        public CustomAdapterProduced(Context context, ArrayList<HashMap<String, String>> lvList) {
-            this.docContext = context;
-            mInflater = LayoutInflater.from(docContext);
-            listProd = lvList;
-        }
+    //<editor-fold desc="Async class Class to handle fetch Adjustment web service call as separate thread">
+    private class AsyncStockReturnListWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(StockAdjustmentList.this);
 
         @Override
-        public int getCount() {
-            return listProd.size();
-        }
+        protected String doInBackground(String... params) {
+            try {
+                String[] name = { "lang", "fromDate", "toDate", "customerId", "prRm"};
+                String fromDateString, toDateString, strRemarks;
+                Date fromDate = new Date();
+                fromDate = dateFormatter_display.parse(tvFromDate.getText().toString().trim());
+                fromDateString = dateFormatter_database.format(fromDate);
+                Date toDate = new Date();
 
-        @Override
-        public Object getItem(int arg0) {
-            return listProd.get(arg0);
-        }
-
-        @Override
-        public long getItemId(int arg0) {
-            return arg0;
-        }
-
-        @Override
-        public int getViewTypeCount() {
-
-            return getCount();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-
-            return position;
-        }
-
-        @Override
-        public View getView(final int arg0, View arg1, ViewGroup arg2) {
-
-
-            final ProducedViewHolder holder;
-            if (arg1 == null) {
-                arg1 = mInflater.inflate(R.layout.list_produced_items, null);
-                holder = new ProducedViewHolder();
-
-                holder.tvName = (TextView) arg1.findViewById(R.id.tvName);
-                holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
-                holder.tvQty = (TextView) arg1.findViewById(R.id.tvQty);
-                holder.btnDelete = (Button) arg1.findViewById(R.id.btnDelete);
-                arg1.setTag(holder);
-
-            } else {
-                holder = (ProducedViewHolder) arg1.getTag();
+                toDate = dateFormatter_display.parse(tvToDate.getText().toString().trim());
+                toDateString = dateFormatter_database.format(toDate);
+                String[] value = {lang, fromDateString, toDateString, userId, rdButtonSelectedText};
+                responseJSON = "";
+                //Call method of web service to download data from server
+                responseJSON = common.CallJsonWS(name, value, "GetStockAdjustmentData", common.url);
+                return "";
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
             }
-            holder.tvId.setText(listProd.get(arg0).get("Id"));
-            holder.tvName.setText(listProd.get(arg0).get("Name"));
-            holder.tvQty.setText(listProd.get(arg0).get("Quantity"));
+        }
 
-            holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+        //After execution of web service
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR: ")) {
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    wordList = new ArrayList<HashMap<String, String>>();
+                    String prevName = "";
+                    if (jsonArray.length() > 0) {
+                        for (int i = 0; i < jsonArray.length(); ++i) {
+                            map = new HashMap<String, String>();
+                            map.put("Id", jsonArray.getJSONObject(i)
+                                    .getString("Id"));
+                            map.put("AdjustDate", jsonArray.getJSONObject(i)
+                                    .getString("AdjustDate"));
+                            map.put("Item", jsonArray.getJSONObject(i)
+                                    .getString("Item"));
+                            map.put("ExistingInventory", jsonArray.getJSONObject(i)
+                                    .getString("ExistingInventory"));
+                            map.put("Quantity", jsonArray.getJSONObject(i)
+                                    .getString("Quantity"));
+                            map.put("NewInventory", jsonArray.getJSONObject(i)
+                                    .getString("NewInventory"));
+                            map.put("Reason", jsonArray.getJSONObject(i)
+                                    .getString("Reason"));
+                            if(prevName.equalsIgnoreCase(jsonArray.getJSONObject(i)
+                                    .getString("Id")))
+                                map.put("Flag", "1");
+                            else
+                                map.put("Flag", "0");
+                            prevName=jsonArray.getJSONObject(i)
+                                    .getString("Id");
+                            wordList.add(map);
+                        }
 
-                @Override
-                public void onClick(View arg0) {
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-                    builder1.setTitle(lang.equalsIgnoreCase("hi") ? "उत्पादित वस्तु को हटाएं" : "Delete Produced Item");
-                    builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप इस उत्पादित वस्तु को हटाना चाहते हैं" : "Are you sure you want to delete this produced item?");
-                    builder1.setCancelable(true);
-                    builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
-                            new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    db.open();
-                                    db.deleteTempProduction(holder.tvId.getText().toString());
-                                    db.close();
-                                    common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित वस्तु सफलतापूर्वक हटा दिया गया" : "Produced item deleted successfully.");
-                                    wordListProd = new ArrayList<HashMap<String, String>>();
-                                    db.openR();
-                                    wordListProd = db.getTempProduced();
-                                    prodlistSize = wordListProd.size();
-                                    if (prodlistSize != 0) {
-                                        listProduced.setAdapter(new CustomAdapterProduced(mContext, wordListProd));
-
-                                        ViewGroup.LayoutParams params = listProduced.getLayoutParams();
-                                        listProduced.setLayoutParams(params);
-                                        listProduced.requestLayout();
-                                        tvProdEmpty.setVisibility(View.GONE);
-                                        tableGridHeadProduced.setVisibility(View.VISIBLE);
-                                        btnSubmit.setVisibility(View.VISIBLE);
-                                    } else {
-                                        listProduced.setAdapter(null);
-                                        tvProdEmpty.setVisibility(View.VISIBLE);
-                                        tableGridHeadProduced.setVisibility(View.GONE);
-                                        btnSubmit.setVisibility(View.GONE);
-                                    }
-                                }
-                            })
-                            .setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं"
-                                    : "No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int id) {
-                                    // if this button is clicked, just close
-                                    dialog.cancel();
-                                }
-                            });
-                    AlertDialog alertnew = builder1.create();
-                    alertnew.show();
-
+                    } else {
+                        if (result.contains("null")) {
+                            result = "Server not responding. Please try again later.";
+                            common.showAlert(StockAdjustmentList.this, result, false);
+                        }
+                    }
+                    listSize = wordList.size();
+                    if (listSize != 0) {
+                        listConvert.setAdapter(new CustomAdapter(mContext, wordList));
+                        //ViewGroup.LayoutParams params = listConvert.getLayoutParams();
+                        //listConvert.setLayoutParams(params);
+                        //listConvert.requestLayout();
+                        //tvEmpty.setVisibility(View.GONE);
+                        tableGridHead.setVisibility(View.VISIBLE);
+                    } else {
+                        listConvert.setAdapter(null);
+                        tvEmpty.setVisibility(View.VISIBLE);
+                        tableGridHead.setVisibility(View.GONE);
+                    }
                 }
-            });
+            } catch (Exception e) {
+                common.showAlert(StockAdjustmentList.this, "Stock Adjustment Downloading failed: " + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
 
-            arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
-            return arg1;
+        //To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Stock Adjustment..");
+            Dialog.setCancelable(false);
+            Dialog.show();
         }
     }
     //</editor-fold>
 
-    //<editor-fold desc="Async Method to Post Outlet Conversion Details">
-    private class AsyncOutletConversionWSCall extends AsyncTask<String, Void, String> {
+    //<editor-fold desc="Code to Download Pending Delivery Status">
+    private class AsyncPendingDeliveryStatusWSCall extends
+            AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
                 StockAdjustmentList.this);
 
         @Override
         protected String doInBackground(String... params) {
-
             try {
-
+                String[] name = { "action", "userId", "role" };
+                String[] value = { "CheckPendingDelivery", userId, "Customer" };
                 responseJSON = "";
-
-                JSONObject jsonMaster = new JSONObject();
-
-                String customerId = "";
-                HashMap<String, String> user = session.getLoginUserDetails();
-                customerId = user.get(UserSessionManager.KEY_ID);
-                JSONArray array = new JSONArray();
-                // To make json string to post delivery
-
-                JSONObject jsonins = new JSONObject();
-                jsonins.put("UniqueId", uniqueId);
-                jsonins.put("CustomerId", customerId);
-                jsonins.put("ipAddress", common.getDeviceIPAddress(true));
-                jsonins.put("Machine", common.getIMEI());
-                jsonins.put("CreateBy", customerId);
-                array.put(jsonins);
-                jsonMaster.put("Master", array);
-
-                JSONObject jsonDetails = new JSONObject();
-                // To get Conversion details from database
-                db.open();
-                ArrayList<HashMap<String, String>> insdet = db.getConversionForSync();
-                db.close();
-                if (insdet != null && insdet.size() > 0) {
-
-                    // To make json string to post delivery details
-                    JSONArray arraydet = new JSONArray();
-                    for (HashMap<String, String> insd : insdet) {
-                        JSONObject jsondet = new JSONObject();
-                        jsondet.put("RawMaterialId", insd.get("RawMaterialId"));
-                        jsondet.put("SkuId", insd.get("SkuId"));
-                        jsondet.put("Quantity", insd.get("Quantity"));
-                        jsondet.put("SKUType", insd.get("SKUType"));
-                        arraydet.put(jsondet);
-                    }
-                    jsonDetails.put("Detail", arraydet);
-                }
-                sendJSon = jsonMaster + "~" + jsonDetails;
-                // To invoke json web service to create delivery
-                responseJSON = common.invokeJSONWS(sendJSon, "json",
-                        "InsertOutletStockConversion", common.url);
-
+                // Call method of web service to download Reatil Outlet Inventory from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
                 return responseJSON;
-            } catch (Exception e) {
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
                 // TODO: handle exception
                 return "ERROR: " + "Unable to get response from server.";
-            } finally {
-                db.close();
             }
-
         }
 
-        // After execution of json web service to create delivery
+        // After execution of web service to download Retail Outlet Inventory
         @Override
         protected void onPostExecute(String result) {
-
             try {
-                // To display message after response from server
                 if (!result.contains("ERROR")) {
-                    if (responseJSON.equalsIgnoreCase("success")) {
-                        //<editor-fold desc="Code to Delete Data from Temporary Table">
-                        db.open();
-                        db.DeleteTempConversion();
-                        db.close();
-                        //</editor-fold>
-                        common.showToast(lang.equalsIgnoreCase("hi") ? "स्टॉक कनवर्ज़न सफलतापूर्वक सहेजा गया" : "Stock Conversion saved successfully.");
-                        Intent i = new Intent(StockAdjustmentList.this, ActivityHomeScreen.class);
-                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(i);
-                        finish();
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    db.open();
+                    db.DeleteMasterData("DeliveryConfirmStatus");
+                    String status="";
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        db.Insert_DeliveryConfirmStatus(jsonArray.getJSONObject(i)
+                                .getString("A"));
+                        status=jsonArray.getJSONObject(i).getString("A");
+                    }
+                    db.close();
+                    if(status.equalsIgnoreCase("0"))
+                    {
+                        if(common.isConnected()) {
+                            AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
+                            task.execute();
+                        }
+                    }
+                    else
+                    {
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए स्टॉक रूपांतरण की अनुमति नहीं है।":"Deliveries are pending for confirmation hence stock adjustment is not allowed.");
                     }
 
                 } else {
-                    if (result.contains("null"))
-                        result = "Server not responding.";
-                    common.showToast("Error: " + result);
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(StockAdjustmentList.this, result, false);
                 }
-
             } catch (Exception e) {
-
+                common.showAlert(StockAdjustmentList.this,
+                        "Pending Delivery Status Downloading failed: "
+                                + "Unable to get response from server.", false);
             }
             Dialog.dismiss();
         }
@@ -838,8 +522,107 @@ public class StockAdjustmentList extends Activity {
         // To display message on screen within process
         @Override
         protected void onPreExecute() {
+            Dialog.setMessage("Downloading Pending Delivery Status..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
 
-            Dialog.setMessage("Posting Stock Conversion...");
+    //<editor-fold desc="Async Method to Fetch LiveInventory Fro Retail Outlet">
+    private class AsyncLiveInventoryDetailWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                StockAdjustmentList.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+                String[] name = {"action","lang","customerId" };
+                String[] value = { "GetProductRawMaterial",lang,userId };
+                // Call method of web service to Read Conversion Details
+                responseJSON = "";
+                responseJSON = common.CallJsonWS(name, value,"GetProductRawMaterial", common.url);
+                return "";
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                return "ERROR: " + e.getMessage();
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    String data="";
+                    // To display message after response from server
+                    JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
+                    JSONArray jsonRaw = new JSONArray(responseJSON.split("~")[1]);
+                    if(jsonSKU.length() > 0 || jsonRaw.length() > 0) {
+                        if (jsonSKU.length() > 0) {
+                            db.open();
+                            db.DeleteMasterData("SKULiveInventory");
+                            db.close();
+                            if (jsonSKU.length() > 0) {
+                                for (int i = 0; i < jsonSKU.length(); ++i) {
+                                    db.open();
+                                    db.Insert_SKULiveInventory(jsonSKU.getJSONObject(i)
+                                            .getString("A"), jsonSKU.getJSONObject(i)
+                                            .getString("B"), jsonSKU.getJSONObject(i)
+                                            .getString("C").replace(".00", ""));
+                                    db.close();
+
+                                }
+
+                            }
+                        }
+                        if (jsonRaw.length() > 0) {
+                            db.open();
+                            db.DeleteMasterData("RawMaterialLiveInventory");
+                            db.close();
+                            for (int i = 0; i < jsonRaw.length(); ++i) {
+                                db.open();
+                                db.Insert_RawMaterialLiveInventory(jsonRaw.getJSONObject(i)
+                                        .getString("A"), jsonRaw.getJSONObject(i)
+                                        .getString("B"), jsonRaw.getJSONObject(i)
+                                        .getString("C").replace(".00", ""));
+                                db.close();
+                            }
+
+                        }
+                        Intent intent = new Intent(StockAdjustmentList.this,
+                                StockAdjustmentCreate.class);
+                        intent.putExtra("UniqueId", UUID.randomUUID().toString());
+                        startActivity(intent);
+                        finish();
+                    }
+                    else {
+                        common.showToast("There is no data available for Inventory!");
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                common.showToast("Outlet Inventory Downloading failed: " + e.toString());
+                Intent intent = new Intent(mContext, StockAdjustmentList.class);
+                startActivity(intent);
+                finish();
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Outlet Inventory..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
