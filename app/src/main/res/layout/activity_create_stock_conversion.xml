@@ -123,7 +123,30 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="0.7" />
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
 
+                <TextView
+                    android:id="@+id/label_availqty"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:text="@string/label_availqty"
+                    android:textStyle="bold" />
+                <TextView
+                    android:id="@+id/tvViewQty"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:textAlignment="viewEnd"
+                    android:layout_gravity="end"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

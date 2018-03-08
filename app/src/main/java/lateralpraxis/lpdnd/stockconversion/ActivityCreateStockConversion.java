@@ -81,7 +81,7 @@ public class ActivityCreateStockConversion extends Activity {
     private LinearLayout llRawMaterial, llSKU, llProduced;
     private EditText etConsumedQty, etProducedQty;
     private Button btnAddConsumed, btnAddProduced, btnSubmit;
-    private TextView tvProdEmpty, tvConsEmpty, tvInventory;
+    private TextView tvProdEmpty, tvConsEmpty, tvInventory,tvViewQty;
     private ListView listConsumed, listProduced;
     private TableLayout tableGridHeadConsumed, tableGridHeadProduced;
     //</editor-fold>
@@ -144,6 +144,7 @@ public class ActivityCreateStockConversion extends Activity {
         tvProdEmpty = (TextView) findViewById(R.id.tvProdEmpty);
         tvConsEmpty = (TextView) findViewById(R.id.tvConsEmpty);
         tvInventory = (TextView) findViewById(R.id.tvInventory);
+        tvViewQty= (TextView) findViewById(R.id.tvViewQty);
         listConsumed = (ListView) findViewById(R.id.listConsumed);
         listProduced = (ListView) findViewById(R.id.listProduced);
         tableGridHeadConsumed = (TableLayout) findViewById(R.id.tableGridHeadConsumed);
@@ -195,6 +196,7 @@ public class ActivityCreateStockConversion extends Activity {
                 etProducedQty.setText("");
                 db.open();
                 tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
+                tvViewQty.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
                 db.close();
                 if (((CustomType) spSKU.getSelectedItem()).getId().split("-")[1].equalsIgnoreCase("0")) {
                     etProducedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
@@ -225,6 +227,7 @@ public class ActivityCreateStockConversion extends Activity {
                 etProducedQty.setText("");
                 db.open();
                 tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
+                tvViewQty.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
                 db.close();
             }
 
@@ -273,7 +276,7 @@ public class ActivityCreateStockConversion extends Activity {
                 if (type.equalsIgnoreCase("Raw") && spRawMaterial.getSelectedItemPosition() == 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कच्ची सामग्री अनिवार्य है।" : "Raw Material is mandatory.");
                 else if (type.equalsIgnoreCase("SKU") && spSKU.getSelectedItemPosition() == 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पाद अनिवार्य है।" : "SKU is mandatory.");
                 else if (String.valueOf(etConsumedQty.getText()).trim().equals(""))
                     common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा अनिवार्य है।" : "Consumed quantity is mandatory.");
                 else if (Double.valueOf(etConsumedQty.getText().toString()) > Double.valueOf(tvInventory.getText().toString()))

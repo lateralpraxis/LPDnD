@@ -263,7 +263,7 @@
 
     <!-- Start of Report Variables-->
     <string name="hint_date">तिथि चुनें</string>
-    <string name="label_Search">Go</string>
+    <string name="label_Search">खोजें</string>
     <string name="label_Demand">मांग विवरण</string>
     <string name="label_Centre">केंद्र:</string>
     <string name="label_CentreHead">केंद्र/वाहन#</string>
@@ -300,7 +300,7 @@
     <string name="label_qty">मात्रा *</string>
     <string name="label_amt">राशि\u20B9 *</string>
     <string name="label_code">कोड</string>
-    <string name="label_date">दिनांक</string>
+    <string name="label_date">तिथि</string>
     <string name="label_quantity">मात्रा</string>
     <string name="hintqty">मात्रा दर्ज करें</string>
     <string name="hintamt">राशि दर्ज करें</string>

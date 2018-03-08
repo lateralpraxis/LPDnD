@@ -360,9 +360,9 @@ public class DatabaseAdapter {
             else if (masterType.equalsIgnoreCase("rawmaterialinv"))
                 labels.add(new CustomType("0", "...कच्ची सामग्री चयन करें"));
             else if (masterType.equalsIgnoreCase("sku"))
-                labels.add(new CustomType("0~0", "...एसकेयू चयन करें"));
+                labels.add(new CustomType("0~0", "...उत्पाद चयन करें"));
             else if (masterType.equalsIgnoreCase("skuinv"))
-                labels.add(new CustomType("0-0", "...एसकेयू चयन करें"));
+                labels.add(new CustomType("0-0", "...उत्पाद चयन करें"));
             else if (masterType.equalsIgnoreCase("exphead"))
                 labels.add(new CustomType("0", "...व्यय हेड चयन करें"));
             else
@@ -3165,7 +3165,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Code to get SKU Inventory by SKU Id">
     public String getSkuInventory(String skuId) {
         String total = "";
-        selectQuery = "SELECT Quantity from OutletInventory WHERE SKUId=" + skuId + " AND RawMaterialId='0' ";
+        selectQuery = "SELECT Quantity from SKULiveInventory WHERE Id='" + skuId + "' ";
         cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
