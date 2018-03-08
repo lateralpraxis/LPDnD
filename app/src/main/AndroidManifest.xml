@@ -325,8 +325,16 @@
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:name=".ExpenseBooking.ActivityListBooking" />
-        <activity android:name=".ExpenseBooking.ActivityAddExpense"></activity>
+        <activity
+            android:name=".ExpenseBooking.ActivityListBooking"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ExpenseBooking.ActivityAddExpense"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>
