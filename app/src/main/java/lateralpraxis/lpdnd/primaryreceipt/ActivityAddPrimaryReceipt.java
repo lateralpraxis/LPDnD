@@ -167,51 +167,53 @@ public class ActivityAddPrimaryReceipt extends Activity {
             //When go button click
             @Override
             public void onClick(View arg0) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-                builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
-                builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप प्राथमिक रसीद लेनदेन जमा करना चाहते हैं?" : "Are you sure, you want to submit primary receipt transaction?");
-                builder1.setCancelable(true);
-                builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                if(type.equalsIgnoreCase("Raw") && ((CustomType)spRawMaterial.getSelectedItem()).getId().equalsIgnoreCase("0"))
-                                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया कच्चे माल का चयन करें":"Please select Raw Material.");
-                                else if(type.equalsIgnoreCase("SKU") && ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0].equalsIgnoreCase("0"))
-                                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया एसकेयू चुनें":"Please select SKU.");
-                                else if(etQty.getText().toString().trim().length()<=0)
-                                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया मात्रा दर्ज करें":"Please enter quantity.");
-                                else if (Double.valueOf(etQty.getText().toString())<=0)
-                                    common.showToast(lang.equalsIgnoreCase("hi") ?"मात्रा शून्य नहीं हो सकती।":"Quantity cannot be zero.");
-                                else if(etAmt.getText().toString().trim().length()<=0)
-                                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया राशि दर्ज करें":"Please enter amount.");
-                                else if (Double.valueOf(etAmt.getText().toString())<=0)
-                                    common.showToast(lang.equalsIgnoreCase("hi") ?"राशि शून्य नहीं हो सकती":"Amount cannot be zero.");
-                                else {
-                                    String customerId="";
+                if(type.equalsIgnoreCase("Raw") && ((CustomType)spRawMaterial.getSelectedItem()).getId().equalsIgnoreCase("0"))
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया कच्चे माल का चयन करें":"Please select Raw Material.");
+                else if(type.equalsIgnoreCase("SKU") && ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0].equalsIgnoreCase("0"))
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया एसकेयू चुनें":"Please select SKU.");
+                else if(etQty.getText().toString().trim().length()<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया मात्रा दर्ज करें":"Please enter quantity.");
+                else if (Double.valueOf(etQty.getText().toString())<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"मात्रा शून्य नहीं हो सकती।":"Quantity cannot be zero.");
+                else if(etAmt.getText().toString().trim().length()<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया राशि दर्ज करें":"Please enter amount.");
+                else if (Double.valueOf(etAmt.getText().toString())<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"राशि शून्य नहीं हो सकती":"Amount cannot be zero.");
+                else {
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
+                    builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
+                    builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप प्राथमिक रसीद लेनदेन जमा करना चाहते हैं?" : "Are you sure, you want to submit primary receipt transaction?");
+                    builder1.setCancelable(true);
+                    builder1.setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int id) {
+
+                                    String customerId = "";
                                     HashMap<String, String> user = session.getLoginUserDetails();
                                     customerId = user.get(UserSessionManager.KEY_ID);
                                     db.open();
-                                    db.Insert_PrimaryReceipt(customerId,  ((CustomType)spRawMaterial.getSelectedItem()).getId(), ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0], etQty.getText().toString(), etAmt.getText().toString());
+                                    db.Insert_PrimaryReceipt(customerId, ((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0], etQty.getText().toString(), etAmt.getText().toString());
                                     db.close();
-                                    common.showToast(lang.equalsIgnoreCase("hi") ?"प्राथमिक रसीद को सफलतापूर्वक सहेजा गया":"Primary Receipt saved successfully.");
-                                   Intent intent = new Intent(ActivityAddPrimaryReceipt.this, ActivityListPrimaryReceipt.class);
+                                    common.showToast(lang.equalsIgnoreCase("hi") ? "प्राथमिक रसीद को सफलतापूर्वक सहेजा गया" : "Primary Receipt saved successfully.");
+                                    Intent intent = new Intent(ActivityAddPrimaryReceipt.this, ActivityListPrimaryReceipt.class);
                                     startActivity(intent);
                                     finish();
+
                                 }
-                            }
-                        }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int id) {
-                                // if this button is clicked, just close
-                                dialog.cancel();
-                            }
-                        });
-                AlertDialog alertnew = builder1.create();
-                alertnew.show();
+                            }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog,
+                                                    int id) {
+                                    // if this button is clicked, just close
+                                    dialog.cancel();
+                                }
+                            });
+                    AlertDialog alertnew = builder1.create();
+                    alertnew.show();
+                }
             }
         });
         //</editor-fold>
