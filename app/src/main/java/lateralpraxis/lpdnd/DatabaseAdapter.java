@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -98,7 +99,10 @@ public class DatabaseAdapter {
             SKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS SKULiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
             RawMaterialLiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialLiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
-    OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);";
+            ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
+    OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
+    ExpenseBooking_CREATE ="CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);";
+
     // Context of the application using the database.
     private final Context context;
 
@@ -329,6 +333,12 @@ public class DatabaseAdapter {
                 else
                     selectQuery = "SELECT Id, Name FROM SKULiveInventory ORDER BY Name COLLATE NOCASE ASC";
                 break;
+            case "exphead":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT Id, Name FROM ExpenseHead WHERE Id !='1' ORDER BY Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT Id, NameLocal FROM ExpenseHead WHERE Id !='1' ORDER BY Name COLLATE NOCASE ASC";
+                break;
         }
         cursor = db.rawQuery(selectQuery, null);
         if (userlang.equalsIgnoreCase("en")) {
@@ -340,6 +350,8 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0~0", "...Select SKU"));
             else if (masterType.equalsIgnoreCase("skuinv"))
                 labels.add(new CustomType("0-0", "...Select SKU"));
+            else if (masterType.equalsIgnoreCase("exphead"))
+                labels.add(new CustomType("0", "...Select Expense Head"));
             else
                 labels.add(new CustomType("0", "...Select"));
         } else {
@@ -351,6 +363,8 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0~0", "...एसकेयू चयन करें"));
             else if (masterType.equalsIgnoreCase("skuinv"))
                 labels.add(new CustomType("0-0", "...एसकेयू चयन करें"));
+            else if (masterType.equalsIgnoreCase("exphead"))
+                labels.add(new CustomType("0", "...व्यय हेड चयन करें"));
             else
                 labels.add(new CustomType("0", "...चयन करें"));
         }
@@ -1645,6 +1659,20 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to Updated Outlet Expense IsSYnc Flag">
+    public String Update_OutletExpenseIsSync() {
+        try {
+            String query = "UPDATE ExpenseBooking SET IsSync = '1'";
+            db.execSQL(query);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
 
     public void DeleteDemand(String orderId) {
         db.execSQL("DELETE FROM Demand WHERE Id = '" + orderId + "'");
@@ -1693,6 +1721,7 @@ public class DatabaseAdapter {
 
             db.execSQL("DELETE FROM OutletPrimaryReceipt;");
             db.execSQL("DELETE FROM OutletPaymentReceipt;");
+            db.execSQL("DELETE FROM ExpenseBooking;");
             result = "success";
         } catch (Exception e) {
             e.printStackTrace();
@@ -2058,7 +2087,7 @@ public class DatabaseAdapter {
     public boolean IslogoutAllowed() {
         boolean isRequired = true;
 
-        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment;
+        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense;
 
         selectQuery = "SELECT Id FROM Delivery WHERE IsSync = '0'";
         cursor = db.rawQuery(selectQuery, null);
@@ -2092,8 +2121,13 @@ public class DatabaseAdapter {
         cursor = db.rawQuery(selectQuery, null);
         countoutletPayment = cursor.getCount();
 
+        selectQuery = "SELECT Id FROM ExpenseBooking WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        countExpense = cursor.getCount();
+
+
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment>0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment>0 || countExpense>0)
             isRequired = false;
 
         return isRequired;
@@ -2952,6 +2986,52 @@ public class DatabaseAdapter {
         return dateFormat.format(date);
     }
 
+    public String convertToDisplayDateFormat(String dateValue)
+    {
+        SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        String createDateForDB = "";
+        Date date = null;
+        try {
+            date = format.parse(dateValue);
+
+            SimpleDateFormat  dbdateformat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+            createDateForDB = dbdateformat.format(date);
+
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+
+        }
+        return createDateForDB;
+    }
+
+    //<editor-fold desc="Method to Fetch Expense Details">
+    public ArrayList<HashMap<String, String>> getExpenseDetails() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        String prevDate="";
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        else
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Date", cursor.getString(0));
+            map.put("Name", cursor.getString(1));
+            map.put("Amount", cursor.getString(2));
+            map.put("Remarks", cursor.getString(3));
+            if(prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
+                map.put("Flag", "0");
+            else
+                map.put("Flag", "1");
+            prevDate =convertToDisplayDateFormat(cursor.getString(0));
+
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Method to Fetch Primary Receipts">
     public ArrayList<HashMap<String, String>> getPrimaryReceipts() {
@@ -3235,6 +3315,25 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to insert Expense Head Data in ExpenseHead Table">
+    public String Insert_ExpenseHead(String id, String name, String nameLocal) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+            newValues.put("NameLocal", nameLocal);
+            db.insert("ExpenseHead", null, newValues);
+
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Code to insert Outlet Payment Receipt Data in OutletPaymentReceipt Table">
     public String Insert_OutletPaymentReceipt(String customerId, String amount,String uniqueId) {
         try {
@@ -3247,6 +3346,28 @@ public class DatabaseAdapter {
             db.insert("OutletPaymentReceipt", null, newValues);
 
             db.execSQL("UPDATE OutletLedger SET Quantity = Quantity + " + Double.parseDouble(amount) + " WHERE Id = '" + customerId + "' ");
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Expense Data in Expense Booking Table">
+    public String Insert_ExpenseBooking(String customerId, String expenseHeadId,String amount,String remarks,String uniqueId) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("CustomerId", customerId);
+            newValues.put("ExpenseHeadId", expenseHeadId);
+            newValues.put("Amount", amount);
+            newValues.put("Remarks", remarks);
+            newValues.put("AndroidDate", getDateTime());
+            newValues.put("UniqueId", uniqueId);
+            db.insert("ExpenseBooking", null, newValues);
+
             result = "success";
             return result;
         } catch (Exception e) {
@@ -3285,6 +3406,27 @@ public class DatabaseAdapter {
             map.put("CustomerId", cursor.getString(1));
             map.put("Amount", cursor.getString(2));
             map.put("AndroidDate", cursor.getString(3));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Method to fetch UnSync Outlet Expense">
+    public ArrayList<HashMap<String, String>> getUnSyncOutletExpense() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+
+        selectQuery = "SELECT UniqueId, CustomerId,ExpenseHeadId,  Amount, AndroidDate, Remarks FROM ExpenseBooking WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("CustomerId", cursor.getString(1));
+            map.put("ExpenseHeadId", cursor.getString(2));
+            map.put("Amount", cursor.getString(3));
+            map.put("TransactionDate", cursor.getString(4));
+            map.put("Remarks", cursor.getString(5));
             wordList.add(map);
         }
         cursor.close();

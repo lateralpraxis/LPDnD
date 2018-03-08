@@ -89,6 +89,7 @@
     <string name="menu_DelRec">DELIVERY\n/RECEIPT(C)</string>
     <string name="menu_VehDelRec">DELIVERY\n/RECEIPT(V)</string>
     <string name="menu_primaryreceipt">Primary Receipt</string>
+    <string name="menu_expense">Expense</string>
     <string name="place_order">Create Demand</string>
     <string name="go">Go</string>
     <string name="show_password">Show Password</string>
@@ -325,7 +326,10 @@
     <string name="create_sale">Create Sale</string>
     <!-- End of Outlet Sale  -->
 
-    <!-- Start of Outlet Payment Variables-->
-
-    <!-- End of Outlet Payment Variables-->
+    <!-- Start of Expense Booking Variables-->
+    <string name="label_Expense">Expense Booking</string>
+    <string name="label_expensehead">Expense Head *</string>
+    <string name="label_expenseheader">Expense Head</string>
+    <string name="label_remarkshead">Remarks *</string>
+    <!-- End of Expense Booking Variables-->
 </resources>

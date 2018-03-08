@@ -101,7 +101,7 @@ public class ActivityAddPrimaryReceipt extends Activity {
         //<editor-fold desc="Code to set Input Filter">
         etQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
         etQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        etAmt.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(6, 2)});
+        etAmt.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         etAmt.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
         //</editor-fold>
 

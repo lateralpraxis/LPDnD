@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lateralpraxis.lpdnd.ExpenseBooking.ActivityListBooking;
 import lateralpraxis.lpdnd.OutletPayment.ActivityListPayments;
 import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
 import lateralpraxis.lpdnd.primaryreceipt.ActivityListPrimaryReceipt;
@@ -139,7 +140,7 @@ public class ActivityHomeScreen extends Activity {
 
             if (userRole.equalsIgnoreCase("Customer")) {
                 if (customerType.equalsIgnoreCase("Retail Outlet"))
-                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_stockconversion,R.layout.btn_outletpayment, R.layout.btn_customersync);
+                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_stockconversion, R.layout.btn_outletpayment,R.layout.btn_expensebooking, R.layout.btn_customersync);
                 else
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand);
             } else if (userRole.contains("Route Officer")) {
@@ -427,6 +428,18 @@ public class ActivityHomeScreen extends Activity {
                     @Override
                     public void onClick(View v) {
                         intent = new Intent(context, ActivityListPayments.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                break;
+            case R.layout.btn_expensebooking:
+                btn = (Button) btnLayout.findViewById(R.id.btnExpenseBooking);
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        intent = new Intent(context, ActivityListBooking.class);
                         startActivity(intent);
                         finish();
                     }
@@ -2146,8 +2159,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // Class to handle SKUMater web service call as separate thread
+    //<editor-fold desc="Async Method to call SKUMatser web service call as separate thread">
     private class AsyncSKUMasterWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -2216,8 +2230,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // Class to handle SaleRateMaster web service call as separate thread
+    //<editor-fold desc="Async Method to call SaleRateMaster web service call as separate thread">
     private class AsyncSaleRateMasterWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -2260,7 +2275,7 @@ public class ActivityHomeScreen extends Activity {
                     }
                     dba.close();
                     if (common.isConnected()) {
-                        AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+                        AsyncExpenseHeadWSCall task = new AsyncExpenseHeadWSCall();
                         task.execute(result);
 
                     }
@@ -2285,7 +2300,79 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Async Method to fetch Expense Head Data From Portal">
+    private class AsyncExpenseHeadWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String[] name = {"action", "userId", "role"};
+                String[] value = {"ReadExpenseHead", userId, userRole};
+                responseJSON = "";
+                // Call method of web service to download Reatil Outlet Inventory from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        // After execution of web service to download Retail Outlet Inventory
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    dba.open();
+                    dba.DeleteMasterData("ExpenseHead");
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        dba.Insert_ExpenseHead(jsonArray.getJSONObject(i)
+                                .getString("A"), jsonArray.getJSONObject(i)
+                                .getString("B"), jsonArray.getJSONObject(i)
+                                .getString("C"));
+                    }
+                    dba.close();
+                    if (common.isConnected()) {
+                        AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+                        task.execute(result);
+
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Expense Head Downloading failed: "
+                                + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Expense Head..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to call RetailOutletInventory web service call as separate thread">
     private class AsyncRetailOutletInventoryWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -2351,7 +2438,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Async Method to call PendingDelivery web service call as separate thread">
     private class AsyncPendingDeliveryStatusWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -2416,6 +2505,7 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
     //<editor-fold desc="Async Method to Fetch Customer Credit Ledger">
     private class AsyncRetailOutletLedgerWSCall extends
@@ -2453,7 +2543,7 @@ public class ActivityHomeScreen extends Activity {
                     dba.DeleteMasterData("OutletLedger");
                     for (int i = 0; i < jsonArray.length(); ++i) {
                         dba.Insert_OutletLedger(userId, jsonArray.getJSONObject(i)
-                                .getString("B"));
+                                .getString("A"));
                     }
                     dba.close();
                     common.showAlert(ActivityHomeScreen.this,
@@ -2482,8 +2572,8 @@ public class ActivityHomeScreen extends Activity {
     }
 
     //</editor-fold>
-    // Class to handle demand / allocated details web service call as separate
-    // thread
+
+    //<editor-fold desc="Async Method to  handle demand / allocated details web service call as separate thread ">
     private class AsyncViewDemandDetailsWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -2570,8 +2660,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // Class to handle demand cut off web services call as separate thread
+    //<editor-fold desc="Async Method to  fetch Demand CutOff data from the Portal ">
     private class AsyncDemandCutOffDisplayWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -2647,8 +2738,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // To make web service class to post data of delivery
+    //<editor-fold desc="Async Method to  post data of delivery on the Portal ">
     private class AsyncDeliveryWSCall extends AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
                 ActivityHomeScreen.this);
@@ -2657,15 +2749,15 @@ public class ActivityHomeScreen extends Activity {
         protected String doInBackground(String... params) {
 
 			/*
-			 * HttpURLConnection urlConnection = null; BufferedReader reader =
+             * HttpURLConnection urlConnection = null; BufferedReader reader =
 			 * null;
 			 */
 
             // Will contain the raw JSON response as a string.
             try {
                 // To get ip address of working network
-				/*
-				 * URL url = new URL("http://wtfismyip.com/text");
+                /*
+                 * URL url = new URL("http://wtfismyip.com/text");
 				 *
 				 * // Create the request to open the connection urlConnection =
 				 * (HttpURLConnection) url.openConnection();
@@ -2791,8 +2883,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // To make web service class to post data of payment
+    //<editor-fold desc="Async Method to  post data of payment on the Portal ">
     private class AsyncPaymentWSCall extends AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
                 ActivityHomeScreen.this);
@@ -2909,8 +3002,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // Async Task to send all attachments on the Portal
+    //<editor-fold desc="Async Method to send all attachments on the Portal ">
     private class Async_AllAttachments_WSCall extends
             AsyncTask<String, String, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -3053,8 +3147,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // Class to handle customer ledger web services call as separate thread
+    //<editor-fold desc="Async Method to Fetch customer ledger ">
     private class AsyncCustomerLedgerWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -3129,8 +3224,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // Class to handle customer rate web services call as separate thread
+    //<editor-fold desc="Async Method to Fetch customer rate ">
     private class AsyncCustomerRateWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -3202,8 +3298,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // Class to handle Company rate web services call as separate thread
+    //<editor-fold desc="Async Method to Fetch ompany rate ">
     private class AsyncCompanyRateWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -3272,8 +3369,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
-    // Class to handle complaint category web services call as separate thread
+    //<editor-fold desc="Async Method to Fetch complaint category ">
     private class AsyncComplaintCategoryWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -3348,9 +3446,9 @@ public class ActivityHomeScreen extends Activity {
             Dialog.show();
         }
     }
-    //</editor-fold>
+//</editor-fold>
 
-    //<editor-fold desc="Class to handle product web services call as separate thread">
+    //<editor-fold desc="Class to handle Cash Deposit web services call as separate thread">
     private class AsyncCashDepositWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -3780,7 +3878,7 @@ public class ActivityHomeScreen extends Activity {
                                     // call method of get customer json web
                                     // service
                                     // commented
-									/*
+                                    /*
 									 * AsyncRouteWSCall task = new
 									 * AsyncRouteWSCall ();
 									 * task.execute(params);
@@ -3997,6 +4095,103 @@ public class ActivityHomeScreen extends Activity {
                         dba.close();
                     }
                     if (common.isConnected()) {
+                        // call method of Post Customer Expense
+                        AsyncCustomerExpenseWSCall task = new AsyncCustomerExpenseWSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                    common.showToast("Error: " + result);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Unable to fetch response from server.", false);
+            }
+
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Outlet Payment...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async method for Posting Outlet Expense for Retail Outlet">
+    private class AsyncCustomerExpenseWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Will contain the raw JSON response as a string.
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonExpense = new JSONObject();
+                dba.open();
+                // to get Primary Receipt from database
+                ArrayList<HashMap<String, String>> insmast = dba
+                        .getUnSyncOutletExpense();
+                dba.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to post payment
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("CustomerId", insp.get("CustomerId"));
+                        jsonins.put("ExpenseHeadId", insp.get("ExpenseHeadId"));
+                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("Remarks", insp.get("Remarks"));
+                        jsonins.put("TransactionDate", insp.get("TransactionDate"));
+                        jsonins.put("CreateBy", userId);
+                        jsonins.put("ipAddress",
+                                common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", common.getIMEI());
+                        array.put(jsonins);
+                    }
+                    jsonExpense.put("Master", array);
+
+                    sendJSon = jsonExpense.toString();
+
+                    // To invoke json web service to create payment
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "CreateOutletExpense", common.url);
+                } else {
+                    return "No outlet expense pending to be send.";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                dba.close();
+            }
+        }
+
+        // After execution of json web service to create payment
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        dba.open();
+                        dba.Update_OutletExpenseIsSync();
+                        dba.close();
+                    }
+                    if (common.isConnected()) {
                         // call method of get customer json web service
                         AsyncComplaintWSCall task = new AsyncComplaintWSCall();
                         task.execute();
@@ -4019,7 +4214,7 @@ public class ActivityHomeScreen extends Activity {
         @Override
         protected void onPreExecute() {
 
-            Dialog.setMessage("Posting Outlet Payment...");
+            Dialog.setMessage("Posting Outlet Expense...");
             Dialog.setCancelable(false);
             Dialog.show();
         }

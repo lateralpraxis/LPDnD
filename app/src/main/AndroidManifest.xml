@@ -324,7 +324,9 @@
             android:name=".OutletPayment.ActivityCreatePayments"
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity android:name=".ExpenseBooking.ActivityListBooking" />
+        <activity android:name=".ExpenseBooking.ActivityAddExpense"></activity>
     </application>
 
 </manifest>

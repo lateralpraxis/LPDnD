@@ -89,6 +89,7 @@
     <string name="menu_customer">ग्राहक</string>
     <string name="menu_rate">दर</string>
     <string name="menu_primaryreceipt">प्राथमिक रसीद</string>
+    <string name="menu_expense">व्यय</string>
     <string name="place_order">डिमांड बनायें</string>
     <string name="go">जाएँ</string>
     <string name="show_password">पासवर्ड दिखाएं </string>
@@ -290,8 +291,23 @@
     <string name="label_PrimaryReceipt">प्राथमिक रसीद</string>
     <string name="label_linkAdd">जोड़ें [ + ]</string>
     <!-- End of Primary Receipt Variables-->
-    <!-- Outlet Sale  -->
-    <string name="menu_outlet_sale">बिक्री</string>
 
+    <!-- Start of Stock Conversion Variables-->
+    <string name="label_StockConversion">स्टॉक रूपांतरण</string>
+    <string name="label_Consumed">खपत</string>
+    <string name="label_Produced">उत्पादित</string>
+    <!-- End of Stock Conversion Variables-->
+
+    <!-- Outlet Sale  -->
+    <string name="menu_outlet_sale">Sale</string>
+    <string name="view_sale">View Sale</string>
+    <string name="create_sale">Create Sale</string>
     <!-- End of Outlet Sale  -->
+
+    <!-- Start of Expense Booking Variables-->
+    <string name="label_Expense">व्यय बुकिंग</string>
+    <string name="label_expensehead">व्यय हेड *</string>
+    <string name="label_expenseheader">व्यय हेड</string>
+    <string name="label_remarkshead">टिप्पणी *</string>
+    <!-- End of Expense Booking Variables-->
 </resources>
