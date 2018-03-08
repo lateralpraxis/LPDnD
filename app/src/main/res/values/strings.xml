@@ -332,4 +332,13 @@
     <string name="label_expenseheader">Expense Head</string>
     <string name="label_remarkshead">Remarks *</string>
     <!-- End of Expense Booking Variables-->
+
+
+    <!-- Start of Stock Adjustment Variables-->
+    <string name="label_StockAdjustment">Stock Adjustment</string>
+    <string name="label_Remarks">Remarks</string>
+    <string name="label_RemarksMandatory">Remarks *</string>
+    <string name="hintRemarks">Enter Remarks</string>
+
+    <!-- End of Stock Adjustment Variables-->
 </resources>
