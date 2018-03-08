@@ -9,10 +9,11 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import android.widget.Spinner;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
@@ -39,7 +41,44 @@ import lateralpraxis.lpdnd.UserSessionManager;
 import lateralpraxis.lpdnd.types.CustomType;
 
 public class ActivityAddPrimaryReceipt extends Activity {
+    final String Digits = "(\\p{Digit}+)";
+    final String HexDigits = "(\\p{XDigit}+)";
+    // an exponent is 'e' or 'E' followed by an optionally
+    // signed decimal integer.
+    final String Exp = "[eE][+-]?" + Digits;
+    final String fpRegex =
+            ("[\\x00-\\x20]*" + // Optional leading "whitespace"
+                    "[+-]?(" +         // Optional sign character
+                    "NaN|" +           // "NaN" string
+                    "Infinity|" +      // "Infinity" string
 
+                    // A decimal floating-point string representing a finite positive
+                    // number without a leading sign has at most five basic pieces:
+                    // Digits . Digits ExponentPart FloatTypeSuffix
+                    //
+                    // Since this method allows integer-only strings as input
+                    // in addition to strings of floating-point literals, the
+                    // two sub-patterns below are simplifications of the grammar
+                    // productions from the Java Language Specification, 2nd
+                    // edition, section 3.10.2.
+
+                    // Digits ._opt Digits_opt ExponentPart_opt FloatTypeSuffix_opt
+                    "(((" + Digits + "(\\.)?(" + Digits + "?)(" + Exp + ")?)|" +
+
+                    // . Digits ExponentPart_opt FloatTypeSuffix_opt
+                    "(\\.(" + Digits + ")(" + Exp + ")?)|" +
+
+                    // Hexadecimal strings
+                    "((" +
+                    // 0[xX] HexDigits ._opt BinaryExponent FloatTypeSuffix_opt
+                    "(0[xX]" + HexDigits + "(\\.)?)|" +
+
+                    // 0[xX] HexDigits_opt . HexDigits BinaryExponent FloatTypeSuffix_opt
+                    "(0[xX]" + HexDigits + "?(\\.)" + HexDigits + ")" +
+
+                    ")[pP][+-]?" + Digits + "))" +
+                    "[fFdD]?))" +
+                    "[\\x00-\\x20]*");
     //<editor-fold desc="Code for class declaration">
     DatabaseAdapter db;
     Common common;
@@ -99,8 +138,10 @@ public class ActivityAddPrimaryReceipt extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to set Input Filter">
-        etQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-        etQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        InputFilter[] FilterProdArray = new InputFilter[1];
+        FilterProdArray[0] = new InputFilter.LengthFilter(5);
+        etQty.setFilters(FilterProdArray);
+        etQty.setInputType(InputType.TYPE_CLASS_NUMBER);
         etAmt.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
         etAmt.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
         //</editor-fold>
@@ -108,6 +149,78 @@ public class ActivityAddPrimaryReceipt extends Activity {
         //<editor-fold desc="Code to Bind Spinners">
         spRawMaterial.setAdapter(DataAdapter("rawmaterial", ""));
         spSKU.setAdapter(DataAdapter("sku", ""));
+        //</editor-fold>
+
+        //<editor-fold desc="Code to be executed on change of text">
+        TextWatcher textWatcher = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                if (!etQty.getText().toString().equalsIgnoreCase(".")) {
+                    if (etQty.getText().toString().equalsIgnoreCase("."))
+                        etQty.setText("");
+
+                } else {
+                    etQty.setText("");
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+        etQty.addTextChangedListener(textWatcher);
+
+        TextWatcher textWatcherprod = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+                if (!etAmt.getText().toString().equalsIgnoreCase(".")) {
+                    if (etAmt.getText().toString().equalsIgnoreCase("."))
+                        etAmt.setText("");
+
+                } else {
+                    etAmt.setText("");
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+        etAmt.addTextChangedListener(textWatcherprod);
+
+        etQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                {
+                    if(Pattern.matches(fpRegex, etQty.getText()))
+                    {
+
+                    }
+                    else
+                        etQty.setText("");
+
+                }
+            }
+        });
+        etAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus)
+                {
+                    if(Pattern.matches(fpRegex, etAmt.getText()))
+                    {
+
+                    }
+                    else
+                        etAmt.setText("");
+
+                }
+            }
+        });
         //</editor-fold>
 
         //<editor-fold desc="Code to be exceuted on change of Radio Button">
@@ -123,10 +236,15 @@ public class ActivityAddPrimaryReceipt extends Activity {
                 if (index == 0) {
                     llRawMaterial.setVisibility(View.VISIBLE);
                     llSKU.setVisibility(View.GONE);
-                    etQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-                    etQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    InputFilter[] FilterProdArray = new InputFilter[1];
+                    FilterProdArray[0] = new InputFilter.LengthFilter(5);
+                    etQty.setFilters(FilterProdArray);
+                    etQty.setInputType(InputType.TYPE_CLASS_NUMBER);
+
                     type="Raw";
                 } else {
+                    etQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
+                    etQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     llRawMaterial.setVisibility(View.GONE);
                     llSKU.setVisibility(View.VISIBLE);
                     type="SKU";
@@ -167,6 +285,8 @@ public class ActivityAddPrimaryReceipt extends Activity {
             //When go button click
             @Override
             public void onClick(View arg0) {
+                etQty.clearFocus();
+                etAmt.clearFocus();
                 if(type.equalsIgnoreCase("Raw") && ((CustomType)spRawMaterial.getSelectedItem()).getId().equalsIgnoreCase("0"))
                     common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया कच्चे माल का चयन करें":"Please select Raw Material.");
                 else if(type.equalsIgnoreCase("SKU") && ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0].equalsIgnoreCase("0"))
@@ -194,7 +314,7 @@ public class ActivityAddPrimaryReceipt extends Activity {
                                     HashMap<String, String> user = session.getLoginUserDetails();
                                     customerId = user.get(UserSessionManager.KEY_ID);
                                     db.open();
-                                    db.Insert_PrimaryReceipt(customerId, ((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0], etQty.getText().toString(), etAmt.getText().toString());
+                                    db.Insert_PrimaryReceipt(customerId, ((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0], Double.valueOf(etQty.getText().toString()).toString(), Double.valueOf(etAmt.getText().toString()).toString());
                                     db.close();
                                     common.showToast(lang.equalsIgnoreCase("hi") ? "प्राथमिक रसीद को सफलतापूर्वक सहेजा गया" : "Primary Receipt saved successfully.");
                                     Intent intent = new Intent(ActivityAddPrimaryReceipt.this, ActivityListPrimaryReceipt.class);

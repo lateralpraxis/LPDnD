@@ -92,6 +92,7 @@
     <string name="menu_expense">Expense</string>
     <string name="menu_stockAdjustment">ADJUST</string>
     <string name="menu_expenseconfirmation">CONFIRM</string>
+    <string name="menu_deliveryConfirmation">DELIVERY CONFIRMATION</string>
     <string name="place_order">Create Demand</string>
     <string name="go">Go</string>
     <string name="show_password">Show Password</string>
@@ -326,7 +327,21 @@
     <string name="menu_outlet_sale">Sale</string>
     <string name="view_sale">View Sale</string>
     <string name="create_sale">Create Sale</string>
+    <string name="credit">Credit</string>
+    <string name="saleType">Sale Type</string>
+    <string name="saleRate">Sale Rate\u20B9</string>
     <!-- End of Outlet Sale  -->
+
+    <!-- Delivery Confirmation -->
+    <string name="deliveryConfirmation">Delivery Confirmation</string>
+    <string name="deliveryConfirmationDetails">Delivery Confirmation Details</string>
+    <string name="delivery">Delivery</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="dateHead">Date</string>
+    <string name="routeOfficer">Route Officer</string>
+    <string name="vehicle">Vehicle#</string>
+    <string name="invoice">Invoice#</string>
+    <!-- End of  Delivery Confirmation -->
 
     <!-- Start of Expense Booking Variables-->
     <string name="label_Expense">Expense Booking</string>
@@ -353,6 +368,7 @@
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="label_FromDate">From Date:</string>
+    <string name="label_ToDate">To Date:</string>
     <string name="label_AdjDate">Adj. Date</string>
     <string name="label_Item">Item</string>
     <string name="label_ExistInventory">Exis. Inv.</string>

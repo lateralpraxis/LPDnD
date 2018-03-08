@@ -80,8 +80,9 @@ public class DatabaseAdapter {
             TempDocTABLE_CREATE = "CREATE TABLE IF NOT EXISTS TempDoc (FileName TEXT)",
 
     /********************* Tables used in Outlet Sale ******************/
+    /********************* Tables used in Outlet Sale ******************/
     OutletSale_CREATE = "CREATE TABLE IF NOT EXISTS OutletSale(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT, CustomerId TEXT, Customer TEXT, SaleType TEXT, CreateBy TEXT, CreateDate TEXT, Imei TEXT, IsSync TEXT);",
-            OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleUniqueId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
+            OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
             ExpenseConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseConfirmationData(Id TEXT, ExpenseDate TEXT, CustomerName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT);",
     /********************* Tables used in Delete For System User ******************/
     CashDepositDeleteDataTABLE_CREATE = "CREATE TABLE IF NOT EXISTS CashDepositDeleteData (CashDepositId TEXT, CashDepositDetailId TEXT, DepositDate TEXT, PCDetailId TEXT, Mode TEXT, Amount TEXT, FullName TEXT)",
@@ -3494,6 +3495,175 @@ public class DatabaseAdapter {
         }
         cursor.close();
         return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="To Update outlet Sale IsSync flag">
+    // To Update outlet Sale IsSync flag
+    public String UpdateOutletSaleIsSync() {
+        try {
+            String query = "UPDATE OutletSale SET IsSync = '1'";
+            db.execSQL(query);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="getUnSyncOutletSale">
+    // To get all unsync outlet sale
+    public ArrayList<HashMap<String, String>> getUnSyncOutletSale() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        selectQuery = "SELECT Id, UniqueId, CreateBy, CustomerId, SaleType, CreateDate, Imei FROM OutletSale WHERE isSync='0'";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Id", cursor.getString(0));
+            map.put("UniqueId", cursor.getString(1));
+            map.put("CreateBy", cursor.getString(2));
+            map.put("CustomerId", cursor.getString(3));
+            map.put("SaleType", cursor.getString(4));
+            map.put("SaleDate", cursor.getString(5));
+            map.put("Imei", cursor.getString(6));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="To get all unsync outlet sale details">
+    public ArrayList<HashMap<String, String>> getUnSyncOutletSaleDetail() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        selectQuery = "SELECT main.UniqueId, det.SkuId, det.Rate, det.SaleRate, det.SaleQty FROM OutletSaleDetail det, OutletSale main WHERE main.Id = det.OutletSaleId AND main.IsSync = '0' ";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("SkuId", cursor.getString(1));
+            map.put("Rate", cursor.getString(2));
+            map.put("SaleRate", cursor.getString(3));
+            map.put("Qty", cursor.getString(4));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Insert_OutletSale">
+    // To insert outlet sale records
+    public String Insert_OutletSale(String uniqueId, String customerId, String customer, String saleType, String createBy, String imei) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("UniqueId", uniqueId);
+            newValues.put("CustomerId", customerId);
+            newValues.put("Customer", customer);
+            newValues.put("SaleType", saleType);
+            newValues.put("CreateBy", createBy);
+            newValues.put("CreateDate", getDateTime());
+            newValues.put("Imei", imei);
+            newValues.put("IsSync", "0");
+
+            long id = db.insert("OutletSale", null, newValues);
+            result = "success~" + id + "~" + uniqueId;
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Insert_OutletSaleDetail">
+    // To insert outlet sale detail records
+    public String Insert_OutletSaleDetail(String outletSaleId, String skuId, String sku, String rate, String saleRate, String Qty, String saleQty) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("OutletSaleId", outletSaleId);
+            newValues.put("SkuId", skuId);
+            newValues.put("Sku", sku);
+            newValues.put("Rate", rate);
+            newValues.put("SaleRate", saleRate);
+            newValues.put("Qty", Qty);
+            newValues.put("SaleQty", saleQty);
+
+            long id = db.insert("OutletSaleDetail", null, newValues);
+            result = "success~" + id;
+            //db.execSQL("UPDATE CustomerLedger SET Balance = Balance - " + Double.parseDouble(saleRate) * Double.parseDouble(saleQty) + " WHERE CustomerId = '" + customerId + "'");
+            db.execSQL("UPDATE OutletInventory SET Quantity = Quantity - " + saleQty + " WHERE SKUId ='" + skuId + "'");
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="getOutletSaleInput">
+    // To get outlet sale input list
+    public ArrayList<HashMap<String, String>> getOutletSaleInput() {
+        wordList = new ArrayList<HashMap<String, String>>();
+        selectQuery = "SELECT inv.SkuId, sku.Name, sku.SKU, rt.Rate, inv.Quantity, sku.NameLocal FROM OutletInventory inv, SaleRateMaster rt, SKUMaster sku WHERE inv.SkuId = rt.Id AND inv.SKUId = sku.Id AND CAST(inv.Quantity AS NUMERIC)>0 AND CAST(rt.Rate AS NUMERIC)>0 AND CAST(inv.SKUId AS NUMERIC)>0 ORDER BY LOWER(sku.Name), LOWER(rt.Rate)";
+        //Log.i("LPDND", "selectQuery="+selectQuery);
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("id", cursor.getString(0));
+            map.put("sku", cursor.getString(1));
+            map.put("type", cursor.getString(2));
+            map.put("rate", cursor.getString(3));
+            map.put("aqty", cursor.getString(4).replace(".0", ""));
+            map.put("skuLocal", cursor.getString(5));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="GetOutletSaleSummery">
+    //Method to get outlet sale summery
+    public ArrayList<HashMap<String, String>> GetOutletSaleSummery(String filter) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+        selectQuery = "SELECT DISTINCT Id, 'OS'||Id, SaleType, CreateDate FROM OutletSale WHERE CustomerId = '"+filter+"' ORDER BY CAST(Id AS NUMERIC) DESC";
+        //Log.i("LPDND", "selectQuery="+masterType+":"+selectQuery);
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Id", cursor.getString(0));
+            map.put("Code", cursor.getString(1));
+            map.put("Name", cursor.getString(2));
+            map.put("Date", cursor.getString(3));
+            list.add(map);
+        }
+        cursor.close();
+        return list;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="getOutletSaleDetail">
+    // To get outlet sale details by id
+    public ArrayList<HashMap<String, String>> getOutletSaleDetail(String id) {
+        ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
+        selectQuery = "SELECT mm.Name, dd.SaleQty, dd.SaleRate, dd.SaleQty*dd.SaleRate, mm.NameLocal FROM OutletSaleDetail dd, SKUMaster mm WHERE mm.Id = dd.skuId AND dd.OutletSaleId ='" + id + "' ORDER BY LOWER(mm.Name)";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Item", cursor.getString(0));
+            map.put("Qty", cursor.getString(1).replace(".0",""));
+            map.put("Rate", cursor.getString(2));
+            map.put("Amount", cursor.getString(3));
+            map.put("ItemLocal", cursor.getString(4));
+            list.add(map);
+        }
+        cursor.close();
+        return list;
     }
     //</editor-fold>
 }

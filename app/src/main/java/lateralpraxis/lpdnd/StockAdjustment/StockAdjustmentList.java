@@ -170,16 +170,16 @@ public class StockAdjustmentList extends Activity {
             //On click of add button
 
 
-          @Override
+            @Override
             public void onClick(View arg0) {
 
-              // get selected radio button from radioGroup
-              int selectedId = RadioType.getCheckedRadioButtonId();
+                // get selected radio button from radioGroup
+                int selectedId = RadioType.getCheckedRadioButtonId();
 
-              // find the radiobutton by returned id
-              RadioButton radioButton = (RadioButton) findViewById(selectedId);
-              rdButtonSelectedText = radioButton.getText().toString();
-              //Call method to get Adjustment List
+                // find the radiobutton by returned id
+                RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                rdButtonSelectedText = radioButton.getText().toString();
+                //Call method to get Adjustment List
                 if (common.isConnected()) {
                     AsyncStockReturnListWSCall task = new AsyncStockReturnListWSCall();
                     task.execute();
@@ -222,10 +222,10 @@ public class StockAdjustmentList extends Activity {
 
         else if (id == 998) {
 
-                DatePickerDialog dialog = new DatePickerDialog(this, toDateListener, year, month, day);
-                dialog.getDatePicker().setMaxDate(new Date().getTime());
-                return dialog;
-            }
+            DatePickerDialog dialog = new DatePickerDialog(this, toDateListener, year, month, day);
+            dialog.getDatePicker().setMaxDate(new Date().getTime());
+            return dialog;
+        }
         return null;
     }
 
@@ -429,7 +429,7 @@ public class StockAdjustmentList extends Activity {
                         //ViewGroup.LayoutParams params = listConvert.getLayoutParams();
                         //listConvert.setLayoutParams(params);
                         //listConvert.requestLayout();
-                        //tvEmpty.setVisibility(View.GONE);
+                        tvEmpty.setVisibility(View.GONE);
                         tableGridHead.setVisibility(View.VISIBLE);
                     } else {
                         listConvert.setAdapter(null);
@@ -539,8 +539,8 @@ public class StockAdjustmentList extends Activity {
         protected String doInBackground(String... params) {
             try {
 
-                String[] name = {"action","lang","customerId" };
-                String[] value = { "GetProductRawMaterial",lang,userId };
+                String[] name = {"lang","id" };
+                String[] value = { lang, userId };
                 // Call method of web service to Read Conversion Details
                 responseJSON = "";
                 responseJSON = common.CallJsonWS(name, value,"GetProductRawMaterial", common.url);

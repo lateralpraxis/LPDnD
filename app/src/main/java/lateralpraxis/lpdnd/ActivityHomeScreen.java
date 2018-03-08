@@ -55,6 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lateralpraxis.lpdnd.DeliveryConfirmation.ActivityDeliveryConfirmationCreateList;
 import lateralpraxis.lpdnd.ExpenseBooking.ActivityListBooking;
 import lateralpraxis.lpdnd.OutletPayment.ActivityListPayments;
 import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
@@ -141,7 +142,7 @@ public class ActivityHomeScreen extends Activity {
 
             if (userRole.equalsIgnoreCase("Customer")) {
                 if (customerType.equalsIgnoreCase("Retail Outlet"))
-                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_stockconversion,R.layout.btn_stockadjustment, R.layout.btn_outletpayment,R.layout.btn_expensebooking, R.layout.btn_customersync);
+                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_delivery_confirmation, R.layout.btn_stockconversion,R.layout.btn_stockadjustment, R.layout.btn_outletpayment,R.layout.btn_expensebooking, R.layout.btn_customersync);
                 else
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand);
             } else if (userRole.contains("Route Officer")) {
@@ -417,6 +418,18 @@ public class ActivityHomeScreen extends Activity {
                     @Override
                     public void onClick(View v) {
                         intent = new Intent(context, ActivityOutletSaleViewSummary.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                break;
+            case R.layout.btn_delivery_confirmation:
+                btn = (Button) btnLayout.findViewById(R.id.btnDeliveryConfirmation);
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        intent = new Intent(context, ActivityDeliveryConfirmationCreateList.class);
                         startActivity(intent);
                         finish();
                     }
@@ -4204,9 +4217,10 @@ public class ActivityHomeScreen extends Activity {
                         dba.close();
                     }
                     if (common.isConnected()) {
-                        // call method of get customer json web service
-                        AsyncComplaintWSCall task = new AsyncComplaintWSCall();
+
+                        AsyncOutletSaleWSCall task = new AsyncOutletSaleWSCall();
                         task.execute();
+
                     }
                 } else {
                     if (result.contains("null"))
@@ -4412,6 +4426,115 @@ public class ActivityHomeScreen extends Activity {
 
         }
 
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="To make web service class to post data of outlet sale">
+    private class AsyncOutletSaleWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            // Will contain the raw JSON response as a string.
+            try {
+                responseJSON = "";
+                JSONObject jsonOutletSale = new JSONObject();
+
+                // to get outlet sale from database
+                dba.open();
+                ArrayList<HashMap<String, String>> insmast = dba.getUnSyncOutletSale();
+                dba.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to post outlet sale
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("UserId", insp.get("CreateBy"));
+                        jsonins.put("CustomerId", insp.get("CustomerId"));
+                        jsonins.put("SaleType", insp.get("SaleType"));
+                        jsonins.put("SaleDate", insp.get("SaleDate"));
+                        jsonins.put("AndroidDate", insp.get("SaleDate"));
+                        jsonins.put("ipAddress", common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", insp.get("Imei"));
+                        array.put(jsonins);
+                    }
+                    jsonOutletSale.put("Master", array);
+
+                    JSONObject jsonDetails = new JSONObject();
+                    // To get outlet sale details from database
+                    dba.open();
+                    ArrayList<HashMap<String, String>> insdet = dba.getUnSyncOutletSaleDetail();
+                    dba.close();
+                    if (insdet != null && insdet.size() > 0) {
+
+                        // To make json string to post outlet sale details
+                        JSONArray arraydet = new JSONArray();
+                        for (HashMap<String, String> insd : insdet) {
+                            JSONObject jsondet = new JSONObject();
+                            jsondet.put("UniqueId", insd.get("UniqueId"));
+                            jsondet.put("SkuId", insd.get("SkuId"));
+                            jsondet.put("Quantity", insd.get("Qty"));
+                            jsondet.put("Rate", insd.get("Rate"));
+                            jsondet.put("SaleRate", insd.get("SaleRate"));
+                            arraydet.put(jsondet);
+                        }
+                        jsonDetails.put("Detail", arraydet);
+                    }
+                    sendJSon = jsonOutletSale + "~" + jsonDetails;
+                    Log.e("sendJSon", sendJSon);
+                    // To invoke json web service to create outlet sale
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "CreateOutletSale", common.url);
+                } else {
+                    return "No outlet sale pending to be send.~";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                dba.close();
+            }
+        }
+
+        // After execution of json web service to create outlet sale
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        dba.open();
+                        dba.UpdateOutletSaleIsSync();
+                        dba.close();
+                    }
+                    if (common.isConnected()) {
+                        // call method of  json web service
+                        AsyncComplaintWSCall task = new AsyncComplaintWSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showToast("Error: " + result);
+                }
+
+            } catch (Exception e) {
+
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Posting Sale Details...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
     }
     //</editor-fold>
 }

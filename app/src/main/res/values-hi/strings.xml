@@ -316,7 +316,22 @@
     <string name="menu_outlet_sale">बिक्री</string>
     <string name="view_sale">बिक्री देखें</string>
     <string name="create_sale">बिक्री बनाएं</string>
+    <string name="credit">जमा धन</string>
+    <string name="saleType">बिक्री का प्रकार</string>
+    <string name="saleRate">बिक्री दर\u20B9</string>
     <!-- End of Outlet Sale  -->
+
+    <!-- Delivery Confirmation -->
+    <string name="menu_deliveryConfirmation">डिलिवरी पुष्टिकरण</string>
+    <string name="deliveryConfirmation">डिलिवरी निश्चित करना</string>
+    <string name="deliveryConfirmationDetails">डिलिवरी पुष्टिकरण विवरण</string>
+    <string name="delivery">डिलिवरी</string>
+    <string name="confirmation">पुष्टिकरण</string>
+    <string name="dateHead">दिनांक</string>
+    <string name="routeOfficer">रूट ऑफिसर</string>
+    <string name="vehicle">वाहन#</string>
+    <string name="invoice">चालान#</string>
+    <!-- End of  Delivery Confirmation -->
 
     <!-- Start of Stock Adjustment Variables-->
     <string name="label_StockAdjustment">स्टॉक समायोजन</string>
@@ -334,6 +349,7 @@
     <string name="accept">स्वीकृत</string>
     <string name="reject">अस्वीकृत</string>
     <string name="label_FromDate">तिथि से:</string>
+    <string name="label_ToDate">तिथि तक:</string>
     <string name="label_AdjDate">समायोजित तिथि</string>
     <string name="label_Item">उत्पाद</string>
     <string name="label_ExistInventory">मौजूदा इन्वेंटरी</string>

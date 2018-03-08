@@ -30,7 +30,6 @@ import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
 import lateralpraxis.lpdnd.DecimalDigitsInputFilter;
-
 import lateralpraxis.lpdnd.R;
 import lateralpraxis.lpdnd.UserSessionManager;
 import lateralpraxis.lpdnd.types.CustomType;
@@ -123,7 +122,7 @@ public class ActivityAddExpense extends Activity {
                                     HashMap<String, String> user = session.getLoginUserDetails();
                                     customerId = user.get(UserSessionManager.KEY_ID);
                                     db.open();
-                                    db.Insert_ExpenseBooking(customerId, ((CustomType) spExpenseHead.getSelectedItem()).getId(), etAmt.getText().toString(), etRemarks.getText().toString(), UUID.randomUUID().toString());
+                                    db.Insert_ExpenseBooking(customerId, ((CustomType) spExpenseHead.getSelectedItem()).getId(),Double.valueOf(etAmt.getText().toString()).toString(), etRemarks.getText().toString(), UUID.randomUUID().toString());
                                     db.close();
                                     common.showToast(lang.equalsIgnoreCase("hi") ? "व्यय विवरण सफलतापूर्वक सहेजा गया" : "Expense details saved successfully.");
                                     Intent intent = new Intent(ActivityAddExpense.this, ActivityListBooking.class);
