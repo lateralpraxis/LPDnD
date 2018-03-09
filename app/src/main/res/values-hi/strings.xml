@@ -64,7 +64,7 @@
     <string name="end_date">अंतिम तिथि: </string>
     <string name="menu_allocation">आवंटन देखें</string>
     <string name="menu_allocation_report">आवंटन</string>
-    <string name="menu_stockAdjust">समायोजन</string>
+    <string name="menu_stockAdjust">स्टॉक समायोजन</string>
     <string name="menu_stockConvert">परिवर्तन</string>
     <string name="menu_stockInve">इन्वेंटरी</string>
     <string name="menu_stockOutstanding">शेष</string>

@@ -82,7 +82,7 @@
     <string name="menu_vehicle">VEHICLE</string>
     <string name="menu_customer">CUSTOMER</string>
     <string name="menu_rate">RATE</string>
-    <string name="menu_stockAdjust">ADJUST</string>
+    <string name="menu_stockAdjust">STOCK ADJUSTMENT</string>
     <string name="menu_stockConvert">CONVERSION</string>
     <string name="menu_stockInve">INVENTORY</string>
     <string name="menu_stockOutstanding">PENDING</string>
