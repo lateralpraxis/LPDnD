@@ -32,7 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/lpblue"/>
+                android:textColor="@color/lpblue"
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -47,7 +48,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/lpblue"/>
+                android:textColor="@color/lpblue"
+                android:textSize="16sp"/>
 
         </LinearLayout>
 
@@ -66,7 +68,8 @@
                 android:layout_gravity="end"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"
-                android:textColor="@color/lpblue"/>
+                android:textColor="@color/lpblue"
+                android:textSize="16sp"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -94,7 +97,8 @@
                 android:focusableInTouchMode="true"
                 android:gravity="end"
                 android:inputType="numberDecimal"
-                android:minHeight="32dp"/>
+                android:minHeight="32dp"
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -114,7 +118,8 @@
                 android:focusableInTouchMode="true"
                 android:gravity="end"
                 android:inputType="numberDecimal"
-                android:minHeight="32dp"/>
+                android:minHeight="32dp"
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -131,7 +136,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:layout_marginRight="5dp"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="5dp"
+                android:textSize="16sp"/>
         </LinearLayout>
     </LinearLayout>
 
