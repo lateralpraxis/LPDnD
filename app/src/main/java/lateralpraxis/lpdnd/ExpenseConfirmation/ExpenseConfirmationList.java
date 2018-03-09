@@ -34,17 +34,18 @@ import lateralpraxis.lpdnd.UserSessionManager;
 
 public class ExpenseConfirmationList extends Activity {
 
-    private final Context mContext = this;
+    /*Start of code for Variable Declaration*/
+    private String lang,userId;
+    private int listSize = 0;
     /*End of code for Variable Declaration*/
-    /*Start of code to declare class*/
+	/*Start of code to declare class*/
     DatabaseAdapter db;
     Common common;
     ActivityCashDeposit.CustomAdapter Cadapter;
-    /*Start of code for Variable Declaration*/
-    private String lang, userId;
-    private int listSize = 0;
     private UserSessionManager session;
-    /*End of code to declare class*/
+    private final Context mContext = this;
+	/*End of code to declare class*/
+
     /*Start of code to declare Controls*/
     private ListView listViewMain;
     private TextView tvEmpty;
@@ -67,7 +68,7 @@ public class ExpenseConfirmationList extends Activity {
         final HashMap<String, String> user = session.getLoginUserDetails();
         userId = user.get(UserSessionManager.KEY_ID);
 
-        lang = session.getDefaultLang();
+        lang= session.getDefaultLang();
         Locale myLocale = new Locale(lang);
         Resources res = getResources();
         DisplayMetrics dm = res.getDisplayMetrics();
@@ -103,48 +104,6 @@ public class ExpenseConfirmationList extends Activity {
                 finish();
             }
         });
-    }
-
-    //Code to go to intent on selection of menu item
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-
-        switch (item.getItemId()) {
-            case android.R.id.home:
-
-                Intent i = new Intent(ExpenseConfirmationList.this, ActivityAdminHomeScreen.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
-                finish();
-                return true;
-
-            case R.id.action_go_to_home:
-                Intent homeScreenIntent = new Intent(this, ActivityAdminHomeScreen.class);
-                homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(homeScreenIntent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    // To create menu on inflater
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_home, menu);
-        return true;
-    }
-    //</editor-fold>
-
-    // When press back button go to home screen
-    @Override
-    public void onBackPressed() {
-        Intent homeScreenIntent = new Intent(ExpenseConfirmationList.this, ActivityAdminHomeScreen.class);
-        homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(homeScreenIntent);
-        finish();
     }
 
     //<editor-fold desc="Code Binding Data In List">
@@ -208,24 +167,66 @@ public class ExpenseConfirmationList extends Activity {
                     .findViewById(R.id.tvAmount);
             holder.tableHeader = (TableRow) convertView.findViewById(R.id.tableHeader);
 
-            final HashMap<String, String> itemData = _listData.get(position);
+            final HashMap<String,String> itemData = _listData.get(position);
             holder.tvId.setText(itemData.get("Id"));
             holder.tvCustomer.setText(itemData.get("CustomerName"));
             holder.tvExpenseHead.setText(itemData.get("ExpenseHead"));
             holder.tvAmount.setText(common.convertToTwoDecimal(String.valueOf(itemData.get("Amount"))));
             holder.tvDate.setText(common.convertToDisplayDateFormat(itemData.get("ExpenseDate")));
-            if (itemData.get("Flag").equalsIgnoreCase("1"))
+            if(itemData.get("Flag").equalsIgnoreCase("1"))
                 holder.tableHeader.setVisibility(View.GONE);
             else
                 holder.tableHeader.setVisibility(View.VISIBLE);
-            //  if(itemData.get("Flag").equalsIgnoreCase("1"))
-            //  holder.tvDate.setVisibility(View.GONE);
-            //  else
+          //  if(itemData.get("Flag").equalsIgnoreCase("1"))
+              //  holder.tvDate.setVisibility(View.GONE);
+          //  else
             //    holder.tvDate.setVisibility(View.VISIBLE);
             convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
-            return convertView;
-        }
+            return convertView;        }
 
+    }
+    //</editor-fold>
+
+
+    //Code to go to intent on selection of menu item
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+
+                Intent i = new Intent(ExpenseConfirmationList.this,ActivityAdminHomeScreen.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(i);
+                finish();
+                return true;
+
+            case R.id.action_go_to_home:
+                Intent homeScreenIntent = new Intent(this, ActivityAdminHomeScreen.class);
+                homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(homeScreenIntent);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    // To create menu on inflater
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    // When press back button go to home screen
+    @Override
+    public void onBackPressed() {
+        Intent homeScreenIntent = new Intent(ExpenseConfirmationList.this, ActivityAdminHomeScreen.class);
+        homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeScreenIntent);
+        finish();
     }
 
 }

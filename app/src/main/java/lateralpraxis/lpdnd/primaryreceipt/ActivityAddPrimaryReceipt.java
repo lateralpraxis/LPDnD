@@ -79,14 +79,15 @@ public class ActivityAddPrimaryReceipt extends Activity {
                     ")[pP][+-]?" + Digits + "))" +
                     "[fFdD]?))" +
                     "[\\x00-\\x20]*");
-    private final Context mContext = this;
     //<editor-fold desc="Code for class declaration">
     DatabaseAdapter db;
     Common common;
+    private UserSessionManager session;
+    private final Context mContext = this;
     String lang = "en";
     String type="Raw";
-    private UserSessionManager session;
     //</editor-fold>
+
     //<editor-fold desc="Code for Control Declaration">
     private RadioGroup RadioType;
     private RadioButton RadioRaw, RadioSKU;
@@ -193,10 +194,13 @@ public class ActivityAddPrimaryReceipt extends Activity {
         etQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (Pattern.matches(fpRegex, etQty.getText())) {
+                if (!hasFocus)
+                {
+                    if(Pattern.matches(fpRegex, etQty.getText()))
+                    {
 
-                    } else
+                    }
+                    else
                         etQty.setText("");
 
                 }
@@ -205,10 +209,13 @@ public class ActivityAddPrimaryReceipt extends Activity {
         etAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (Pattern.matches(fpRegex, etAmt.getText())) {
+                if (!hasFocus)
+                {
+                    if(Pattern.matches(fpRegex, etAmt.getText()))
+                    {
 
-                    } else
+                    }
+                    else
                         etAmt.setText("");
 
                 }
@@ -280,18 +287,18 @@ public class ActivityAddPrimaryReceipt extends Activity {
             public void onClick(View arg0) {
                 etQty.clearFocus();
                 etAmt.clearFocus();
-                if (type.equalsIgnoreCase("Raw") && ((CustomType) spRawMaterial.getSelectedItem()).getId().equalsIgnoreCase("0"))
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया कच्चे माल का चयन करें" : "Please select Raw Material.");
-                else if (type.equalsIgnoreCase("SKU") && ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0].equalsIgnoreCase("0"))
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया एसकेयू चुनें" : "Please select SKU.");
-                else if (etQty.getText().toString().trim().length() <= 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया मात्रा दर्ज करें" : "Please enter quantity.");
-                else if (Double.valueOf(etQty.getText().toString()) <= 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "मात्रा शून्य नहीं हो सकती।" : "Quantity cannot be zero.");
-                else if (etAmt.getText().toString().trim().length() <= 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया राशि दर्ज करें" : "Please enter amount.");
-                else if (Double.valueOf(etAmt.getText().toString()) <= 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "राशि शून्य नहीं हो सकती" : "Amount cannot be zero.");
+                if(type.equalsIgnoreCase("Raw") && ((CustomType)spRawMaterial.getSelectedItem()).getId().equalsIgnoreCase("0"))
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया कच्चे माल का चयन करें":"Please select Raw Material.");
+                else if(type.equalsIgnoreCase("SKU") && ((CustomType)spSKU.getSelectedItem()).getId().split("~")[0].equalsIgnoreCase("0"))
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया एसकेयू चुनें":"Please select SKU.");
+                else if(etQty.getText().toString().trim().length()<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया मात्रा दर्ज करें":"Please enter quantity.");
+                else if (Double.valueOf(etQty.getText().toString())<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"मात्रा शून्य नहीं हो सकती।":"Quantity cannot be zero.");
+                else if(etAmt.getText().toString().trim().length()<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया राशि दर्ज करें":"Please enter amount.");
+                else if (Double.valueOf(etAmt.getText().toString())<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"राशि शून्य नहीं हो सकती":"Amount cannot be zero.");
                 else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                     builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");

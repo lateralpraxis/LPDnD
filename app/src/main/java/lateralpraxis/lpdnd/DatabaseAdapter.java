@@ -101,8 +101,8 @@ public class DatabaseAdapter {
             RawMaterialLiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialLiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
-            OutletPaymentReceipt_CREATE = "CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
-            ExpenseBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);";
+    OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
+    ExpenseBooking_CREATE ="CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);";
 
     // Context of the application using the database.
     private final Context context;
@@ -2128,7 +2128,7 @@ public class DatabaseAdapter {
 
 
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment>0 || countExpense>0)
             isRequired = false;
 
         return isRequired;
@@ -3050,14 +3050,15 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
-    public String convertToDisplayDateFormat(String dateValue) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    public String convertToDisplayDateFormat(String dateValue)
+    {
+        SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         String createDateForDB = "";
         Date date = null;
         try {
             date = format.parse(dateValue);
 
-            SimpleDateFormat dbdateformat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+            SimpleDateFormat  dbdateformat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
             createDateForDB = dbdateformat.format(date);
 
         } catch (ParseException e) {
@@ -3071,7 +3072,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Method to Fetch Expense Details">
     public ArrayList<HashMap<String, String>> getExpenseDetails() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
-        String prevDate = "";
+        String prevDate="";
         if (userlang.equalsIgnoreCase("en"))
             selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
         else
@@ -3083,11 +3084,11 @@ public class DatabaseAdapter {
             map.put("Name", cursor.getString(1));
             map.put("Amount", cursor.getString(2));
             map.put("Remarks", cursor.getString(3));
-            if (prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
+            if(prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
                 map.put("Flag", "0");
             else
                 map.put("Flag", "1");
-            prevDate = convertToDisplayDateFormat(cursor.getString(0));
+            prevDate =convertToDisplayDateFormat(cursor.getString(0));
 
             wordList.add(map);
         }
@@ -3400,7 +3401,7 @@ public class DatabaseAdapter {
     //</editor-fold>
 
     //<editor-fold desc="Code to insert Expense Data in Expense Booking Table">
-    public String Insert_ExpenseBooking(String customerId, String expenseHeadId, String amount, String remarks, String uniqueId) {
+    public String Insert_ExpenseBooking(String customerId, String expenseHeadId,String amount,String remarks,String uniqueId) {
         try {
             result = "fail";
             newValues = new ContentValues();
@@ -3481,7 +3482,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Method to Fetch Data For Synchronizing Stock Conversion">
     public ArrayList<HashMap<String, String>> getConversionForSync() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
-        selectQuery = "SELECT MaterialId, SKUId, Quantity,'C' FROM OutletConversionConsumedTemp UNION ALL SELECT 0, SKUId, Quantity,'P'  FROM OutletConversionProducedTemp";
+            selectQuery = "SELECT MaterialId, SKUId, Quantity,'C' FROM OutletConversionConsumedTemp UNION ALL SELECT 0, SKUId, Quantity,'P'  FROM OutletConversionProducedTemp";
 
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -3630,7 +3631,7 @@ public class DatabaseAdapter {
     //Method to get outlet sale summery
     public ArrayList<HashMap<String, String>> GetOutletSaleSummery(String filter) {
         ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-        selectQuery = "SELECT DISTINCT Id, 'OS'||Id, SaleType, CreateDate FROM OutletSale WHERE CustomerId = '" + filter + "' ORDER BY CAST(Id AS NUMERIC) DESC";
+        selectQuery = "SELECT DISTINCT Id, 'OS'||Id, SaleType, CreateDate FROM OutletSale WHERE CustomerId = '"+filter+"' ORDER BY CAST(Id AS NUMERIC) DESC";
         //Log.i("LPDND", "selectQuery="+masterType+":"+selectQuery);
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -3655,7 +3656,7 @@ public class DatabaseAdapter {
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
             map.put("Item", cursor.getString(0));
-            map.put("Qty", cursor.getString(1).replace(".0", ""));
+            map.put("Qty", cursor.getString(1).replace(".0",""));
             map.put("Rate", cursor.getString(2));
             map.put("Amount", cursor.getString(3));
             map.put("ItemLocal", cursor.getString(4));
@@ -3663,6 +3664,20 @@ public class DatabaseAdapter {
         }
         cursor.close();
         return list;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="To Get Delivery Confirm Status ">
+    public String GetDeliveryConfirmStatus() {
+        String status = "";
+        selectQuery = "SELECT Status FROM DeliveryConfirmStatus";
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                status = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+        return status;
     }
     //</editor-fold>
 }

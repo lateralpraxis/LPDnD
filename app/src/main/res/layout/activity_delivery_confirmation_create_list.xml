@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
 
     <TextView
         style="@style/style_topbar"
-        android:text="@string/DeleteDeliveryHead" />
+        android:text="@string/DeleteDeliveryHead"/>
 
     <lateralpraxis.lpdnd.NonScrollableListView
         android:id="@+id/listViewConfirm"
@@ -17,13 +17,13 @@
         android:divider="@color/black"
         android:dividerHeight="1sp"
         android:focusable="true"
-        android:minHeight="64sp" />
+        android:minHeight="64sp"/>
 
     <View
         android:id="@+id/tvDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/black" />
+        android:background="@color/black"/>
 
     <TextView
         android:id="@+id/tvNoRecord"
@@ -33,6 +33,6 @@
         android:gravity="center"
         android:text="@string/norecord"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 </LinearLayout>

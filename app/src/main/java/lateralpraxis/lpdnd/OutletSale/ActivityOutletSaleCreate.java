@@ -259,9 +259,9 @@ public class ActivityOutletSaleCreate extends ListActivity {
                                                 tvTotalAmount.setText("");
                                                 dba.close();
                                                 if (lang.equalsIgnoreCase("hi"))
-                                                    common.showToast("बिक्री सफलतापूर्वक बनाई गई|");
+                                                common.showToast("बिक्री सफलतापूर्वक बनाई गई|");
                                                 else
-                                                    common.showToast("Sale created successfully.");
+                                                common.showToast("Sale created successfully.");
 
                                                 SimpleDateFormat dateFormatter = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
                                                 //To bind default sale date
@@ -270,12 +270,19 @@ public class ActivityOutletSaleCreate extends ListActivity {
                                                 String saleDate = dateFormatter.format(c.getTime());
 
                                                 Intent intent;
-                                                intent = new Intent(context, ActivityOutletSaleViewDetail.class);
+                                                intent = new Intent(context, ActivityOutletSaleViewSummary.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                intent.putExtra("Id", insertDelId.split("~")[1]);
-                                                intent.putExtra("Date", saleDate);
                                                 startActivity(intent);
                                                 finish();
+
+//                                                Intent intent;
+//                                                intent = new Intent(context, ActivityOutletSaleViewDetail.class);
+//                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                                intent.putExtra("Id", insertDelId.split("~")[1]);
+//                                                intent.putExtra("Date",saleDate);
+//                                                intent.putExtra("Name",saleType);
+//                                                startActivity(intent);
+//                                                finish();
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();
@@ -462,9 +469,9 @@ public class ActivityOutletSaleCreate extends ListActivity {
                                 holder.tvAmount.setText("");
                             } else if (Double.parseDouble(holder.etSaleQty.getText().toString().trim()) > Double.parseDouble(holder.tvQty.getText().toString().trim())) {
                                 if (lang.equalsIgnoreCase("hi"))
-                                    common.showToast("\n" + "बिक्री मात्रा उपलब्ध मात्रा से अधिक नहीं होनी चाहिए।");
+                                common.showToast("\n" +"बिक्री मात्रा उपलब्ध मात्रा से अधिक नहीं होनी चाहिए।");
                                 else
-                                    common.showToast("Sale quantity should not be exceeded from available quantity!");
+                                common.showToast("Sale quantity should not be exceeded from available quantity!");
                                 holder.etSaleQty.setText("");
                             } else
                                 holder.tvAmount.setText(common.stringToTwoDecimal(String.valueOf(Double.parseDouble(holder.etSaleQty.getText().toString()) * Double.parseDouble(holder.etSaleRate.getText().toString().replace(",", "")))));

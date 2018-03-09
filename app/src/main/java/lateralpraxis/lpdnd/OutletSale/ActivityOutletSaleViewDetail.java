@@ -77,7 +77,7 @@ public class ActivityOutletSaleViewDetail extends Activity {
         tvNoRecord = (TextView) findViewById(R.id.tvNoRecord);
         tvTotalAmount = (TextView) findViewById(R.id.tvTotalAmount);
         tvHeader = (TextView) findViewById(R.id.tvHeader);
-        tvDivider = findViewById(R.id.tvDivider);
+        tvDivider = (View) findViewById(R.id.tvDivider);
         tvDivider.setVisibility(View.GONE);
 
         //To extract id from bundle to show details
@@ -87,9 +87,9 @@ public class ActivityOutletSaleViewDetail extends Activity {
             date = extras.getString("Date");
             name = extras.getString("Name");
             if (lang.equalsIgnoreCase("hi"))
-                tvHeader.setText("दिनांक: " + date + "  कोड: OS" + id + "  बिक्री का प्रकार: " + name);
+                tvHeader.setText("दिनांक: " + date + "  कोड: OS" + id+ "  बिक्री का प्रकार: " + name);
             else
-                tvHeader.setText("Date: " + date + "  Code: OS" + id + "  Sale Type: " + name);
+                tvHeader.setText("Date: " + date + "  Code: OS" + id+ "  Sale Type: " + name);
         }
 
 //To get outlet sale details from database
@@ -223,7 +223,7 @@ public class ActivityOutletSaleViewDetail extends Activity {
                 holder = (ViewHolder) arg1.getTag();
             }
             //To bind data into view holder
-            holder.tvItem.setText((lang.equalsIgnoreCase("hi")) ? HeaderDetails.get(arg0).get("ItemLocal") : HeaderDetails.get(arg0).get("Item"));
+            holder.tvItem.setText((lang.equalsIgnoreCase("hi"))?HeaderDetails.get(arg0).get("ItemLocal"):HeaderDetails.get(arg0).get("Item"));
             holder.tvQty.setText(HeaderDetails.get(arg0).get("Qty"));
             holder.tvRate.setText(common.stringToTwoDecimal(HeaderDetails.get(arg0).get("Rate")));
             holder.tvAmount.setText(common.stringToTwoDecimal(HeaderDetails.get(arg0).get("Amount")));

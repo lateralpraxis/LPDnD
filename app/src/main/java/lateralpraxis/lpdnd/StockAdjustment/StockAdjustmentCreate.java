@@ -233,7 +233,7 @@ public class StockAdjustmentCreate extends Activity {
                 else {
                     if (Pattern.matches(fpRegex, etAdjustedQty.getText())) {
                         if (etAdjustedQty.getText().toString().trim().length() > 0) {
-                            if (TextUtils.isEmpty(tvInventory.getText().toString().trim()))
+                            if(TextUtils.isEmpty(tvInventory.getText().toString().trim()))
                                 tvInventory.setText("0");
                             if (Double.valueOf(etAdjustedQty.getText().toString().trim()) > Double.valueOf(tvInventory.getText().toString().trim()))
                                 tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
@@ -250,13 +250,13 @@ public class StockAdjustmentCreate extends Activity {
         //<editor-fold desc="Code to be executed on change of text">
         TextWatcher textWatcher = new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                if (!etAdjustedQty.getText().toString().equalsIgnoreCase(".")) {
-                    if (etAdjustedQty.getText().toString().equalsIgnoreCase("."))
-                        etAdjustedQty.setText("");
+                    if (!etAdjustedQty.getText().toString().equalsIgnoreCase(".")) {
+                        if (etAdjustedQty.getText().toString().equalsIgnoreCase("."))
+                            etAdjustedQty.setText("");
 
-                } else {
-                    etAdjustedQty.setText("");
-                }
+                    } else {
+                        etAdjustedQty.setText("");
+                    }
 
             }
 

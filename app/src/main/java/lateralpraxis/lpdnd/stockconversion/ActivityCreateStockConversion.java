@@ -249,10 +249,13 @@ public class ActivityCreateStockConversion extends Activity {
         etProducedQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (Pattern.matches(fpRegex, etProducedQty.getText())) {
+                if (!hasFocus)
+                {
+                    if(Pattern.matches(fpRegex, etProducedQty.getText()))
+                    {
 
-                    } else
+                    }
+                    else
                         etProducedQty.setText("");
 
                 }
@@ -261,10 +264,13 @@ public class ActivityCreateStockConversion extends Activity {
         etConsumedQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (Pattern.matches(fpRegex, etConsumedQty.getText())) {
+                if (!hasFocus)
+                {
+                    if(Pattern.matches(fpRegex, etConsumedQty.getText()))
+                    {
 
-                    } else
+                    }
+                    else
                         etConsumedQty.setText("");
 
                 }
@@ -687,7 +693,7 @@ public class ActivityCreateStockConversion extends Activity {
             }
             holder.tvId.setText(listCons.get(arg0).get("Id"));
             holder.tvName.setText(listCons.get(arg0).get("Name"));
-            holder.tvQty.setText(listCons.get(arg0).get("Quantity").replace(".0", ""));
+            holder.tvQty.setText(listCons.get(arg0).get("Quantity").replace(".0",""));
 
             holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 
@@ -802,7 +808,7 @@ public class ActivityCreateStockConversion extends Activity {
             }
             holder.tvId.setText(listProd.get(arg0).get("Id"));
             holder.tvName.setText(listProd.get(arg0).get("Name"));
-            holder.tvQty.setText(listProd.get(arg0).get("Quantity").replace(".0", ""));
+            holder.tvQty.setText(listProd.get(arg0).get("Quantity").replace(".0",""));
 
             holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 

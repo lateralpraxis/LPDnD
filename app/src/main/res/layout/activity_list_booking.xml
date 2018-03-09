@@ -46,11 +46,10 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:visibility="visible">
-
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="5.0dip">
+                android:layout_marginBottom="5.0dip" >
 
 
                 <TextView
@@ -59,13 +58,12 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="start"
-                    android:paddingRight="2dp"
                     android:text="@string/label_date"
                     android:textColor="@color/white"
                     android:textIsSelectable="false"
+                    android:paddingRight="2dp"
                     android:textSize="18sp" />
             </TableRow>
-
             <TableRow
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"

@@ -36,18 +36,18 @@ import lateralpraxis.lpdnd.types.CustomType;
 
 public class ActivityAddExpense extends Activity {
 
-    private final Context mContext = this;
     //<editor-fold desc="Code for class declaration">
     DatabaseAdapter db;
     Common common;
-    String lang = "en";
     private UserSessionManager session;
+    String lang = "en";
+    private final Context mContext = this;
     private Intent intent;
     //</editor-fold>
 
     //<editor-fold desc="Code to Declare Controls">
     private Spinner spExpenseHead;
-    private EditText etAmt, etRemarks;
+    private EditText etAmt,etRemarks;
     private Button btnSave;
     //</editor-fold>
 
@@ -99,14 +99,14 @@ public class ActivityAddExpense extends Activity {
             //When go button click
             @Override
             public void onClick(View arg0) {
-                if (((CustomType) spExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया व्यय हेड का चयन करें" : "Please select Expense Head.");
-                else if (etAmt.getText().toString().trim().length() <= 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया राशि दर्ज करें" : "Please enter amount.");
-                else if (Double.valueOf(etAmt.getText().toString()) <= 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "राशि शून्य नहीं हो सकती" : "Amount cannot be zero.");
-                else if (etRemarks.getText().toString().trim().length() <= 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया टिप्पणी दर्ज करें" : "Please enter remarks.");
+                if(((CustomType)spExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया व्यय हेड का चयन करें":"Please select Expense Head.");
+                else if(etAmt.getText().toString().trim().length()<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया राशि दर्ज करें":"Please enter amount.");
+                else if (Double.valueOf(etAmt.getText().toString())<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"राशि शून्य नहीं हो सकती":"Amount cannot be zero.");
+                else if(etRemarks.getText().toString().trim().length()<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया टिप्पणी दर्ज करें":"Please enter remarks.");
                 else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                     builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
@@ -122,7 +122,7 @@ public class ActivityAddExpense extends Activity {
                                     HashMap<String, String> user = session.getLoginUserDetails();
                                     customerId = user.get(UserSessionManager.KEY_ID);
                                     db.open();
-                                    db.Insert_ExpenseBooking(customerId, ((CustomType) spExpenseHead.getSelectedItem()).getId(), Double.valueOf(etAmt.getText().toString()).toString(), etRemarks.getText().toString(), UUID.randomUUID().toString());
+                                    db.Insert_ExpenseBooking(customerId, ((CustomType) spExpenseHead.getSelectedItem()).getId(),Double.valueOf(etAmt.getText().toString()).toString(), etRemarks.getText().toString(), UUID.randomUUID().toString());
                                     db.close();
                                     common.showToast(lang.equalsIgnoreCase("hi") ? "व्यय विवरण सफलतापूर्वक सहेजा गया" : "Expense details saved successfully.");
                                     Intent intent = new Intent(ActivityAddExpense.this, ActivityListBooking.class);

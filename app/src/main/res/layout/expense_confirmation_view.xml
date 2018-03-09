@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/white"
+            android:orientation="vertical" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <TextView
             style="@style/style_topbar"
@@ -23,7 +23,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="2dp"
             android:paddingStart="5dp"
-            android:weightSum="1">
+            android:weightSum="1" >
 
             <TextView
                 android:layout_width="0dp"
@@ -53,7 +53,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="2dp"
             android:paddingStart="5dp"
-            android:weightSum="1">
+            android:weightSum="1" >
 
             <TextView
                 android:layout_width="0dp"
@@ -83,7 +83,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="2dp"
             android:paddingStart="5dp"
-            android:weightSum="1">
+            android:weightSum="1" >
 
             <TextView
                 android:layout_width="0dp"
@@ -113,7 +113,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="2dp"
             android:paddingStart="5dp"
-            android:weightSum="1">
+            android:weightSum="1" >
 
             <TextView
                 android:layout_width="0dp"
@@ -144,7 +144,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="2dp"
             android:paddingStart="5dp"
-            android:weightSum="1">
+            android:weightSum="1"  >
 
             <TextView
                 android:layout_width="0dp"
@@ -162,7 +162,8 @@
                 android:layout_weight=".6"
                 android:gravity="start"
                 android:text="@string/label_Remarks"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                />
         </LinearLayout>
 
         <LinearLayout
@@ -174,7 +175,7 @@
             android:paddingLeft="5dp"
             android:paddingRight="2dp"
             android:paddingStart="5dp"
-            android:weightSum="1">
+            android:weightSum="1"  >
 
             <TextView
                 android:id="@+id/tvType"
@@ -219,16 +220,16 @@
             android:paddingLeft="5dp"
             android:paddingRight="2dp"
             android:paddingStart="5dp"
-            android:weightSum="1">
+            android:weightSum="1"  >
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".4"
                 android:gravity="start"
-                android:text="@string/label_Remarks"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:text="@string/label_Remarks" />
 
             <EditText
                 android:id="@+id/etRemarks"
@@ -242,14 +243,14 @@
                 android:maxLength="100"
                 android:minLines="5"
                 android:paddingLeft="5dp"
-                android:scrollbars="vertical" />
+                android:scrollbars="vertical"/>
         </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end">
+            android:layout_gravity="end" >
 
             <Button
                 android:id="@+id/btnSubmit"

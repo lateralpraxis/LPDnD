@@ -44,6 +44,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
@@ -141,7 +142,7 @@ public class ActivityHomeScreen extends Activity {
 
             if (userRole.equalsIgnoreCase("Customer")) {
                 if (customerType.equalsIgnoreCase("Retail Outlet"))
-                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_delivery_confirmation, R.layout.btn_stockconversion, R.layout.btn_stockadjustment, R.layout.btn_outletpayment, R.layout.btn_expensebooking, R.layout.btn_customersync);
+                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_delivery_confirmation, R.layout.btn_stockconversion,R.layout.btn_stockadjustment, R.layout.btn_outletpayment,R.layout.btn_expensebooking, R.layout.btn_customersync);
                 else
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand);
             } else if (userRole.contains("Route Officer")) {
@@ -240,7 +241,7 @@ public class ActivityHomeScreen extends Activity {
                         if (common.isConnected()) {
                             // call method of view demand json web service
                             AsyncViewDemandWSCall task = new AsyncViewDemandWSCall();
-                            task.execute("3");
+                            task.execute(new String[]{"3"});
                         }
                     }
                 });
@@ -296,7 +297,7 @@ public class ActivityHomeScreen extends Activity {
                     public void onClick(View v) {
                         if (common.isConnected()) {
                             AsyncProductMasterWSCall task = new AsyncProductMasterWSCall();
-                            task.execute("2");
+                            task.execute(new String[]{"2"});
                         }
                     }
                 });
@@ -680,7 +681,7 @@ public class ActivityHomeScreen extends Activity {
 
     // Method to compress, create and return byte array for document
     private String getByteArrayFromImage(Bitmap bitmap)
-            throws IOException {
+            throws FileNotFoundException, IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bitmap.compress(CompressFormat.JPEG, 80, bos);
         byte[] data = bos.toByteArray();
@@ -720,6 +721,7 @@ public class ActivityHomeScreen extends Activity {
                     end = userInput.getSelectionEnd();
                     userInput
                             .setTransformationMethod(new PasswordTransformationMethod());
+                    ;
                     userInput.setSelection(start, end);
                 } else {
                     start = userInput.getSelectionStart();
@@ -3902,7 +3904,7 @@ public class ActivityHomeScreen extends Activity {
                                     // service
                                     // commented
                                     /*
-                                     * AsyncRouteWSCall task = new
+									 * AsyncRouteWSCall task = new
 									 * AsyncRouteWSCall ();
 									 * task.execute(params);
 									 */

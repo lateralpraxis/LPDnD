@@ -68,7 +68,7 @@ public class StockAdjustmentList extends Activity {
     //</editor-fold>
 
     //<editor-fold desc="Code to declare Controls">
-    private TextView tvFromDate, tvEmpty, linkAddStockAdjustment, tvToDate, tvItem, tvAdjDate, tvExistInv, tvAdjQty, tvNewInv, tvReason;
+    private TextView tvFromDate, tvEmpty,linkAddStockAdjustment, tvToDate, tvItem, tvAdjDate, tvExistInv, tvAdjQty, tvNewInv, tvReason;
     private ListView listConvert;
     private Button btnGo;
     private TableLayout tableGridHead;
@@ -125,7 +125,7 @@ public class StockAdjustmentList extends Activity {
         tvExistInv = (TextView) findViewById(R.id.tvExistInv);
         tvNewInv = (TextView) findViewById(R.id.tvNewInv);
         tvReason = (TextView) findViewById(R.id.tvReason);
-        linkAddStockAdjustment = (TextView) findViewById(R.id.linkAddStockAdjustment);
+        linkAddStockAdjustment= (TextView) findViewById(R.id.linkAddStockAdjustment);
         btnGo = (Button) findViewById(R.id.btnGo);
         tableGridHead = (TableLayout) findViewById(R.id.tableGridHead);
         dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
@@ -146,8 +146,9 @@ public class StockAdjustmentList extends Activity {
             //On click of view delivery button
             @Override
             public void onClick(View arg0) {
-                if (common.isConnected()) {
-                    AsyncPendingDeliveryStatusWSCall task = new AsyncPendingDeliveryStatusWSCall();
+                if(common.isConnected())
+                {
+                    AsyncPendingDeliveryStatusWSCall task= new AsyncPendingDeliveryStatusWSCall();
                     task.execute();
                 }
             }
@@ -194,7 +195,6 @@ public class StockAdjustmentList extends Activity {
     private void FromDate(String date) {
         tvFromDate.setText(date.replace(" ", "-"));
     }
-
     private void ToDate(String date) {
         tvToDate.setText(date.replace(" ", "-"));
     }
@@ -218,7 +218,9 @@ public class StockAdjustmentList extends Activity {
             DatePickerDialog dialog = new DatePickerDialog(this, fromDateListener, year, month, day);
             dialog.getDatePicker().setMaxDate(new Date().getTime());
             return dialog;
-        } else if (id == 998) {
+        }
+
+        else if (id == 998) {
 
             DatePickerDialog dialog = new DatePickerDialog(this, toDateListener, year, month, day);
             dialog.getDatePicker().setMaxDate(new Date().getTime());
@@ -340,7 +342,7 @@ public class StockAdjustmentList extends Activity {
             holder.tvAdjQty.setText(list.get(arg0).get("Quantity"));
             holder.tvNewInv.setText(list.get(arg0).get("NewInventory"));
             holder.tvReason.setText(Html.fromHtml("<b>Remarks: </b>") + list.get(arg0).get("Reason"));
-            if (list.get(arg0).get("Flag").equalsIgnoreCase("1"))
+            if(list.get(arg0).get("Flag").equalsIgnoreCase("1"))
                 holder.tableHeader.setVisibility(View.GONE);
             else
                 holder.tableHeader.setVisibility(View.VISIBLE);
@@ -358,7 +360,7 @@ public class StockAdjustmentList extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String[] name = {"lang", "fromDate", "toDate", "customerId", "prRm"};
+                String[] name = { "lang", "fromDate", "toDate", "customerId", "prRm"};
                 String fromDateString, toDateString, strRemarks;
                 Date fromDate = new Date();
                 fromDate = dateFormatter_display.parse(tvFromDate.getText().toString().trim());
@@ -405,12 +407,12 @@ public class StockAdjustmentList extends Activity {
                                     .getString("NewInventory"));
                             map.put("Reason", jsonArray.getJSONObject(i)
                                     .getString("Reason"));
-                            if (prevName.equalsIgnoreCase(jsonArray.getJSONObject(i)
+                            if(prevName.equalsIgnoreCase(jsonArray.getJSONObject(i)
                                     .getString("Id")))
                                 map.put("Flag", "1");
                             else
                                 map.put("Flag", "0");
-                            prevName = jsonArray.getJSONObject(i)
+                            prevName=jsonArray.getJSONObject(i)
                                     .getString("Id");
                             wordList.add(map);
                         }
@@ -460,8 +462,8 @@ public class StockAdjustmentList extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String[] name = {"action", "userId", "role"};
-                String[] value = {"CheckPendingDelivery", userId, "Customer"};
+                String[] name = { "action", "userId", "role" };
+                String[] value = { "CheckPendingDelivery", userId, "Customer" };
                 responseJSON = "";
                 // Call method of web service to download Reatil Outlet Inventory from
                 // server
@@ -485,20 +487,23 @@ public class StockAdjustmentList extends Activity {
                     JSONArray jsonArray = new JSONArray(responseJSON);
                     db.open();
                     db.DeleteMasterData("DeliveryConfirmStatus");
-                    String status = "";
+                    String status="";
                     for (int i = 0; i < jsonArray.length(); ++i) {
                         db.Insert_DeliveryConfirmStatus(jsonArray.getJSONObject(i)
                                 .getString("A"));
-                        status = jsonArray.getJSONObject(i).getString("A");
+                        status=jsonArray.getJSONObject(i).getString("A");
                     }
                     db.close();
-                    if (status.equalsIgnoreCase("0")) {
-                        if (common.isConnected()) {
+                    if(status.equalsIgnoreCase("0"))
+                    {
+                        if(common.isConnected()) {
                             AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
                             task.execute();
                         }
-                    } else {
-                        common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए स्टॉक रूपांतरण की अनुमति नहीं है।" : "Deliveries are pending for confirmation hence stock adjustment is not allowed.");
+                    }
+                    else
+                    {
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए स्टॉक रूपांतरण की अनुमति नहीं है।":"Deliveries are pending for confirmation hence stock adjustment is not allowed.");
                     }
 
                 } else {
@@ -534,11 +539,11 @@ public class StockAdjustmentList extends Activity {
         protected String doInBackground(String... params) {
             try {
 
-                String[] name = {"lang", "id"};
-                String[] value = {lang, userId};
+                String[] name = {"lang","id" };
+                String[] value = { lang, userId };
                 // Call method of web service to Read Conversion Details
                 responseJSON = "";
-                responseJSON = common.CallJsonWS(name, value, "GetProductRawMaterial", common.url);
+                responseJSON = common.CallJsonWS(name, value,"GetProductRawMaterial", common.url);
                 return "";
             } catch (SocketTimeoutException e) {
                 return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
@@ -554,11 +559,11 @@ public class StockAdjustmentList extends Activity {
         protected void onPostExecute(String result) {
             try {
                 if (!result.contains("ERROR")) {
-                    String data = "";
+                    String data="";
                     // To display message after response from server
                     JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
                     JSONArray jsonRaw = new JSONArray(responseJSON.split("~")[1]);
-                    if (jsonSKU.length() > 0 || jsonRaw.length() > 0) {
+                    if(jsonSKU.length() > 0 || jsonRaw.length() > 0) {
                         if (jsonSKU.length() > 0) {
                             db.open();
                             db.DeleteMasterData("SKULiveInventory");
@@ -595,7 +600,8 @@ public class StockAdjustmentList extends Activity {
                         intent.putExtra("UniqueId", UUID.randomUUID().toString());
                         startActivity(intent);
                         finish();
-                    } else {
+                    }
+                    else {
                         common.showToast("There is no data available for Inventory!");
                     }
 

@@ -2,18 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <TableLayout
         android:id="@+id/tableGridHead"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:visibility="visible">
-
         <TableRow
             android:id="@+id/tableRowDate"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5.0dip">
+            android:layout_marginBottom="5.0dip" >
 
 
             <TextView
@@ -22,13 +20,12 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
-                android:paddingRight="2dp"
                 android:text="@string/label_date"
                 android:textColor="@color/black"
                 android:textIsSelectable="false"
+                android:paddingRight="2dp"
                 android:textSize="18sp" />
         </TableRow>
-
         <TableRow
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"

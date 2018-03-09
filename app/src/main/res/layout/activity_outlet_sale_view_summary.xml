@@ -21,7 +21,7 @@
             android:background="@android:color/transparent"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="@string/create_sale"
+            android:text="@string/label_linkAdd"
             android:textColor="@color/lpblue"
             android:textSize="16sp" />
 
@@ -34,12 +34,11 @@
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
             android:weightSum="1" >
-
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".4"
-                android:orientation="vertical">
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/tvDate"
@@ -75,7 +74,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
                 android:orientation="vertical" >
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -100,7 +98,6 @@
             android:divider="@color/black"
             android:dividerHeight="1sp"
             android:focusable="true" />
-
         <View
             android:id="@+id/tvDivider"
             android:layout_width="match_parent"

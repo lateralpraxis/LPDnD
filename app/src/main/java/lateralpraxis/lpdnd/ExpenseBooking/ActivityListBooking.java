@@ -34,17 +34,18 @@ import lateralpraxis.lpdnd.UserSessionManager;
 
 public class ActivityListBooking extends Activity {
 
-    private final Context mContext = this;
+    //<editor-fold desc="Code for Control Declaration">
+    private TextView linkAddExpense,tvEmpty;
+    private ListView listExpense;
+    private TableLayout tableGridHead;
+    //</editor-fold>
+
     //<editor-fold desc="Code for class declaration">
     DatabaseAdapter db;
     Common common;
-    //</editor-fold>
-    String lang = "en";
-    //<editor-fold desc="Code for Control Declaration">
-    private TextView linkAddExpense, tvEmpty;
-    private ListView listExpense;
-    private TableLayout tableGridHead;
     private UserSessionManager session;
+    String lang = "en";
+    private final Context mContext = this;
     private Intent intent;
     //</editor-fold>
 
@@ -52,7 +53,6 @@ public class ActivityListBooking extends Activity {
     private ArrayList<HashMap<String, String>> wordList = null;
     private ArrayList<HashMap<String, String>> list;
     private int listSize = 0;
-
     //</editor-fold>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +62,8 @@ public class ActivityListBooking extends Activity {
         //<editor-fold desc="Code for finding controls">
         linkAddExpense = (TextView) findViewById(R.id.linkAddExpense);
         tvEmpty = (TextView) findViewById(R.id.tvEmpty);
-        listExpense = (ListView) findViewById(R.id.listExpense);
-        tableGridHead = (TableLayout) findViewById(R.id.tableGridHead);
+        listExpense= (ListView) findViewById(R.id.listExpense);
+        tableGridHead= (TableLayout) findViewById(R.id.tableGridHead);
         //</editor-fold>
 
         //<editor-fold desc="Code for setting Action Bar">
@@ -119,48 +119,11 @@ public class ActivityListBooking extends Activity {
         }
     }
 
-    //<editor-fold desc="Code to Set Home Button in Action Bar">
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
-    //<editor-fold desc="Code to be executed on Action Bar Menu Item">
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return true;
-            case R.id.action_go_to_home:
-                onBackPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Code to b executed on Back Press">
-    @Override
-    public void onBackPressed() {
-
-        Intent i = new Intent(ActivityListBooking.this, ActivityHomeScreen.class);
-        startActivity(i);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
-        finish();
-
-    }
-    //</editor-fold>
-
     //<editor-fold desc="Code to be Bind Data in list view">
     public static class ViewHolder {
         TextView tvDate, tvExpenseHead, tvAmount;
         TableRow tableRowDate;
     }
-    //</editor-fold>
 
     public class CustomAdapter extends BaseAdapter {
         private Context docContext;
@@ -220,7 +183,7 @@ public class ActivityListBooking extends Activity {
             holder.tvExpenseHead.setText(list.get(arg0).get("Name"));
             holder.tvDate.setText(common.convertToDisplayDateFormat(list.get(arg0).get("Date")));
             holder.tvAmount.setText(common.convertToTwoDecimal(list.get(arg0).get("Amount")));
-            if (list.get(arg0).get("Flag").equalsIgnoreCase("0"))
+            if(list.get(arg0).get("Flag").equalsIgnoreCase("0"))
                 holder.tableRowDate.setVisibility(View.GONE);
             else
                 holder.tableRowDate.setVisibility(View.VISIBLE);
@@ -228,6 +191,43 @@ public class ActivityListBooking extends Activity {
             arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return arg1;
         }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to Set Home Button in Action Bar">
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return true;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to be executed on Action Bar Menu Item">
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.action_go_to_home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to b executed on Back Press">
+    @Override
+    public void onBackPressed() {
+
+        Intent i = new Intent(ActivityListBooking.this, ActivityHomeScreen.class);
+        startActivity(i);
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+        finish();
+
     }
     //</editor-fold>
 }
