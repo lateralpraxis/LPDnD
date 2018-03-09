@@ -317,7 +317,7 @@
     <!-- End of Primary Receipt Variables-->
 
 
-    <!-- Start of Stock Conversion Variables-->
+    <!-- Start of Stock Conversion Variables -->
     <string name="label_StockConversion">Stock Conversion</string>
     <string name="label_Consumed">Consumed</string>
     <string name="label_Produced">Produced</string>
