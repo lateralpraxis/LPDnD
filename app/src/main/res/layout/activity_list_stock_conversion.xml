@@ -34,7 +34,8 @@
                 android:clickable="true"
                 android:gravity="right"
                 android:linksClickable="true"
-                android:text="@string/label_linkAdd" />
+                android:text="@string/label_linkAdd"
+                android:textSize="18dp" />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,6 +49,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:text="@string/datehead"
+                android:textSize="18dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -55,7 +57,8 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"
-                android:hint="@string/hint_date" />
+                android:hint="@string/hint_date"
+                android:textSize="18dp" />
 
             <ImageView
                 android:layout_width="0dp"
@@ -129,11 +132,11 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
+                        android:gravity="end"
+                        android:paddingRight="2dp"
                         android:text="@string/label_date"
                         android:textColor="@color/white"
                         android:textIsSelectable="false"
-                        android:gravity="end"
-                        android:paddingRight="2dp"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
