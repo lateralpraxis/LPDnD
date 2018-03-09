@@ -3225,15 +3225,16 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> getTempConsumed() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         if (userlang.equalsIgnoreCase("en"))
-            selectQuery = "SELECT tmp.Id, ifnull(sm.Name,rm.Name||' '||rm.Uom) AS Name, tmp.Quantity FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN SKUMaster sm ON tmp.SKUId = sm.Id LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
+            selectQuery = "SELECT tmp.Id, ifnull(sm.Name,rm.Name||' '||rm.Uom) AS Name, tmp.Quantity, (CASE WHEN tmp.SKUId=0 THEN 'RAW' ELSE 'SKU' END) FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN SKUMaster sm ON tmp.SKUId = sm.Id LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
         else
-            selectQuery = "SELECT tmp.Id, ifnull(sm.NameLocal,rm.NameLocal||' '||rm.Uom) AS Name, tmp.Quantity FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN SKUMaster sm ON tmp.SKUId = sm.Id LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
+            selectQuery = "SELECT tmp.Id, ifnull(sm.NameLocal,rm.NameLocal||' '||rm.Uom) AS Name, tmp.Quantity, (CASE WHEN tmp.SKUId=0 THEN 'RAW' ELSE 'SKU' END) FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN SKUMaster sm ON tmp.SKUId = sm.Id LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
             map.put("Id", cursor.getString(0));
             map.put("Name", cursor.getString(1));
             map.put("Quantity", cursor.getString(2));
+            map.put("Type", cursor.getString(3));
             wordList.add(map);
         }
         cursor.close();

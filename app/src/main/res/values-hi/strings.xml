@@ -88,10 +88,10 @@
     <string name="menu_vehicle">वाहन</string>
     <string name="menu_customer">ग्राहक</string>
     <string name="menu_rate">दर</string>
-    <string name="menu_primaryreceipt">प्राथमिक रसीद</string>
+    <string name="menu_primaryreceipt">प्राथमिक\nरसीद</string>
     <string name="menu_expense">व्यय</string>
-    <string name="menu_stockAdjustment">स्टॉक समायोजन</string>
-    <string name="menu_expenseconfirmation">व्यय पुष्टि</string>
+    <string name="menu_stockAdjustment">स्टॉक\nसमायोजन</string>
+    <string name="menu_expenseconfirmation">व्यय\nपुष्टि</string>
     <string name="place_order">डिमांड बनायें</string>
     <string name="go">देखें</string>
     <string name="show_password">पासवर्ड दिखाएं </string>
@@ -324,7 +324,7 @@
     <!-- End of Outlet Sale  -->
 
     <!-- Delivery Confirmation -->
-    <string name="menu_deliveryConfirmation">डिलिवरी पुष्टिकरण</string>
+    <string name="menu_deliveryConfirmation">डिलिवरी\nपुष्टिकरण</string>
     <string name="deliveryConfirmation">डिलिवरी निश्चित करना</string>
     <string name="deliveryConfirmationDetails">डिलिवरी पुष्टिकरण विवरण</string>
     <string name="delivery">डिलिवरी</string>

@@ -14,7 +14,7 @@
     </style>
 
     <style name="style_topbar">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:minHeight">36sp</item>
         <item name="android:background">@color/lpgreen</item>
         <item name="android:autoText">false</item>
