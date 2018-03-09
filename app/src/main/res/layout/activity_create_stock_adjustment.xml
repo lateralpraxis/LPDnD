@@ -44,6 +44,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_type"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <RadioGroup
@@ -60,13 +61,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:text="@string/label_raw" />
+                        android:text="@string/label_raw"
+                        android:textSize="16sp"/>
 
                     <RadioButton
                         android:id="@+id/RadioSKU"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/Item" />
+                        android:text="@string/Item"
+                        android:textSize="16sp"/>
                 </RadioGroup>
             </LinearLayout>
 
@@ -84,6 +87,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_rawMat"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -109,6 +113,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_item"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -130,6 +135,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_availqty"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -151,7 +157,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
-                    android:text="@string/label_qty"
+                    android:text="@string/label_Adjustedqtymandatory"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -177,6 +184,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:visibility="gone"/>
 
@@ -185,6 +193,7 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.7"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -200,6 +209,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_RemarksMandatory"
+                    android:textSize="16sp"
                     android:textStyle="bold"/>
 
                 <EditText
@@ -214,7 +224,8 @@
                     android:maxLength="100"
                     android:minLines="5"
                     android:paddingLeft="5dp"
-                    android:scrollbars="vertical"/>
+                    android:scrollbars="vertical"
+                    android:textSize="16sp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -239,7 +250,8 @@
                     android:paddingRight="10sp"
                     android:paddingTop="5sp"
                     android:text="@string/stradd"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="16sp"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

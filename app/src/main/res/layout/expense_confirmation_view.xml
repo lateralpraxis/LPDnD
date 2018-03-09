@@ -21,6 +21,7 @@
             android:orientation="horizontal"
             android:paddingEnd="2dp"
             android:paddingLeft="5dp"
+
             android:paddingRight="2dp"
             android:paddingStart="5dp"
             android:weightSum="1" >
@@ -28,20 +29,22 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".4"
                 android:gravity="start"
                 android:text="@string/Customer"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvCustomer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".6"
                 android:gravity="start"
                 android:text="@string/Customer"
-                android:textSize="18sp" />
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -58,20 +61,22 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".4"
                 android:gravity="start"
                 android:text="@string/ComplaintDate"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".6"
                 android:gravity="start"
                 android:text="@string/ComplaintDate"
-                android:textSize="18sp" />
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -88,20 +93,22 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".4"
                 android:gravity="start"
                 android:text="@string/ExpenseHead"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvExpenseHead"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".6"
                 android:gravity="start"
                 android:text="@string/ExpenseHead"
-                android:textSize="18sp" />
+                android:textSize="16sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -118,20 +125,22 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".4"
                 android:gravity="start"
                 android:text="@string/amounthead"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvAmount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".6"
                 android:gravity="start"
                 android:text="@string/amounthead"
-                android:textSize="18sp" />
+                android:textSize="16sp"/>
 
         </LinearLayout>
 
@@ -149,22 +158,30 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".4"
                 android:gravity="start"
                 android:text="@string/label_Remarks"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvRemarks"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".6"
                 android:gravity="start"
                 android:text="@string/label_Remarks"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 />
         </LinearLayout>
+
+        <View
+            android:id="@+id/tvDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/black"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -181,10 +198,11 @@
                 android:id="@+id/tvType"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".4"
                 android:gravity="start"
-                android:text="@string/label_type"
-                android:textSize="18sp"
+                android:text="@string/label_status"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <RadioGroup
@@ -193,7 +211,6 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.6"
                 android:orientation="horizontal"
-                android:paddingLeft="4dp"
                 android:textColor="@color/black">
 
                 <RadioButton
@@ -225,16 +242,18 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight=".4"
                 android:gravity="start"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:text="@string/label_Remarks" />
+                android:text="@string/label_Remarks"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
 
             <EditText
                 android:id="@+id/etRemarks"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_margin="5dp"
                 android:layout_weight="0.6"
                 android:gravity="top|left"
                 android:hint="@string/hintRemarks"
@@ -266,7 +285,7 @@
                 android:paddingStart="10sp"
                 android:text="@string/submit"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
+                android:textSize="16sp"
                 android:visibility="visible" />
         </LinearLayout>
     </LinearLayout>

@@ -98,6 +98,7 @@
     <string name="last_updated_on">अंतिम अद्यतन :</string>
     <string name="btn_search">खोजें</string>
     <string name="status">स्थिति:</string>
+    <string name="label_status">स्थिति</string>
     <string name="Customer">ग्राहक</string>
     <string name="OrderDt">डिमांड तिथि</string>
     <string name="AllocatedDt">आवंटित  तिथि</string>
@@ -342,6 +343,7 @@
     <string name="hintRemarks">टिप्पणी दर्ज करें</string>
     <string name="label_availqty">उपलब्ध मात्रा</string>
     <string name="label_Adjustedqty">समायोजित मात्रा</string>
+    <string name="label_Adjustedqtymandatory">समायोजित मात्रा *</string>
     <!-- End of Stock Adjustment Variables-->
 
     <!-- Start of Expense Confirmation Variables-->
@@ -350,14 +352,14 @@
     <string name="ExpenseHead">व्यय हेड</string>
     <string name="accept">स्वीकृत</string>
     <string name="reject">अस्वीकृत</string>
-    <string name="label_FromDate">तिथि से:</string>
-    <string name="label_ToDate">तिथि तक:</string>
+    <string name="label_FromDate">तिथि से</string>
+    <string name="label_ToDate">तिथि तक</string>
     <string name="label_AdjDate">समायोजित तिथि</string>
     <string name="label_Item">उत्पाद</string>
     <string name="label_ExistInventory">मौजूदा इन्वेंटरी</string>
     <string name="label_AdjQty">मात्रा</string>
     <string name="label_NewInventory">नया इन्वेंटरी</string>
-    <string name="label_Adjtype">प्रकार:</string>
+    <string name="label_Adjtype">प्रकार</string>
     <!-- End of Expense Confirmation Variables-->
 
     <!-- Start of Expense Booking Variables -->

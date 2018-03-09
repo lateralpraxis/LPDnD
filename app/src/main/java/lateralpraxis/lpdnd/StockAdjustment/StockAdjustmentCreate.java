@@ -188,6 +188,7 @@ public class StockAdjustmentCreate extends Activity {
                 etRemarks.setText("");
                 tvAdjusted.setText("");
                 tvInventory.setText("0");
+                tvAdjustedLabel.setText("");
                 if (index == 0) {
                     llRawMaterial.setVisibility(View.VISIBLE);
                     llSKU.setVisibility(View.GONE);
@@ -208,6 +209,9 @@ public class StockAdjustmentCreate extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
+                etAdjustedQty.setText("");
+                tvAdjustedLabel.setText("");
+                tvAvailable.setText("");
                 db.open();
                 tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
                 tvAvailable.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
@@ -240,10 +244,12 @@ public class StockAdjustmentCreate extends Activity {
                                 tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
                                         Double.valueOf(tvInventory.getText().toString().trim())))));
                                 tvAdjustedLabel.setText("Gain");
+                                tvAdjustedLabel.setVisibility(View.VISIBLE);
                             } else {
                                 tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(tvInventory.getText().toString().trim()) -
                                         Double.valueOf(etAdjustedQty.getText().toString().trim())))));
                                 tvAdjustedLabel.setText("Loss");
+                                tvAdjustedLabel.setVisibility(View.VISIBLE);
                             }
                         }
                     }
@@ -279,6 +285,9 @@ public class StockAdjustmentCreate extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
+                etAdjustedQty.setText("");
+                tvAdjustedLabel.setText("");
+                tvAvailable.setText("");
                 db.open();
                 tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
                 tvAvailable.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
