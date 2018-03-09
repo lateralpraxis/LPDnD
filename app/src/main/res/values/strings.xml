@@ -94,7 +94,7 @@
     <string name="menu_expenseconfirmation">CONFIRM</string>
     <string name="menu_deliveryConfirmation">DELIVERY CONFIRMATION</string>
     <string name="place_order">Create Demand</string>
-    <string name="go">Go</string>
+    <string name="go">View</string>
     <string name="show_password">Show Password</string>
     <string name="last_updated_on">Last Updated On:</string>
     <string name="btn_search">Search</string>
@@ -272,7 +272,7 @@
 
     <!-- Start of Report Variables-->
     <string name="hint_date">Select Date</string>
-    <string name="label_Search">Go</string>
+    <string name="label_Search">View</string>
     <string name="label_Demand">Demand Details</string>
     <string name="label_Centre">Centre:</string>
     <string name="label_CentreHead">Centre/Veh#</string>
@@ -317,10 +317,12 @@
     <!-- End of Primary Receipt Variables-->
 
 
-    <!-- Start of Stock Conversion Variables-->
+    <!-- Start of Stock Conversion Variables -->
     <string name="label_StockConversion">Stock Conversion</string>
     <string name="label_Consumed">Consumed</string>
     <string name="label_Produced">Produced</string>
+    <string name="label_consumedqty">Consumed Quantity *</string>
+    <string name="label_producedqty">Produced Quantity *</string>
     <!-- End of Stock Conversion Variables-->
 
     <!-- Outlet Sale  -->
@@ -336,7 +338,7 @@
     <string name="deliveryConfirmation">Delivery Confirmation</string>
     <string name="deliveryConfirmationDetails">Delivery Confirmation Details</string>
     <string name="delivery">Delivery</string>
-    <string name="confirmation">Confirm Qty</string>
+    <string name="confirmation">Confirmation</string>
     <string name="dateHead">Date</string>
     <string name="routeOfficer">Route Officer</string>
     <string name="vehicle">Vehicle#</string>
@@ -356,8 +358,8 @@
     <string name="label_Remarks">Remarks</string>
     <string name="label_RemarksMandatory">Remarks *</string>
     <string name="hintRemarks">Enter Remarks</string>
-    <string name="label_availqty">Available</string>
-    <string name="label_Adjustedqty">Adjusted</string>
+    <string name="label_availqty">Available Quantity</string>
+    <string name="label_Adjustedqty">Adjusted Quantity</string>
     <!-- End of Stock Adjustment Variables-->
 
     <!-- Start of Expense Confirmation Variables-->

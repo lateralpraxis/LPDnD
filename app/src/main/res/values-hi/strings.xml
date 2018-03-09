@@ -93,7 +93,7 @@
     <string name="menu_stockAdjustment">समायोजन</string>
     <string name="menu_expenseconfirmation">पुष्टि</string>
     <string name="place_order">डिमांड बनायें</string>
-    <string name="go">जाएँ</string>
+    <string name="go">देखें</string>
     <string name="show_password">पासवर्ड दिखाएं </string>
     <string name="last_updated_on">अंतिम अद्यतन :</string>
     <string name="btn_search">खोजें</string>
@@ -263,7 +263,7 @@
 
     <!-- Start of Report Variables-->
     <string name="hint_date">तिथि चुनें</string>
-    <string name="label_Search">खोजें</string>
+    <string name="label_Search">देखें</string>
     <string name="label_Demand">मांग विवरण</string>
     <string name="label_Centre">केंद्र:</string>
     <string name="label_CentreHead">केंद्र/वाहन#</string>
@@ -310,6 +310,8 @@
     <string name="label_StockConversion">स्टॉक रूपांतरण</string>
     <string name="label_Consumed">खपत</string>
     <string name="label_Produced">उत्पादित</string>
+    <string name="label_consumedqty">खपत मात्रा *</string>
+    <string name="label_producedqty">उत्पादित मात्रा *</string>
     <!-- End of Stock Conversion Variables-->
 
     <!-- Outlet Sale  -->
@@ -338,8 +340,8 @@
     <string name="label_Remarks">टिप्पणी</string>
     <string name="label_RemarksMandatory">टिप्पणी *</string>
     <string name="hintRemarks">टिप्पणी दर्ज करें</string>
-    <string name="label_availqty">उपलब्ध</string>
-    <string name="label_Adjustedqty">समायोजित</string>
+    <string name="label_availqty">उपलब्ध मात्रा</string>
+    <string name="label_Adjustedqty">समायोजित मात्रा</string>
     <!-- End of Stock Adjustment Variables-->
 
     <!-- Start of Expense Confirmation Variables-->

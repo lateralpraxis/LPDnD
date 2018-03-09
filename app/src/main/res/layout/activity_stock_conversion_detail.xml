@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    tools:context="lateralpraxis.lpdnd.stockconversion.ActivityStockConversionDetail">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical"
+              tools:context="lateralpraxis.lpdnd.stockconversion.ActivityStockConversionDetail">
 
     <TextView
         style="@style/style_topbar"
@@ -37,13 +37,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_code"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvCode"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7" />
+                    android:layout_weight="0.7"
+                    android:textSize="18sp"/>
 
             </LinearLayout>
 
@@ -59,19 +61,21 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_date"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDate"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7" />
+                    android:layout_weight="0.7"
+                    android:textSize="18sp"/>
             </LinearLayout>
 
             <TextView
-                style="@style/style_sectionHead"
-                android:paddingLeft="4dp"
-                android:paddingStart="4dp"
+                style="@style/style_topbar"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
                 android:text="@string/label_Consumed" />
 
             <TableLayout
@@ -122,9 +126,9 @@
                 android:dividerHeight="1sp" />
 
             <TextView
-                style="@style/style_sectionHead"
-                android:paddingLeft="4dp"
-                android:paddingStart="4dp"
+                style="@style/style_topbar"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
                 android:text="@string/label_Produced" />
 
             <TableLayout
