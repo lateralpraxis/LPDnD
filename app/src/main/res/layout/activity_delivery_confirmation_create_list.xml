@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:descendantFocusability="afterDescendants"
         android:divider="@color/black"
-        android:dividerHeight="1sp"
+        android:dividerHeight="1dp"
         android:focusable="true"
         android:minHeight="64sp"/>
 
