@@ -3582,7 +3582,7 @@ public class DatabaseAdapter {
 
     //<editor-fold desc="Insert_OutletSaleDetail">
     // To insert outlet sale detail records
-    public String Insert_OutletSaleDetail(String outletSaleId, String skuId, String sku, String rate, String saleRate, String Qty, String saleQty) {
+    public String Insert_OutletSaleDetail(String outletSaleId, String skuId, String sku, String rate, String saleRate, String Qty, String saleQty, String customerId) {
         try {
             result = "fail";
             newValues = new ContentValues();
@@ -3596,6 +3596,7 @@ public class DatabaseAdapter {
 
             long id = db.insert("OutletSaleDetail", null, newValues);
             result = "success~" + id;
+            db.execSQL("UPDATE OutletLedger SET Quantity = Quantity - " + Double.parseDouble(rate) * Double.parseDouble(saleQty) + " WHERE Id = '" + customerId + "' ");
             //db.execSQL("UPDATE CustomerLedger SET Balance = Balance - " + Double.parseDouble(saleRate) * Double.parseDouble(saleQty) + " WHERE CustomerId = '" + customerId + "'");
             db.execSQL("UPDATE OutletInventory SET Quantity = Quantity - " + saleQty + " WHERE SKUId ='" + skuId + "'");
             return result;
