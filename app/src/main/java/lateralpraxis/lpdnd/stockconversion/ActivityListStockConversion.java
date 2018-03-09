@@ -135,8 +135,9 @@ public class ActivityListStockConversion extends Activity {
             public void onClick(View arg0) {
                if(common.isConnected())
                {
-                   AsyncCustomerPrimaryReceiptWSCall task = new AsyncCustomerPrimaryReceiptWSCall();
-                   task.execute();
+                   String[] myTaskParams = {"transactions"};
+                   AsyncCustomerValidatePasswordWSCall task = new AsyncCustomerValidatePasswordWSCall();
+                   task.execute(myTaskParams);
                }
             }
         });

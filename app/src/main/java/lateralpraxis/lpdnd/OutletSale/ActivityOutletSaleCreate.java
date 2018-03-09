@@ -248,7 +248,7 @@ public class ActivityOutletSaleCreate extends ListActivity {
                                                     if (!etSaleQty.getText().toString().equalsIgnoreCase(".")) {
                                                         String qty = etSaleQty.getText().toString().trim().length() == 0 ? "0" : String.valueOf(Double.valueOf(etSaleQty.getText().toString().trim()));
                                                         if (Double.parseDouble(qty) != 0) {
-                                                            dba.Insert_OutletSaleDetail(insertDelId.split("~")[1], tvId.getText().toString(), tvItem.getText().toString(), tvRate.getText().toString().replace(",", ""), etSaleRate.getText().toString().replace("-", "0"), tvQty.getText().toString(), qty);
+                                                            dba.Insert_OutletSaleDetail(insertDelId.split("~")[1], tvId.getText().toString(), tvItem.getText().toString(), tvRate.getText().toString().replace(",", ""), etSaleRate.getText().toString().replace("-", "0"), tvQty.getText().toString(), qty, userId);
                                                         }
                                                     }
                                                 }
@@ -469,7 +469,7 @@ public class ActivityOutletSaleCreate extends ListActivity {
                                 holder.tvAmount.setText("");
                             } else if (Double.parseDouble(holder.etSaleQty.getText().toString().trim()) > Double.parseDouble(holder.tvQty.getText().toString().trim())) {
                                 if (lang.equalsIgnoreCase("hi"))
-                                common.showToast("\n" +"बिक्री मात्रा उपलब्ध मात्रा से अधिक नहीं होनी चाहिए।");
+                                    common.showToast("बिक्री मात्रा उपलब्ध मात्रा से अधिक नहीं होनी चाहिए।");
                                 else
                                 common.showToast("Sale quantity should not be exceeded from available quantity!");
                                 holder.etSaleQty.setText("");
