@@ -53,18 +53,6 @@ public class ActivityOutletSaleCreate extends ListActivity {
 
     //<editor-fold desc="Code to declare variables">
     final Context context = this;
-    UserSessionManager session;
-    double totalQty = 0;
-    private Button btnGo, btnCreate;
-    private Common common;
-    private DatabaseAdapter dba;
-    private String[] arrTemp;
-    private TextView tvNoRecord, tvTotalAmount;
-    private String userId, customer;
-    private String lang, saleType;
-    private RadioGroup radioGroupType;
-    private View tvDivider;
-    private int idx;
     final String Digits = "(\\p{Digit}+)";
     final String HexDigits = "(\\p{XDigit}+)";
     // an exponent is 'e' or 'E' followed by an optionally
@@ -103,6 +91,18 @@ public class ActivityOutletSaleCreate extends ListActivity {
                     ")[pP][+-]?" + Digits + "))" +
                     "[fFdD]?))" +
                     "[\\x00-\\x20]*");
+    UserSessionManager session;
+    double totalQty = 0;
+    private Button btnGo, btnCreate;
+    private Common common;
+    private DatabaseAdapter dba;
+    private String[] arrTemp;
+    private TextView tvNoRecord, tvTotalAmount;
+    private String userId, customer;
+    private String lang, saleType;
+    private RadioGroup radioGroupType;
+    private View tvDivider;
+    private int idx;
     //</editor-fold>
 
     //<editor-fold desc="Code to be executed on page load">
@@ -136,7 +136,7 @@ public class ActivityOutletSaleCreate extends ListActivity {
         tvTotalAmount = (TextView) findViewById(R.id.tvTotalAmount);
         tvNoRecord = (TextView) findViewById(R.id.tvNoRecord);
         radioGroupType = (RadioGroup) findViewById(R.id.radioGroupType);
-        tvDivider = (View) findViewById(R.id.tvDivider);
+        tvDivider = findViewById(R.id.tvDivider);
         tvDivider.setVisibility(View.GONE);
 
         // To create instance of database
@@ -270,12 +270,19 @@ public class ActivityOutletSaleCreate extends ListActivity {
                                                 String saleDate = dateFormatter.format(c.getTime());
 
                                                 Intent intent;
-                                                intent = new Intent(context, ActivityOutletSaleViewDetail.class);
+                                                intent = new Intent(context, ActivityOutletSaleViewSummary.class);
                                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                                intent.putExtra("Id", insertDelId.split("~")[1]);
-                                                intent.putExtra("Date",saleDate);
                                                 startActivity(intent);
                                                 finish();
+
+//                                                Intent intent;
+//                                                intent = new Intent(context, ActivityOutletSaleViewDetail.class);
+//                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                                                intent.putExtra("Id", insertDelId.split("~")[1]);
+//                                                intent.putExtra("Date",saleDate);
+//                                                intent.putExtra("Name",saleType);
+//                                                startActivity(intent);
+//                                                finish();
                                             }
                                         } catch (Exception e) {
                                             e.printStackTrace();

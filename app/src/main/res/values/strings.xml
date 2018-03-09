@@ -336,7 +336,7 @@
     <string name="deliveryConfirmation">Delivery Confirmation</string>
     <string name="deliveryConfirmationDetails">Delivery Confirmation Details</string>
     <string name="delivery">Delivery</string>
-    <string name="confirmation">Confirmation</string>
+    <string name="confirmation">Confirm Qty</string>
     <string name="dateHead">Date</string>
     <string name="routeOfficer">Route Officer</string>
     <string name="vehicle">Vehicle#</string>

@@ -85,7 +85,7 @@ public class ActivityOutletSaleViewSummary extends Activity {
         listViewMain = (ListView) findViewById(R.id.listViewMain);
         tvNoRecord = (TextView) findViewById(R.id.tvNoRecord);
         btnCreate = (Button) findViewById(R.id.btnCreate);
-        tvDivider = (View) findViewById(R.id.tvDivider);
+        tvDivider = findViewById(R.id.tvDivider);
         tvDivider.setVisibility(View.GONE);
 
         //To handle a callback to be invoked when an item in this AdapterView has been clicked
@@ -145,9 +145,17 @@ public class ActivityOutletSaleViewSummary extends Activity {
         btnCreate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View arg0) {
-                intent = new Intent(context, ActivityOutletSaleCreate.class);
-                startActivity(intent);
-                finish();
+
+                dba.open();
+                String status = dba.GetDeliveryConfirmStatus();
+                dba.close();
+                if (status.equalsIgnoreCase("0")) {
+                    intent = new Intent(context, ActivityOutletSaleCreate.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए बिक्री की अनुमति नहीं है।" : "Deliveries are pending for confirmation hence sale is not allowed.");
+                }
             }
         });
     }

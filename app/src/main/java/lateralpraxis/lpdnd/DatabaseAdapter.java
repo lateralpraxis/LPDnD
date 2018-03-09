@@ -3666,4 +3666,18 @@ public class DatabaseAdapter {
         return list;
     }
     //</editor-fold>
+
+    //<editor-fold desc="To Get Delivery Confirm Status ">
+    public String GetDeliveryConfirmStatus() {
+        String status = "";
+        selectQuery = "SELECT Status FROM DeliveryConfirmStatus";
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToFirst()) {
+            do {
+                status = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+        return status;
+    }
+    //</editor-fold>
 }

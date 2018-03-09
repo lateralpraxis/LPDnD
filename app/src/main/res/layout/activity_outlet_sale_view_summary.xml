@@ -21,7 +21,7 @@
             android:background="@android:color/transparent"
             android:paddingLeft="5dp"
             android:paddingRight="5dp"
-            android:text="@string/create_sale"
+            android:text="@string/label_linkAdd"
             android:textColor="@color/lpblue"
             android:textSize="16sp" />
 
