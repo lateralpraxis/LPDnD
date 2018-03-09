@@ -5,10 +5,10 @@
     <dimen name="button_vertical_margin">4dp</dimen>
     <dimen name="activity_horizontal_padding">8dp</dimen>
     <dimen name="activity_vertical_padding">8dp</dimen>
-    <dimen name="menuButton_horizontal_padding">16dp</dimen>
+    <dimen name="menuButton_horizontal_padding">8dp</dimen>
     <dimen name="menuButton_vertical_padding">16dp</dimen>
     <dimen name="activity_bottom_margin">8dp</dimen>
-    <dimen name="ldrawer_drawableSize">50dp</dimen>
+    <dimen name="ldrawer_drawableSize">48dp</dimen>
     <dimen name="ldrawer_barSize">25dp</dimen>
     <dimen name="ldrawer_topBottomBarArrowSize">11dp</dimen>
     <dimen name="ldrawer_thickness">3dp</dimen>

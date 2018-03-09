@@ -44,7 +44,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
@@ -104,6 +103,7 @@ public class ActivityHomeScreen extends Activity {
         tl = (TableLayout) findViewById(R.id.tlmainMenu);
         tl.setColumnStretchable(0, true);
         tl.setColumnStretchable(1, true);
+
     /*--------End of Code to find controls -----------------------------*/
         strSyncWhat = "";
         try {
@@ -241,7 +241,7 @@ public class ActivityHomeScreen extends Activity {
                         if (common.isConnected()) {
                             // call method of view demand json web service
                             AsyncViewDemandWSCall task = new AsyncViewDemandWSCall();
-                            task.execute(new String[]{"3"});
+                            task.execute("3");
                         }
                     }
                 });
@@ -297,7 +297,7 @@ public class ActivityHomeScreen extends Activity {
                     public void onClick(View v) {
                         if (common.isConnected()) {
                             AsyncProductMasterWSCall task = new AsyncProductMasterWSCall();
-                            task.execute(new String[]{"2"});
+                            task.execute("2");
                         }
                     }
                 });
@@ -681,7 +681,7 @@ public class ActivityHomeScreen extends Activity {
 
     // Method to compress, create and return byte array for document
     private String getByteArrayFromImage(Bitmap bitmap)
-            throws FileNotFoundException, IOException {
+            throws IOException {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         bitmap.compress(CompressFormat.JPEG, 80, bos);
         byte[] data = bos.toByteArray();
@@ -721,7 +721,6 @@ public class ActivityHomeScreen extends Activity {
                     end = userInput.getSelectionEnd();
                     userInput
                             .setTransformationMethod(new PasswordTransformationMethod());
-                    ;
                     userInput.setSelection(start, end);
                 } else {
                     start = userInput.getSelectionStart();

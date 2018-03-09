@@ -867,7 +867,6 @@ public class ActivityCreateStockConversion extends Activity {
     }
     //</editor-fold>
 
-
     //<editor-fold desc="Async Method to Post Outlet Conversion Details">
     private class AsyncOutletConversionWSCall extends AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
