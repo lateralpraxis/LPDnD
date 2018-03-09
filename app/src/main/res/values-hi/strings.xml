@@ -360,7 +360,7 @@
     <string name="label_Adjtype">प्रकार:</string>
     <!-- End of Expense Confirmation Variables-->
 
-    <!-- Start of Expense Booking Variables-->
+    <!-- Start of Expense Booking Variables -->
     <string name="label_Expense">व्यय बुकिंग</string>
     <string name="label_expensehead">व्यय हेड *</string>
     <string name="label_expenseheader">व्यय हेड</string>

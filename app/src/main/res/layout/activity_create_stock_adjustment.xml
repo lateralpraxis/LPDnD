@@ -28,8 +28,8 @@
                 android:id="@+id/tvInventory"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="fill_parent"
@@ -173,11 +173,12 @@
                 android:weightSum="1">
 
                 <TextView
+                    android:id="@+id/tvAdjustedLabel"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
-                    android:text="@string/label_Adjustedqty"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/tvAdjusted"
@@ -198,8 +199,8 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
-                    android:textStyle="bold"
-                    android:text="@string/label_RemarksMandatory" />
+                    android:text="@string/label_RemarksMandatory"
+                    android:textStyle="bold"/>
 
                 <EditText
                     android:id="@+id/etRemarks"

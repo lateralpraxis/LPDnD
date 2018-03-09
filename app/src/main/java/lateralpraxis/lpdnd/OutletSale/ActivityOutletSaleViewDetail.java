@@ -77,7 +77,7 @@ public class ActivityOutletSaleViewDetail extends Activity {
         tvNoRecord = (TextView) findViewById(R.id.tvNoRecord);
         tvTotalAmount = (TextView) findViewById(R.id.tvTotalAmount);
         tvHeader = (TextView) findViewById(R.id.tvHeader);
-        tvDivider = (View) findViewById(R.id.tvDivider);
+        tvDivider = findViewById(R.id.tvDivider);
         tvDivider.setVisibility(View.GONE);
 
         //To extract id from bundle to show details
@@ -87,9 +87,9 @@ public class ActivityOutletSaleViewDetail extends Activity {
             date = extras.getString("Date");
             name = extras.getString("Name");
             if (lang.equalsIgnoreCase("hi"))
-                tvHeader.setText("दिनांक: " + date + "  कोड: OS" + id+ "  बिक्री का प्रकार: " + name);
+                tvHeader.setText(Html.fromHtml("<b>दिनांक:</b> " + date + "  <b>कोड:</b> OS" + id + "  <b>बिक्री का प्रकार:</b> " + name));
             else
-                tvHeader.setText("Date: " + date + "  Code: OS" + id+ "  Sale Type: " + name);
+                tvHeader.setText(Html.fromHtml("<b>Date:</b> " + date + "  <b>Code:</b> OS" + id + "  <b>Sale Type:</b> " + name));
         }
 
 //To get outlet sale details from database
