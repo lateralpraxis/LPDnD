@@ -90,8 +90,8 @@
     <string name="menu_rate">दर</string>
     <string name="menu_primaryreceipt">प्राथमिक रसीद</string>
     <string name="menu_expense">व्यय</string>
-    <string name="menu_stockAdjustment">समायोजन</string>
-    <string name="menu_expenseconfirmation">पुष्टि</string>
+    <string name="menu_stockAdjustment">स्टॉक समायोजन</string>
+    <string name="menu_expenseconfirmation">व्यय पुष्टि</string>
     <string name="place_order">डिमांड बनायें</string>
     <string name="go">देखें</string>
     <string name="show_password">पासवर्ड दिखाएं </string>
