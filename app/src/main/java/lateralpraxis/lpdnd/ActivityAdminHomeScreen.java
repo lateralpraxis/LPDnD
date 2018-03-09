@@ -1,14 +1,5 @@
 package lateralpraxis.lpdnd;
 
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -32,25 +23,36 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 import lateralpraxis.lpdnd.ExpenseConfirmation.ExpenseConfirmationList;
 
 public class ActivityAdminHomeScreen  extends Activity{
-	private String userRole, password, userId, loginId,customerType,responseJSON;
-	private TextView tvHeader;
-	final Context context = this;
 	static final int ITEM_PER_ROW = 2;
-	private Intent intent;
+	final Context context = this;
 	Common common;
-	private UserSessionManager session;
 	HashMap<String, String> map = null;
-	private String imei, lang;
-	private DatabaseAdapter dba;
 	Button go, btn;
 	TableLayout tl;
 	TableRow tr;
 	List<Integer> views = Arrays.asList(
 			R.layout.btn_report);
 	LinearLayout btnLayout;
+	private String userRole, password, userId, loginId, customerType, responseJSON;
+	private TextView tvHeader;
+	private Intent intent;
+	private UserSessionManager session;
+	private String imei, lang;
+	private DatabaseAdapter dba;
+
 	// Code to be executed on page load
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -613,7 +615,7 @@ public class ActivityAdminHomeScreen  extends Activity{
 			} catch (Exception e) {
 				e.printStackTrace();
 				common.showAlert(ActivityAdminHomeScreen.this,
-						"Expense Head Confirmation Data Downloading failed: " + e.toString(),
+						"Expense Booking Confirmation Data Downloading failed: " + e.toString(),
 						false);
 			}
 			Dialog.dismiss();
@@ -622,7 +624,7 @@ public class ActivityAdminHomeScreen  extends Activity{
 		// To display message on screen within process
 		@Override
 		protected void onPreExecute() {
-			Dialog.setMessage("Downloading Expense Head Confirmation Data..");
+			Dialog.setMessage("Downloading Expense Booking Confirmation Data..");
 			Dialog.setCancelable(false);
 			Dialog.show();
 		}

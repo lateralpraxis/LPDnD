@@ -426,11 +426,13 @@ public class StockAdjustmentList extends Activity {
                     listSize = wordList.size();
                     if (listSize != 0) {
                         listConvert.setAdapter(new CustomAdapter(mContext, wordList));
-                        //ViewGroup.LayoutParams params = listConvert.getLayoutParams();
-                        //listConvert.setLayoutParams(params);
+                        ViewGroup.LayoutParams params = listConvert.getLayoutParams();
+                        listConvert.setLayoutParams(params);
                         //listConvert.requestLayout();
                         tvEmpty.setVisibility(View.GONE);
+                        listConvert.requestLayout();
                         tableGridHead.setVisibility(View.VISIBLE);
+
                     } else {
                         listConvert.setAdapter(null);
                         tvEmpty.setVisibility(View.VISIBLE);
