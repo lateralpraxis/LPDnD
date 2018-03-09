@@ -111,7 +111,7 @@ public class StockAdjustmentCreate extends Activity {
     private LinearLayout llRawMaterial, llSKU;
     private EditText etAdjustedQty, etRemarks;
     private Button btnAdd;
-    private TextView tvInventory, tvAvailable, tvAdjusted;
+    private TextView tvInventory, tvAvailable, tvAdjusted, tvAdjustedLabel;
     //</editor-fold>
 
     //<editor-fold desc="Code to be executed on On Create Method">
@@ -162,6 +162,7 @@ public class StockAdjustmentCreate extends Activity {
         tvInventory = (TextView) findViewById(R.id.tvInventory);
         tvAvailable = (TextView) findViewById(R.id.tvAvailable);
         tvAdjusted = (TextView) findViewById(R.id.tvAdjusted);
+        tvAdjustedLabel = (TextView) findViewById(R.id.tvAdjustedLabel);
         tvInventory.setText("0");
         //</editor-fold>
 
@@ -235,12 +236,15 @@ public class StockAdjustmentCreate extends Activity {
                         if (etAdjustedQty.getText().toString().trim().length() > 0) {
                             if(TextUtils.isEmpty(tvInventory.getText().toString().trim()))
                                 tvInventory.setText("0");
-                            if (Double.valueOf(etAdjustedQty.getText().toString().trim()) > Double.valueOf(tvInventory.getText().toString().trim()))
+                            if (Double.valueOf(etAdjustedQty.getText().toString().trim()) > Double.valueOf(tvInventory.getText().toString().trim())) {
                                 tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
-                                        Double.valueOf(tvInventory.getText().toString().trim())))) + "( Gain )");
-                            else
+                                        Double.valueOf(tvInventory.getText().toString().trim())))));
+                                tvAdjustedLabel.setText("Gain");
+                            } else {
                                 tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(tvInventory.getText().toString().trim()) -
-                                        Double.valueOf(etAdjustedQty.getText().toString().trim())))) + "( Loss )");
+                                        Double.valueOf(etAdjustedQty.getText().toString().trim())))));
+                                tvAdjustedLabel.setText("Loss");
+                            }
                         }
                     }
                 }

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -347,7 +346,7 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
                 holder.llVehicle.setVisibility(View.VISIBLE);
                 holder.llName.setVisibility(View.VISIBLE);
             }
-            convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
+            //convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return convertView;
         }
 
