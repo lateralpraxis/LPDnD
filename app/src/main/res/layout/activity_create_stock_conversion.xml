@@ -49,7 +49,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_type"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <RadioGroup
@@ -90,7 +90,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_rawMat"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -116,7 +116,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_item"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <Spinner
@@ -139,7 +139,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_availqty"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
                 <TextView
                     android:id="@+id/tvViewQty"
@@ -165,7 +165,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_consumedqty"
-                    android:textSize="18dp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <EditText
@@ -270,7 +270,7 @@
                 android:gravity="center_vertical|center_horizontal"
                 android:text="@string/norecord"
                 android:textColor="@color/black"
-                android:textSize="18dp" />
+                android:textSize="16sp" />
 
 
             <LinearLayout
@@ -302,7 +302,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
                         android:text="@string/label_item"
-                        android:textSize="18dp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <Spinner
@@ -328,7 +328,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="0.3"
                         android:text="@string/label_producedqty"
-                        android:textSize="18dp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <EditText
