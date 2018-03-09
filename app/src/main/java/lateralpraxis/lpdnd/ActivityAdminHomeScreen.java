@@ -1,14 +1,5 @@
 package lateralpraxis.lpdnd;
 
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -32,23 +23,36 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import lateralpraxis.lpdnd.ExpenseConfirmation.ExpenseConfirmationList;
+
 public class ActivityAdminHomeScreen  extends Activity{
-	private String userRole, password, userId, loginId,customerType,responseJSON;
-	private TextView tvHeader;
-	final Context context = this;
 	static final int ITEM_PER_ROW = 2;
-	private Intent intent;
-	Common common;
-	private UserSessionManager session;
+    final Context context = this;
+    Common common;
 	HashMap<String, String> map = null;
-	private String imei;
-	private DatabaseAdapter dba;
 	Button go, btn;
 	TableLayout tl;
 	TableRow tr;
 	List<Integer> views = Arrays.asList(
 			R.layout.btn_report);
 	LinearLayout btnLayout;
+    private String userRole, password, userId, loginId, customerType, responseJSON;
+    private TextView tvHeader;
+    private Intent intent;
+    private UserSessionManager session;
+    private String imei, lang;
+    private DatabaseAdapter dba;
+
 	// Code to be executed on page load
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +108,8 @@ public class ActivityAdminHomeScreen  extends Activity{
 					R.layout.btn_delivery,
 					R.layout.btn_payment,
 					R.layout.btn_cashdeposit,
-					R.layout.btn_report);
+                    R.layout.btn_expenseconfirmation,
+                    R.layout.btn_report);
 		else
 			views = Arrays.asList(
 					R.layout.btn_report);
@@ -206,7 +211,20 @@ public class ActivityAdminHomeScreen  extends Activity{
 						finish();
 					}
 				});
-				break;
+                break;
+            case R.layout.btn_expenseconfirmation:
+                btn = (Button) btnLayout.findViewById(R.id.btnExpenseConfirmation);
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (common.isConnected()) {
+                            ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
+                            task.execute();
+                        }
+                    }
+                });
+                break;
 			default:
 				break;
 		}
@@ -520,4 +538,94 @@ public class ActivityAdminHomeScreen  extends Activity{
 			Dialog.show();
 		}
 	}
+
+
+    // Web Service to Fetch Expense Data for Confirmation
+    private class ActivityExpenseConirmationWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityAdminHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+                //<editor-fold desc="Code to set default language">
+                lang = session.getDefaultLang();
+                Locale myLocale = new Locale(lang);
+                Resources res = getResources();
+                DisplayMetrics dm = res.getDisplayMetrics();
+                Configuration conf = res.getConfiguration();
+                conf.locale = myLocale;
+                res.updateConfiguration(conf, dm);
+                //</editor-fold>
+
+                String[] name = {"lang"};
+                String[] value = {lang};
+                // Call method of web service to Read Expense Data For Confirmation
+                responseJSON = "";
+                responseJSON = common.CallJsonWS(name, value, "GetExpensePendingConfirmation", common.url);
+                return "";
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                return "ERROR: " + e.getMessage();
+            }
+
+        }
+
+        // After execution of product web service
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    dba.open();
+                    dba.DeleteMasterData("ExpenseConfirmationData");
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    if (jsonArray.length() > 0) {
+
+                        // inserting data into CashDepositDeleteData
+                        for (int i = 0; i < jsonArray.length(); ++i) {
+
+                            dba.Insert_ExpenseConfirmationData(jsonArray.getJSONObject(i)
+                                    .getString("Id"), jsonArray.getJSONObject(i)
+                                    .getString("ExpenseDate"), jsonArray.getJSONObject(i)
+                                    .getString("CustomerName"), jsonArray.getJSONObject(i)
+                                    .getString("ExpenseHeadName"), jsonArray.getJSONObject(i)
+                                    .getString("Amount"), jsonArray.getJSONObject(i)
+                                    .getString("Remarks"));
+                        }
+                        dba.close();
+                        intent = new Intent(context, ExpenseConfirmationList.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        common.showToast("There is no data available for confirming expense data!");
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityAdminHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                common.showAlert(ActivityAdminHomeScreen.this,
+                        "Expense Head Confirmation Data Downloading failed: " + e.toString(),
+                        false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Expense Head Confirmation Data..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
 }

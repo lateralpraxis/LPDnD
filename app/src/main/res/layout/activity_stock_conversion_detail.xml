@@ -37,13 +37,15 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_code"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvCode"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7" />
+                    android:layout_weight="0.7"
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -59,19 +61,21 @@
                     android:layout_height="match_parent"
                     android:layout_weight="0.3"
                     android:text="@string/label_date"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tvDate"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="0.7" />
+                    android:layout_weight="0.7"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <TextView
-                style="@style/style_sectionHead"
-                android:paddingLeft="4dp"
-                android:paddingStart="4dp"
+                style="@style/style_topbar"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
                 android:text="@string/label_Consumed" />
 
             <TableLayout
@@ -122,9 +126,9 @@
                 android:dividerHeight="1sp" />
 
             <TextView
-                style="@style/style_sectionHead"
-                android:paddingLeft="4dp"
-                android:paddingStart="4dp"
+                style="@style/style_topbar"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
                 android:text="@string/label_Produced" />
 
             <TableLayout

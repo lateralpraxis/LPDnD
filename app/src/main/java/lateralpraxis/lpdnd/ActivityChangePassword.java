@@ -1,13 +1,5 @@
 package lateralpraxis.lpdnd;
 
-import java.net.SocketTimeoutException;
-import java.util.HashMap;
-import java.util.Locale;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,7 +9,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.PasswordTransformationMethod;
@@ -29,18 +20,25 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.SocketTimeoutException;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class ActivityChangePassword extends Activity {
-	private Common common;
-	TextView tvInstructions,tvPasswordExpired;
+    private static String responseJSON;
+    TextView tvInstructions,tvPasswordExpired;
 	EditText etOldPassword, etNewPassword, etConfirmPassword;
 	CheckBox ckShowPass;
 	Button btnChangePassword;
-	private String JSONStr;
-	private static String responseJSON;
+    private Common common;
+    private String JSONStr;
 	private UserSessionManager session;
 	private DatabaseAdapter databaseAdapter;
 
@@ -169,19 +167,19 @@ public class ActivityChangePassword extends Activity {
 				{
 					oldStart=etOldPassword.getSelectionStart();
 					oldEnd=etOldPassword.getSelectionEnd();
-					etOldPassword.setTransformationMethod(new PasswordTransformationMethod());;
-					etOldPassword.setSelection(oldStart,oldEnd);
+                    etOldPassword.setTransformationMethod(new PasswordTransformationMethod());
+                    etOldPassword.setSelection(oldStart, oldEnd);
 
 					newStart=etNewPassword.getSelectionStart();
 					newEnd=etNewPassword.getSelectionEnd();
-					etNewPassword.setTransformationMethod(new PasswordTransformationMethod());;
-					etNewPassword.setSelection(newStart,newEnd);
+                    etNewPassword.setTransformationMethod(new PasswordTransformationMethod());
+                    etNewPassword.setSelection(newStart, newEnd);
 
 					confirmStart=etConfirmPassword.getSelectionStart();
 					confirmEnd=etConfirmPassword.getSelectionEnd();
-					etConfirmPassword.setTransformationMethod(new PasswordTransformationMethod());;
-					etConfirmPassword.setSelection(confirmStart,confirmEnd);
-				}
+                    etConfirmPassword.setTransformationMethod(new PasswordTransformationMethod());
+                    etConfirmPassword.setSelection(confirmStart, confirmEnd);
+                }
 				else
 				{
 					oldStart=etOldPassword.getSelectionStart();
@@ -204,13 +202,80 @@ public class ActivityChangePassword extends Activity {
 
 	}
 
+    //When press back button go to home screen
+    @Override
+    public void onBackPressed() {
+        String userRole = "";
+        final HashMap<String, String> user = session.getLoginUserDetails();
+        userRole = user.get(UserSessionManager.KEY_ROLES);
+        Intent homeScreenIntent;
+        if (userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant"))) {
+            homeScreenIntent = new Intent(this, ActivityAdminHomeScreen.class);
+        } else {
+            homeScreenIntent = new Intent(this, ActivityHomeScreen.class);
+        }
+        homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(homeScreenIntent);
+    }
+
+    //To create menu on inflater
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_home, menu);
+        return true;
+    }
+
+    //To bind activity on menu item click
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                String userRole = "";
+                final HashMap<String, String> user = session.getLoginUserDetails();
+                userRole = user.get(UserSessionManager.KEY_ROLES);
+
+                if (userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant"))) {
+                    //Open Administrator home page screen
+                    Intent intent = new Intent(this, ActivityAdminHomeScreen.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    //Open home page screen
+                    Intent intent = new Intent(this, ActivityHomeScreen.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return true;
+            case R.id.action_go_to_home:
+                String userRolenew = "";
+                final HashMap<String, String> usernew = session.getLoginUserDetails();
+                userRolenew = usernew.get(UserSessionManager.KEY_ROLES);
+
+                if (userRolenew.contains("System User") || userRolenew.contains("Centre User") || userRolenew.contains("MIS User") || userRolenew.contains("Management User") && (!userRolenew.contains("Route Officer") || !userRolenew.contains("Collection Officer") || !userRolenew.contains("Accountant"))) {
+                    //Open Administrator home page screen
+                    Intent intent = new Intent(this, ActivityAdminHomeScreen.class);
+                    startActivity(intent);
+                    finish();
+                } else {
+                    //Open home page screen
+                    Intent intent = new Intent(this, ActivityHomeScreen.class);
+                    startActivity(intent);
+                    finish();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 	//Make method of web service for changing user password
 	private class AsyncChangePasswordWSCall extends AsyncTask<String, Void, String> {
 		private ProgressDialog Dialog = new ProgressDialog(ActivityChangePassword.this);
 		@Override
 		protected String doInBackground(String... params) {
-			try {				
-				responseJSON= common.invokeJSONWS(JSONStr,"json","ChangeUserPassword",common.url );
+            try {
+                responseJSON= common.invokeJSONWS(JSONStr,"json","ChangeUserPassword",common.url );
 			}
 			catch (SocketTimeoutException e)
 			{
@@ -220,8 +285,8 @@ public class ActivityChangePassword extends Activity {
 				e.printStackTrace();
 
 				return "ERROR: "+ e.getMessage();
-			} 
-			return "";
+            }
+            return "";
 		}
 		//After execution of web service for changing user password
 		@Override
@@ -243,16 +308,16 @@ public class ActivityChangePassword extends Activity {
 								if(common.isConnected())
 								{
 									AsyncLogOutWSCall task = new AsyncLogOutWSCall();
-									task.execute();	
-								}
+                                    task.execute();
+                                }
 								else{
 									databaseAdapter.insertExceptions("Unable to connect to Internet !", "ActivityHomeScreen.java","onCreate()");
 								}
 							}
 						});
 
-						alertbox.show();						
-					}
+                        alertbox.show();
+                    }
 					else if(responseJSON.toLowerCase(Locale.US).contains("LoginFailed".toLowerCase(Locale.US)))
 					{
 						common.showAlert(ActivityChangePassword.this, "Invalid Old Password", false);
@@ -305,85 +370,11 @@ public class ActivityChangePassword extends Activity {
 		}
 	}
 
-	//When press back button go to home screen
-	@Override
-	public void onBackPressed() {
-		String userRole="";
-		final HashMap<String, String> user = session.getLoginUserDetails();
-		userRole = user.get(UserSessionManager.KEY_ROLES);
-		Intent homeScreenIntent;
-		if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant"))) {
-			homeScreenIntent = new Intent(this, ActivityHomeScreen.class);
-		}
-		else {
-			homeScreenIntent = new Intent(this, ActivityAdminHomeScreen.class);
-		}
-		homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(homeScreenIntent);
-	}
-
-	//To create menu on inflater
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {  
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu_home, menu);
-		return true;
-	}
-
-	//To bind activity on menu item click
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			String userRole="";
-			final HashMap<String, String> user = session.getLoginUserDetails();
-			userRole = user.get(UserSessionManager.KEY_ROLES);
-		 
-			if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant")))
-			{
-				//Open Administrator home page screen
-				Intent	intent = new Intent(this, ActivityAdminHomeScreen.class);
-				startActivity(intent);
-				finish();
-			}
-			else
-			{
-			//Open home page screen
-			Intent	intent = new Intent(this, ActivityHomeScreen.class);
-			startActivity(intent);
-			finish();
-			}
-			return true;
-		case R.id.action_go_to_home: 
-			String userRolenew="";
-			final HashMap<String, String> usernew = session.getLoginUserDetails();
-			userRolenew = usernew.get(UserSessionManager.KEY_ROLES);
-		 
-			if(userRolenew.contains("System User") || userRolenew.contains("Centre User") || userRolenew.contains("MIS User") || userRolenew.contains("Management User") && (!userRolenew.contains("Route Officer") || !userRolenew.contains("Collection Officer") || !userRolenew.contains("Accountant")))
-			{
-				//Open Administrator home page screen
-				Intent	intent = new Intent(this, ActivityAdminHomeScreen.class);
-				startActivity(intent);
-				finish();
-			}
-			else
-			{
-			//Open home page screen
-			Intent	intent = new Intent(this, ActivityHomeScreen.class);
-			startActivity(intent);
-			finish();
-			}
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
-
-
 	//Make method of web service for logout user from login
 	private class AsyncLogOutWSCall extends AsyncTask<String, Void, String> {
-		private ProgressDialog Dialog = new ProgressDialog(ActivityChangePassword.this);
 		String responseJSON="";
+        private ProgressDialog Dialog = new ProgressDialog(ActivityChangePassword.this);
+
 		@Override
 		protected String doInBackground(String... params) {
 			try {	

@@ -12,8 +12,10 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -42,6 +44,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Pattern;
 
 import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
@@ -53,6 +56,44 @@ import lateralpraxis.lpdnd.types.CustomType;
 
 public class ActivityCreateStockConversion extends Activity {
 
+    final String Digits = "(\\p{Digit}+)";
+    final String HexDigits = "(\\p{XDigit}+)";
+    // an exponent is 'e' or 'E' followed by an optionally
+    // signed decimal integer.
+    final String Exp = "[eE][+-]?" + Digits;
+    final String fpRegex =
+            ("[\\x00-\\x20]*" + // Optional leading "whitespace"
+                    "[+-]?(" +         // Optional sign character
+                    "NaN|" +           // "NaN" string
+                    "Infinity|" +      // "Infinity" string
+
+                    // A decimal floating-point string representing a finite positive
+                    // number without a leading sign has at most five basic pieces:
+                    // Digits . Digits ExponentPart FloatTypeSuffix
+                    //
+                    // Since this method allows integer-only strings as input
+                    // in addition to strings of floating-point literals, the
+                    // two sub-patterns below are simplifications of the grammar
+                    // productions from the Java Language Specification, 2nd
+                    // edition, section 3.10.2.
+
+                    // Digits ._opt Digits_opt ExponentPart_opt FloatTypeSuffix_opt
+                    "(((" + Digits + "(\\.)?(" + Digits + "?)(" + Exp + ")?)|" +
+
+                    // . Digits ExponentPart_opt FloatTypeSuffix_opt
+                    "(\\.(" + Digits + ")(" + Exp + ")?)|" +
+
+                    // Hexadecimal strings
+                    "((" +
+                    // 0[xX] HexDigits ._opt BinaryExponent FloatTypeSuffix_opt
+                    "(0[xX]" + HexDigits + "(\\.)?)|" +
+
+                    // 0[xX] HexDigits_opt . HexDigits BinaryExponent FloatTypeSuffix_opt
+                    "(0[xX]" + HexDigits + "?(\\.)" + HexDigits + ")" +
+
+                    ")[pP][+-]?" + Digits + "))" +
+                    "[fFdD]?))" +
+                    "[\\x00-\\x20]*");
     private final Context mContext = this;
 
     //<editor-fold desc="Code for class declaration">
@@ -81,7 +122,7 @@ public class ActivityCreateStockConversion extends Activity {
     private LinearLayout llRawMaterial, llSKU, llProduced;
     private EditText etConsumedQty, etProducedQty;
     private Button btnAddConsumed, btnAddProduced, btnSubmit;
-    private TextView tvProdEmpty, tvConsEmpty, tvInventory;
+    private TextView tvProdEmpty, tvConsEmpty, tvInventory, tvViewQty;
     private ListView listConsumed, listProduced;
     private TableLayout tableGridHeadConsumed, tableGridHeadProduced;
     //</editor-fold>
@@ -144,6 +185,7 @@ public class ActivityCreateStockConversion extends Activity {
         tvProdEmpty = (TextView) findViewById(R.id.tvProdEmpty);
         tvConsEmpty = (TextView) findViewById(R.id.tvConsEmpty);
         tvInventory = (TextView) findViewById(R.id.tvInventory);
+        tvViewQty = (TextView) findViewById(R.id.tvViewQty);
         listConsumed = (ListView) findViewById(R.id.listConsumed);
         listProduced = (ListView) findViewById(R.id.listProduced);
         tableGridHeadConsumed = (TableLayout) findViewById(R.id.tableGridHeadConsumed);
@@ -151,12 +193,84 @@ public class ActivityCreateStockConversion extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to set Input Filter">
-        etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-        etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        etProducedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(6, 2)});
-        etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = new InputFilter.LengthFilter(5);
+        etConsumedQty.setFilters(FilterArray);
+        etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
+//        etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 0)});
+//        etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        InputFilter[] FilterProdArray = new InputFilter[1];
+        FilterProdArray[0] = new InputFilter.LengthFilter(5);
+        etProducedQty.setFilters(FilterProdArray);
+        etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
+       /* etProducedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(6, 1)});
+        etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);*/
         //</editor-fold>
+        //<editor-fold desc="Code to be executed on change of text">
+        TextWatcher textWatcher = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+                if (!etConsumedQty.getText().toString().equalsIgnoreCase(".")) {
+                    if (etConsumedQty.getText().toString().equalsIgnoreCase("."))
+                        etConsumedQty.setText("");
 
+                } else {
+                    etConsumedQty.setText("");
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+        etConsumedQty.addTextChangedListener(textWatcher);
+
+        TextWatcher textWatcherprod = new TextWatcher() {
+            public void afterTextChanged(Editable s) {
+
+                if (!etProducedQty.getText().toString().equalsIgnoreCase(".")) {
+                    if (etProducedQty.getText().toString().equalsIgnoreCase("."))
+                        etProducedQty.setText("");
+
+                } else {
+                    etProducedQty.setText("");
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        };
+        etProducedQty.addTextChangedListener(textWatcherprod);
+
+        etProducedQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (Pattern.matches(fpRegex, etProducedQty.getText())) {
+
+                    } else
+                        etProducedQty.setText("");
+
+                }
+            }
+        });
+        etConsumedQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (Pattern.matches(fpRegex, etConsumedQty.getText())) {
+
+                    } else
+                        etConsumedQty.setText("");
+
+                }
+            }
+        });
+        //</editor-fold>
         //<editor-fold desc="Code to Bind Spinners">
         spRawMaterial.setAdapter(DataAdapter("rawmaterialinv", ""));
         spSKU.setAdapter(DataAdapter("skuinv", ""));
@@ -175,10 +289,14 @@ public class ActivityCreateStockConversion extends Activity {
                 if (index == 0) {
                     llRawMaterial.setVisibility(View.VISIBLE);
                     llSKU.setVisibility(View.GONE);
-                    etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    InputFilter[] FilterArray = new InputFilter[1];
+                    FilterArray[0] = new InputFilter.LengthFilter(5);
+                    etConsumedQty.setFilters(FilterArray);
+                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
                     type = "Raw";
                 } else {
+                    etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
+                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
                     llRawMaterial.setVisibility(View.GONE);
                     llSKU.setVisibility(View.VISIBLE);
                     type = "SKU";
@@ -192,19 +310,20 @@ public class ActivityCreateStockConversion extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                etProducedQty.setText("");
+                etConsumedQty.setText("");
                 db.open();
                 tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
+                tvViewQty.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
                 db.close();
                 if (((CustomType) spSKU.getSelectedItem()).getId().split("-")[1].equalsIgnoreCase("0")) {
-                    etProducedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-                    etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
+                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 } else {
-                    int maxLength = 4;
+                    int maxLength = 5;
                     InputFilter[] FilterArray = new InputFilter[1];
                     FilterArray[0] = new InputFilter.LengthFilter(maxLength);
-                    etProducedQty.setFilters(FilterArray);
-                    etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    etConsumedQty.setFilters(FilterArray);
+                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
                 }
             }
 
@@ -222,9 +341,10 @@ public class ActivityCreateStockConversion extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                etProducedQty.setText("");
+                etConsumedQty.setText("");
                 db.open();
                 tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
+                tvViewQty.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
                 db.close();
             }
 
@@ -242,16 +362,16 @@ public class ActivityCreateStockConversion extends Activity {
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1,
                                        int arg2, long arg3) {
-                etConsumedQty.setText("");
+                etProducedQty.setText("");
                 if (((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[1].equalsIgnoreCase("0")) {
-                    etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                    etProducedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
+                    etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
                 } else {
-                    int maxLength = 4;
+                    int maxLength = 5;
                     InputFilter[] FilterArray = new InputFilter[1];
                     FilterArray[0] = new InputFilter.LengthFilter(maxLength);
-                    etConsumedQty.setFilters(FilterArray);
-                    etConsumedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
+                    etProducedQty.setFilters(FilterArray);
+                    etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
                 }
             }
 
@@ -269,11 +389,11 @@ public class ActivityCreateStockConversion extends Activity {
 
             @Override
             public void onClick(View arg0) {
-
+                etConsumedQty.clearFocus();
                 if (type.equalsIgnoreCase("Raw") && spRawMaterial.getSelectedItemPosition() == 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कच्ची सामग्री अनिवार्य है।" : "Raw Material is mandatory.");
                 else if (type.equalsIgnoreCase("SKU") && spSKU.getSelectedItemPosition() == 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पाद अनिवार्य है।" : "SKU is mandatory.");
                 else if (String.valueOf(etConsumedQty.getText()).trim().equals(""))
                     common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा अनिवार्य है।" : "Consumed quantity is mandatory.");
                 else if (Double.valueOf(etConsumedQty.getText().toString()) > Double.valueOf(tvInventory.getText().toString()))
@@ -285,7 +405,7 @@ public class ActivityCreateStockConversion extends Activity {
                         common.showToast(lang.equalsIgnoreCase("hi") ? "खपत आइटम पहले ही जोड़ दिया गया है।" : "Consumed item already added.");
                     else {
                         db.open();
-                        db.Insert_OutletConversionConsumedTemp(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("-")[0], etConsumedQty.getText().toString());
+                        db.Insert_OutletConversionConsumedTemp(((CustomType) spRawMaterial.getSelectedItem()).getId(), ((CustomType) spSKU.getSelectedItem()).getId().split("-")[0], Double.valueOf(etConsumedQty.getText().toString()).toString());
                         db.close();
                         spRawMaterial.setSelection(0);
                         spSKU.setSelection(0);
@@ -323,7 +443,7 @@ public class ActivityCreateStockConversion extends Activity {
 
             @Override
             public void onClick(View arg0) {
-
+                etProducedQty.clearFocus();
                 if (spProdSKU.getSelectedItemPosition() == 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
                 else if (String.valueOf(etProducedQty.getText()).trim().equals(""))
@@ -335,7 +455,7 @@ public class ActivityCreateStockConversion extends Activity {
                         common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित आइटम पहले ही जोड़ दिया गया है।" : "Produced item already added.");
                     else {
                         db.open();
-                        db.Insert_OutletConversionProducedTemp(((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[0], etProducedQty.getText().toString());
+                        db.Insert_OutletConversionProducedTemp(((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[0], Double.valueOf(etProducedQty.getText().toString()).toString());
                         db.close();
                         spProdSKU.setSelection(0);
                         etProducedQty.setText("");
@@ -567,7 +687,7 @@ public class ActivityCreateStockConversion extends Activity {
             }
             holder.tvId.setText(listCons.get(arg0).get("Id"));
             holder.tvName.setText(listCons.get(arg0).get("Name"));
-            holder.tvQty.setText(listCons.get(arg0).get("Quantity"));
+            holder.tvQty.setText(listCons.get(arg0).get("Quantity").replace(".0", ""));
 
             holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 
@@ -682,7 +802,7 @@ public class ActivityCreateStockConversion extends Activity {
             }
             holder.tvId.setText(listProd.get(arg0).get("Id"));
             holder.tvName.setText(listProd.get(arg0).get("Name"));
-            holder.tvQty.setText(listProd.get(arg0).get("Quantity"));
+            holder.tvQty.setText(listProd.get(arg0).get("Quantity").replace(".0", ""));
 
             holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 

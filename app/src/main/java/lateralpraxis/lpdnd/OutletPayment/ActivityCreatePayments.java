@@ -293,7 +293,7 @@ public class ActivityCreatePayments extends Activity {
                                 public void onClick(DialogInterface dialog,
                                                     int id) {
                                     db.open();
-                                    db.Insert_OutletPaymentReceipt(userId, etCashAmount.getText().toString(), UUID.randomUUID().toString());
+                                    db.Insert_OutletPaymentReceipt(userId, Double.valueOf(etCashAmount.getText().toString()).toString(), UUID.randomUUID().toString());
                                     db.close();
                                     common.showToast(lang.equalsIgnoreCase("hi") ? "भुगतान सफलतापूर्वक सहेजा गया।" : "payment saved successfully.");
                                     Intent i = new Intent(ActivityCreatePayments.this, ActivityListPayments.class);

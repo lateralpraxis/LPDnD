@@ -6,14 +6,14 @@
     android:background="@color/white">
 
     <Button
-        android:id="@+id/btnPrimaryReceipt"
+        android:id="@+id/btnExpenseConfirmation"
         style="@style/style_homeButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="fill_vertical"
         android:layout_weight="0.5"
-        android:drawableLeft="@drawable/ic_receipt"
-        android:text="@string/menu_primaryreceipt"
+        android:drawableLeft="@drawable/ic_expense_confirmation"
+        android:text="@string/menu_expenseconfirmation"
         android:textAllCaps="true"
         tools:ignore="RtlHardcoded,RtlSymmetry" />
 </LinearLayout>

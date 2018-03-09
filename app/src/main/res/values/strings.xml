@@ -89,8 +89,12 @@
     <string name="menu_DelRec">DELIVERY\n/RECEIPT(C)</string>
     <string name="menu_VehDelRec">DELIVERY\n/RECEIPT(V)</string>
     <string name="menu_primaryreceipt">Primary Receipt</string>
+    <string name="menu_expense">Expense</string>
+    <string name="menu_stockAdjustment">ADJUST</string>
+    <string name="menu_expenseconfirmation">CONFIRM</string>
+    <string name="menu_deliveryConfirmation">DELIVERY CONFIRMATION</string>
     <string name="place_order">Create Demand</string>
-    <string name="go">Go</string>
+    <string name="go">View</string>
     <string name="show_password">Show Password</string>
     <string name="last_updated_on">Last Updated On:</string>
     <string name="btn_search">Search</string>
@@ -268,7 +272,7 @@
 
     <!-- Start of Report Variables-->
     <string name="hint_date">Select Date</string>
-    <string name="label_Search">Go</string>
+    <string name="label_Search">View</string>
     <string name="label_Demand">Demand Details</string>
     <string name="label_Centre">Centre:</string>
     <string name="label_CentreHead">Centre/Veh#</string>
@@ -317,15 +321,61 @@
     <string name="label_StockConversion">Stock Conversion</string>
     <string name="label_Consumed">Consumed</string>
     <string name="label_Produced">Produced</string>
+    <string name="label_consumedqty">Consumed Quantity *</string>
+    <string name="label_producedqty">Produced Quantity *</string>
     <!-- End of Stock Conversion Variables-->
 
     <!-- Outlet Sale  -->
     <string name="menu_outlet_sale">Sale</string>
     <string name="view_sale">View Sale</string>
     <string name="create_sale">Create Sale</string>
+    <string name="credit">Credit</string>
+    <string name="saleType">Sale Type</string>
+    <string name="saleRate">Sale Rate\u20B9</string>
     <!-- End of Outlet Sale  -->
 
-    <!-- Start of Outlet Payment Variables-->
+    <!-- Delivery Confirmation -->
+    <string name="deliveryConfirmation">Delivery Confirmation</string>
+    <string name="deliveryConfirmationDetails">Delivery Confirmation Details</string>
+    <string name="delivery">Delivery</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="dateHead">Date</string>
+    <string name="routeOfficer">Route Officer</string>
+    <string name="vehicle">Vehicle#</string>
+    <string name="invoice">Invoice#</string>
+    <!-- End of  Delivery Confirmation -->
 
-    <!-- End of Outlet Payment Variables-->
+    <!-- Start of Expense Booking Variables-->
+    <string name="label_Expense">Expense Booking</string>
+    <string name="label_expensehead">Expense Head *</string>
+    <string name="label_expenseheader">Expense Head</string>
+    <string name="label_remarkshead">Remarks *</string>
+    <!-- End of Expense Booking Variables-->
+
+
+    <!-- Start of Stock Adjustment Variables-->
+    <string name="label_StockAdjustment">Stock Adjustment</string>
+    <string name="label_Remarks">Remarks</string>
+    <string name="label_RemarksMandatory">Remarks *</string>
+    <string name="hintRemarks">Enter Remarks</string>
+    <string name="label_availqty">Available Quantity</string>
+    <string name="label_Adjustedqty">Adjusted Quantity</string>
+    <!-- End of Stock Adjustment Variables-->
+
+    <!-- Start of Expense Confirmation Variables-->
+    <string name="expenseConfirmation">Expense Confirmation</string>
+    <string name="expenseConfirmationHead">Customer - Expense Head - Amount</string>
+    <string name="expenseDetails">Expense Details</string>
+    <string name="ExpenseHead">Expense Head</string>
+    <string name="accept">Accept</string>
+    <string name="reject">Reject</string>
+    <string name="label_FromDate">From Date:</string>
+    <string name="label_ToDate">To Date:</string>
+    <string name="label_AdjDate">Adj. Date</string>
+    <string name="label_Item">Item</string>
+    <string name="label_ExistInventory">Exis. Inv.</string>
+    <string name="label_AdjQty">Qty</string>
+    <string name="label_NewInventory">New Inv.</string>
+    <string name="label_Adjtype">Type:</string>
+    <!-- End of Expense Confirmation Variables-->
 </resources>

@@ -5,7 +5,7 @@
     <string name="appFullName">Demand &amp; Distribution System</string>
     <string name="home">Home</string>
     <string name="action_settings">Settings</string>
-      <string name="enterusername">उपयोगकर्ता नाम दर्ज करें</string>
+    <string name="enterusername">उपयोगकर्ता नाम दर्ज करें</string>
     <string name="enterpassword">पास वर्ड दर्ज करें</string>
     <string name="password_hint_">पासवर्ड दर्ज करें *</string>
     <string name="username">उपयोगकर्ता नाम *</string>
@@ -29,9 +29,9 @@
     <string name="ALQty">आवंटन</string>
     <string name="BalQty">शेष</string>
     <string name="RetQty">वापसी</string>
-     <string name="AssignedRoute">असाइन रूट</string>
-      <string name="OtherRoute">अन्य रूट</string>
-    
+    <string name="AssignedRoute">असाइन रूट</string>
+    <string name="OtherRoute">अन्य रूट</string>
+
     <string name="Type">प्रकार</string>
     <string name="CreateDemand">[ डिमांड बनाएं ]</string>
     <string name="create_demand">डिमांड बनाएं</string>
@@ -64,7 +64,7 @@
     <string name="end_date">अंतिम तिथि: </string>
     <string name="menu_allocation">आवंटन देखें</string>
     <string name="menu_allocation_report">आवंटन</string>
-     <string name="menu_stockAdjust">समायोजन</string>
+    <string name="menu_stockAdjust">समायोजन</string>
     <string name="menu_stockConvert">परिवर्तन</string>
     <string name="menu_stockInve">इन्वेंटरी</string>
     <string name="menu_stockOutstanding">शेष</string>
@@ -89,8 +89,11 @@
     <string name="menu_customer">ग्राहक</string>
     <string name="menu_rate">दर</string>
     <string name="menu_primaryreceipt">प्राथमिक रसीद</string>
+    <string name="menu_expense">व्यय</string>
+    <string name="menu_stockAdjustment">समायोजन</string>
+    <string name="menu_expenseconfirmation">पुष्टि</string>
     <string name="place_order">डिमांड बनायें</string>
-    <string name="go">जाएँ</string>
+    <string name="go">देखें</string>
     <string name="show_password">पासवर्ड दिखाएं </string>
     <string name="last_updated_on">अंतिम अद्यतन :</string>
     <string name="btn_search">खोजें</string>
@@ -104,7 +107,7 @@
     <string name="change_language">भाषा बदलो</string>
     <string name="the_password_should_consists_of_">The password should consists of -</string>
     <string name="password_expired">Please change your password, as your previous password has already expired.</string>
-     <string name="old_password">पुराना पासवर्ड *</string>
+    <string name="old_password">पुराना पासवर्ड *</string>
     <string name="new_password">नया पासवर्ड *</string>
     <string name="confirm_password">पासवर्ड की पुष्टि कीजिये *</string>
     <string name="enter_old_password">पुराना पासवर्ड दर्ज करें</string>
@@ -191,11 +194,11 @@
     <string name="datehead">दिनांक:</string>
     <string name="cdhead">नकद जमा#:</string>
     <string name="delete">हटाएँ</string>
-    
+
     <string name="modehead">मोड</string>
     <string name="amounthead">राशि\u20B9</string>
     <!-- End of Cash Deposit Delete-->
-    
+
     <!-- Start of Delete Delivery Delete-->
     <string name="VehicleHead">वाहन#:</string>
     <string name="DeleteDeliveryHead">वितरण का विवरण</string>
@@ -257,41 +260,110 @@
     <string name="string_routes">रूट ऑफिसर को सौंपा गया मार्ग</string>
     <string name="viewRouteAllocation">मार्ग आवंटन देखें</string>
     <string name="skipcompany">कंपनी बदलें</string>
-    
-     <!-- Start of Report Variables-->
-     <string name="hint_date">तिथि चुनें</string>
-     <string name="label_Search">Go</string>
-     <string name="label_Demand">मांग विवरण</string>
-     <string name="label_Centre">केंद्र:</string>
-     <string name="label_CentreHead">केंद्र/वाहन#</string>
-     <string name="label_Company">कंपनी:</string>
-     <string name="label_Alloc">आवंटित#</string>
-     <string name="label_Vehicle">वाहन#</string>
-     <string name="label_RouteOfficer">रूट ऑफिसर</string>
-     <string name="label_Allo">आवंटन</string>
-     <string name="label_Deli">वितरण</string>
-     <string name="label_Ret">वापसी</string>    
-     <string name="label_Leak">लीक</string>
-     <string name="label_CreateBy">द्वारा बनाया</string>
-     <string name="label_ConversionNo">परिवर्तन#</string>
-     <string name="label_AllocReport">आवंटन विवरण</string>
-     <string name="label_AdjustReportReport">स्टॉक समायोजन विवरण</string>
-     <string name="label_DeliveryReport">डिलिवरी का विवरण</string>
-     <string name="label_DeliveryReceipt">वितरण / रसीद\u20B9</string>
-     <string name="label_ConversionReport">स्टॉक परिवर्तन का विवरण</string>
-     <string name="label_CollectReport">नकद - संग्रह</string>
-     <string name="label_Type">प्रकार</string>
-     <string name="label_Inventory">इन्वेंटरी</string>
-     <string name="label_DelVsRecReport">Delivery Vs. Receipt</string>
-     <string name="label_NameReport">नाम</string>
+
+    <!-- Start of Report Variables-->
+    <string name="hint_date">तिथि चुनें</string>
+    <string name="label_Search">देखें</string>
+    <string name="label_Demand">मांग विवरण</string>
+    <string name="label_Centre">केंद्र:</string>
+    <string name="label_CentreHead">केंद्र/वाहन#</string>
+    <string name="label_Company">कंपनी:</string>
+    <string name="label_Alloc">आवंटित#</string>
+    <string name="label_Vehicle">वाहन#</string>
+    <string name="label_RouteOfficer">रूट ऑफिसर</string>
+    <string name="label_Allo">आवंटन</string>
+    <string name="label_Deli">वितरण</string>
+    <string name="label_Ret">वापसी</string>
+    <string name="label_Leak">लीक</string>
+    <string name="label_CreateBy">द्वारा बनाया</string>
+    <string name="label_ConversionNo">परिवर्तन#</string>
+    <string name="label_AllocReport">आवंटन विवरण</string>
+    <string name="label_AdjustReportReport">स्टॉक समायोजन विवरण</string>
+    <string name="label_DeliveryReport">डिलिवरी का विवरण</string>
+    <string name="label_DeliveryReceipt">वितरण / रसीद\u20B9</string>
+    <string name="label_ConversionReport">स्टॉक परिवर्तन का विवरण</string>
+    <string name="label_CollectReport">नकद - संग्रह</string>
+    <string name="label_Type">प्रकार</string>
+    <string name="label_Inventory">इन्वेंटरी</string>
+    <string name="label_DelVsRecReport">Delivery Vs. Receipt</string>
+    <string name="label_NameReport">नाम</string>
     <string name="label_CollBy">द्वारा एकत्रित</string>
+
 
     <!-- Start of Primary Receipt Variables-->
     <string name="label_PrimaryReceipt">प्राथमिक रसीद</string>
     <string name="label_linkAdd">जोड़ें [ + ]</string>
+    <string name="label_type">प्रकार</string>
+    <string name="label_raw">कच्ची सामग्री</string>
+    <string name="label_rawMat">कच्ची सामग्री *</string>
+    <string name="label_item">उत्पाद *</string>
+    <string name="label_qty">मात्रा *</string>
+    <string name="label_amt">राशि\u20B9 *</string>
+    <string name="label_code">कोड</string>
+    <string name="label_date">तिथि</string>
+    <string name="label_quantity">मात्रा</string>
+    <string name="hintqty">मात्रा दर्ज करें</string>
+    <string name="hintamt">राशि दर्ज करें</string>
     <!-- End of Primary Receipt Variables-->
+
+    <!-- Start of Stock Conversion Variables-->
+    <string name="label_StockConversion">स्टॉक रूपांतरण</string>
+    <string name="label_Consumed">खपत</string>
+    <string name="label_Produced">उत्पादित</string>
+    <string name="label_consumedqty">खपत मात्रा *</string>
+    <string name="label_producedqty">उत्पादित मात्रा *</string>
+    <!-- End of Stock Conversion Variables-->
+
     <!-- Outlet Sale  -->
     <string name="menu_outlet_sale">बिक्री</string>
-
+    <string name="view_sale">बिक्री देखें</string>
+    <string name="create_sale">बिक्री बनाएं</string>
+    <string name="credit">जमा धन</string>
+    <string name="saleType">बिक्री का प्रकार</string>
+    <string name="saleRate">बिक्री दर\u20B9</string>
     <!-- End of Outlet Sale  -->
+
+    <!-- Delivery Confirmation -->
+    <string name="menu_deliveryConfirmation">डिलिवरी पुष्टिकरण</string>
+    <string name="deliveryConfirmation">डिलिवरी निश्चित करना</string>
+    <string name="deliveryConfirmationDetails">डिलिवरी पुष्टिकरण विवरण</string>
+    <string name="delivery">डिलिवरी</string>
+    <string name="confirmation">पुष्टिकरण</string>
+    <string name="dateHead">दिनांक</string>
+    <string name="routeOfficer">रूट ऑफिसर</string>
+    <string name="vehicle">वाहन#</string>
+    <string name="invoice">चालान#</string>
+    <!-- End of  Delivery Confirmation -->
+
+    <!-- Start of Stock Adjustment Variables-->
+    <string name="label_StockAdjustment">स्टॉक समायोजन</string>
+    <string name="label_Remarks">टिप्पणी</string>
+    <string name="label_RemarksMandatory">टिप्पणी *</string>
+    <string name="hintRemarks">टिप्पणी दर्ज करें</string>
+    <string name="label_availqty">उपलब्ध मात्रा</string>
+    <string name="label_Adjustedqty">समायोजित मात्रा</string>
+    <!-- End of Stock Adjustment Variables-->
+
+    <!-- Start of Expense Confirmation Variables-->
+    <string name="expenseConfirmation">व्यय पुष्टि</string>
+    <string name="expenseDetails">व्यय विवरण</string>
+    <string name="ExpenseHead">व्यय हेड</string>
+    <string name="accept">स्वीकृत</string>
+    <string name="reject">अस्वीकृत</string>
+    <string name="label_FromDate">तिथि से:</string>
+    <string name="label_ToDate">तिथि तक:</string>
+    <string name="label_AdjDate">समायोजित तिथि</string>
+    <string name="label_Item">उत्पाद</string>
+    <string name="label_ExistInventory">मौजूदा इन्वेंटरी</string>
+    <string name="label_AdjQty">मात्रा</string>
+    <string name="label_NewInventory">नया इन्वेंटरी</string>
+    <string name="label_Adjtype">प्रकार:</string>
+    <!-- End of Expense Confirmation Variables-->
+
+    <!-- Start of Expense Booking Variables-->
+    <string name="label_Expense">व्यय बुकिंग</string>
+    <string name="label_expensehead">व्यय हेड *</string>
+    <string name="label_expenseheader">व्यय हेड</string>
+    <string name="label_remarkshead">टिप्पणी *</string>
+    <!-- End of Expense Booking Variables-->
 </resources>
