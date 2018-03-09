@@ -693,7 +693,7 @@ public class ActivityCreateStockConversion extends Activity {
             }
             holder.tvId.setText(listCons.get(arg0).get("Id"));
             holder.tvName.setText(listCons.get(arg0).get("Name"));
-            holder.tvQty.setText(listCons.get(arg0).get("Quantity"));
+            holder.tvQty.setText(listCons.get(arg0).get("Quantity").replace(".0",""));
 
             holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 
@@ -808,7 +808,7 @@ public class ActivityCreateStockConversion extends Activity {
             }
             holder.tvId.setText(listProd.get(arg0).get("Id"));
             holder.tvName.setText(listProd.get(arg0).get("Name"));
-            holder.tvQty.setText(listProd.get(arg0).get("Quantity"));
+            holder.tvQty.setText(listProd.get(arg0).get("Quantity").replace(".0",""));
 
             holder.btnDelete.setOnClickListener(new View.OnClickListener() {
 
