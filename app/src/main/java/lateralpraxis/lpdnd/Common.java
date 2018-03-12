@@ -45,22 +45,22 @@ import java.util.List;
 import java.util.Locale;
 
 public class Common {
-	static Context c;
-	UserSessionManager session;
+    private final static String namespace = "http://tempuri.org/";
+    private final static String soap_action = "http://tempuri.org/";
+    static Context c;
 	static HashMap<String, String> user;
-	public String log="lpdnd_app";
-	public String deviceIP="";
-	//public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
-	public final String domain = "http://122.180.148.98:82"; // 82 Port for Development
-	//public final String domain = "http://122.180.148.98:82";
-	//For Demo Server
+    private static String responseJSON;
+    //public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
+    ////public final String domain = "http://122.180.148.98:82"; // 82 Port for Development
+    public final String domain = "http://122.180.148.98:82";
+    //For Demo Server
 	//public final String domain = "http://54.148.76.44"; // lateralpraxis.co.in
 	//public final String url=domain+"/LPDnD-Ganesh/Shared/Services/Android.asmx";
 	public final String url=domain+"/LPDnD/Shared/Services/Android.asmx";
-	private final static String namespace = "http://tempuri.org/";
-	private final static String soap_action = "http://tempuri.org/";
-	private static String responseJSON;
-	private DatabaseAdapter databaseAdapter;
+    public String log = "lpdnd_app";
+    public String deviceIP = "";
+    UserSessionManager session;
+    private DatabaseAdapter databaseAdapter;
 
 	public Common(Context context)
 	{
