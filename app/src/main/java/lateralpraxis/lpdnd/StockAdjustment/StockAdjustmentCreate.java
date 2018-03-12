@@ -458,7 +458,7 @@ public class StockAdjustmentCreate extends Activity {
                     skuId = "0";
                 } else {
                     rmId = "0";
-                    skuId = ((CustomType) spSKU.getSelectedItem()).getId().split("~")[0];
+                    skuId = ((CustomType) spSKU.getSelectedItem()).getId().split("-")[0];
                 }
 
                 String[] name = {"uniqueId", "customerId", "rawMaterialId", "skuId", "currentInventory", "newInventory", "remarks", "userId", "ipAddress", "machine"};

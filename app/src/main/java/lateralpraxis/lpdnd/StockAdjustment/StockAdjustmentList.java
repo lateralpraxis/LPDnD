@@ -2,10 +2,12 @@ package lateralpraxis.lpdnd.StockAdjustment;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -13,6 +15,7 @@ import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,7 +25,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -31,6 +37,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
@@ -41,6 +48,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
+import lateralpraxis.lpdnd.ActivityChangePassword;
 import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
@@ -56,7 +64,7 @@ public class StockAdjustmentList extends Activity {
     DatabaseAdapter db;
     Common common;
     /*Start of code for Variable Declaration*/
-    private String lang, userId, responseJSON, rdButtonSelectedText;
+    private String lang, userId, responseJSON, rdButtonSelectedText, sendJSon;
     private int listSize = 0;
     /*End of code for Variable Declaration*/
     private int year, month, day;
@@ -148,8 +156,10 @@ public class StockAdjustmentList extends Activity {
             public void onClick(View arg0) {
                 if(common.isConnected())
                 {
-                    AsyncPendingDeliveryStatusWSCall task= new AsyncPendingDeliveryStatusWSCall();
-                    task.execute();
+                    String[] myTaskParams = {"transactions"};
+                    AsyncCustomerValidatePasswordWSCall task = new AsyncCustomerValidatePasswordWSCall();
+                    task.execute(myTaskParams);
+
                 }
             }
         });
@@ -272,6 +282,84 @@ public class StockAdjustmentList extends Activity {
     }
     //</editor-fold>
 
+    private void showChangePassWindow(final String source, final String resp) {
+        LayoutInflater li = LayoutInflater.from(mContext);
+        View promptsView = li.inflate(R.layout.dialog_password_prompt, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                mContext);
+        alertDialogBuilder.setView(promptsView);
+        // Code to find controls in dialog
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.etPassword);
+
+        final CheckBox ckShowPass = (CheckBox) promptsView
+                .findViewById(R.id.ckShowPass);
+
+        final TextView tvMsg = (TextView) promptsView.findViewById(R.id.tvMsg);
+
+        tvMsg.setText(resp);
+
+        ckShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                int start, end;
+
+                if (!isChecked) {
+                    start = userInput.getSelectionStart();
+                    end = userInput.getSelectionEnd();
+                    userInput
+                            .setTransformationMethod(new PasswordTransformationMethod());
+                    userInput.setSelection(start, end);
+                } else {
+                    start = userInput.getSelectionStart();
+                    end = userInput.getSelectionEnd();
+                    userInput.setTransformationMethod(null);
+                    userInput.setSelection(start, end);
+                }
+
+            }
+        });
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Submit",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String password = userInput.getText().toString().trim();
+                                if (password.length() > 0) {
+                                    // Code to update password in session and
+                                    // call validate Async Method
+                                    session.updatePassword(password);
+
+                                    String[] myTaskParams = {source};
+                                    AsyncCustomerValidatePasswordWSCall task = new AsyncCustomerValidatePasswordWSCall();
+                                    task.execute(myTaskParams);
+                                } else {
+                                    // Display message if password is not
+                                    // enetered
+                                    common.showToast("Password is mandatory");
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
+
     //<editor-fold desc="Code to be Bind Data in list view">
     public static class ViewHolder {
         TextView tvAdjDate, tvItem, tvAdjQty, tvExistInv, tvNewInv, tvReason;
@@ -352,6 +440,546 @@ public class StockAdjustmentList extends Activity {
         }
     }
     //</editor-fold>
+
+    //<editor-fold desc="Code to Validate Retail Outlet Customer">
+    private class AsyncCustomerValidatePasswordWSCall extends
+            AsyncTask<String, Void, String> {
+        String source = "";
+        private ProgressDialog Dialog = new ProgressDialog(
+                StockAdjustmentList.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try { // if this button is clicked, close
+
+                source = params[0];
+                db.openR();
+                HashMap<String, String> user = session.getLoginUserDetails();
+                // Creation of JSON string for posting validating data
+                JSONObject json = new JSONObject();
+                json.put("username", user.get(UserSessionManager.KEY_CODE));
+                json.put("password", user.get(UserSessionManager.KEY_PWD));
+                json.put("imei", common.getIMEI());
+                json.put("version", db.getVersion());
+                String JSONStr = json.toString();
+
+                // Store response fetched from server in responseJSON variable
+                responseJSON = common.invokeJSONWS(JSONStr, "json",
+                        "ValidatePassword", common.url);
+
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                // e.printStackTrace();
+                return "ERROR: Unable to fetch response from server.";
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                // Check if result contains error
+                if (!result.contains("ERROR")) {
+                    String passExpired = responseJSON.split("~")[0];
+                    String passServer = responseJSON.split("~")[1];
+                    String membershipError = responseJSON.split("~")[2];
+                    // Check if password is expire and open change password
+                    // intent
+                    if (passExpired.toLowerCase(Locale.US).equals("yes")) {
+                        Intent intent = new Intent(mContext,
+                                ActivityChangePassword.class);
+                        intent.putExtra("fromwhere", "login");
+                        startActivity(intent);
+                        finish();
+                    }
+                    // Code to check other validations
+                    else if (passServer.toLowerCase(Locale.US).equals("no")) {
+                        String resp = "";
+
+                        if (membershipError.toLowerCase(Locale.US).contains(
+                                "NO_USER".toLowerCase(Locale.US))) {
+                            resp = "There is no user in the system";
+                        } else if (membershipError.toLowerCase(Locale.US)
+                                .contains("BARRED".toLowerCase(Locale.US))) {
+                            resp = "Your account has been barred by the Administrator.";
+                        } else if (membershipError.toLowerCase(Locale.US)
+                                .contains("LOCKED".toLowerCase(Locale.US))) {
+                            resp = "Your account has been locked out because "
+                                    + "you have exceeded the maximum number of incorrect login attempts. "
+                                    + "Please contact the System Admin to "
+                                    + "unblock your account.";
+                        } else if (membershipError.toLowerCase(Locale.US)
+                                .contains("LOGINFAILED".toLowerCase(Locale.US))) {
+                            resp = "Invalid password. "
+                                    + "Password is case-sensitive. "
+                                    + "Access to the system will be disabled after "
+                                    + responseJSON.split("~")[3] + " "
+                                    + "consecutive wrong attempts.\n"
+                                    + "Number of Attempts remaining: "
+                                    + responseJSON.split("~")[4];
+                        } else {
+                            resp = "Password mismatched. Enter latest password!";
+                        }
+
+                        showChangePassWindow(source, resp);
+                    }
+
+                    // If version does not match logout user
+                    if (responseJSON.contains("NOVERSION")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(
+                                mContext);
+                        builder.setMessage(
+                                "Application is running an older version. Please install latest version.!")
+                                .setCancelable(false)
+                                .setPositiveButton(
+                                        "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(
+                                                    DialogInterface dialog,
+                                                    int id) {
+                                                // Code to call async method
+                                                // for posting transactions
+                                                if (common.isConnected()) {
+                                                    AsyncCustomerPrimaryReceiptWSCall task = new AsyncCustomerPrimaryReceiptWSCall();
+                                                    task.execute();
+                                                }
+                                            }
+                                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                    } else {
+                        if (common.isConnected()) {
+                            AsyncCustomerPrimaryReceiptWSCall task = new AsyncCustomerPrimaryReceiptWSCall();
+                            task.execute();
+                        }
+                    }
+
+                } else {
+                    common.showAlert(StockAdjustmentList.this,
+                            "Unable to fetch response from server.", false);
+                }
+
+            } catch (Exception e) {
+                common.showAlert(StockAdjustmentList.this,
+                        "Validating credentials failed: " + e.toString(), false);
+            }
+            Dialog.dismiss();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Validating your credentials..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+        }
+
+    }
+    //</editor-fold>
+
+
+    //<editor-fold desc="Async for Posting Primary Receipt for Retail Outlet">
+    private class AsyncCustomerPrimaryReceiptWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                StockAdjustmentList.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Will contain the raw JSON response as a string.
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonPayment = new JSONObject();
+                db.open();
+                // to get Primary Receipt from database
+                ArrayList<HashMap<String, String>> insmast = db
+                        .getUnSyncPrimaryReceipt();
+                db.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to post payment
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("CustomerId", insp.get("CustomerId"));
+                        jsonins.put("MaterialId", insp.get("MaterialId"));
+                        jsonins.put("SkuId", insp.get("SKUId"));
+                        jsonins.put("Quantity", insp.get("Quantity"));
+                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("TransactionDate", insp.get("CreateDate"));
+                        jsonins.put("CreateBy", userId);
+                        jsonins.put("ipAddress",
+                                common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", common.getIMEI());
+                        array.put(jsonins);
+                    }
+                    jsonPayment.put("PrimaryReceipt", array);
+
+                    sendJSon = jsonPayment.toString();
+
+                    // To invoke json web service to create payment
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "InsertPimaryReceipt", common.url);
+                } else {
+                    return "No primary receipt pending to be send.";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                db.close();
+            }
+        }
+
+        // After execution of json web service to create Primary Receipt
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        db.open();
+                        db.Update_PrimaryReceiptIsSync();
+                        db.close();
+                    }
+                    if (common.isConnected()) {
+                        // call method of Sync Pending Outlet Payments
+                        AsyncCustomerPaymentsWSCall task = new AsyncCustomerPaymentsWSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showAlert(StockAdjustmentList.this, result, false);
+                    common.showToast("Error: " + result);
+                }
+            } catch (Exception e) {
+                common.showAlert(StockAdjustmentList.this,
+                        "Unable to fetch response from server.", false);
+            }
+
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Primary Receipt...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async method for Posting Outlet Payment for Retail Outlet">
+    private class AsyncCustomerPaymentsWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                StockAdjustmentList.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Will contain the raw JSON response as a string.
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonPayment = new JSONObject();
+                db.open();
+                // to get Primary Receipt from database
+                ArrayList<HashMap<String, String>> insmast = db.getUnSyncOutletPayment();
+                db.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to post payment
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("CustomerId", insp.get("CustomerId"));
+                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("TransactionDate", insp.get("AndroidDate"));
+                        jsonins.put("CreateBy", userId);
+                        jsonins.put("ipAddress",
+                                common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", common.getIMEI());
+                        array.put(jsonins);
+                    }
+                    jsonPayment.put("Payments", array);
+
+                    sendJSon = jsonPayment.toString();
+
+                    // To invoke json web service to create payment
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "InsertOutletPayment", common.url);
+                } else {
+                    return "No outlet payment pending to be send.";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                db.close();
+            }
+        }
+
+        // After execution of json web service to create payment
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        db.open();
+                        db.Update_PaymentReceiptIsSync();
+                        db.close();
+                    }
+                    if (common.isConnected()) {
+                        // call method of Post Customer Expense
+                        AsyncCustomerExpenseWSCall task = new AsyncCustomerExpenseWSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showAlert(StockAdjustmentList.this, result, false);
+                    common.showToast("Error: " + result);
+                }
+            } catch (Exception e) {
+                common.showAlert(StockAdjustmentList.this,
+                        "Unable to fetch response from server.", false);
+            }
+
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Outlet Payment...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async method for Posting Outlet Expense for Retail Outlet">
+    private class AsyncCustomerExpenseWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                StockAdjustmentList.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Will contain the raw JSON response as a string.
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonExpense = new JSONObject();
+                db.open();
+                // to get Primary Receipt from database
+                ArrayList<HashMap<String, String>> insmast = db
+                        .getUnSyncOutletExpense();
+                db.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to post payment
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("CustomerId", insp.get("CustomerId"));
+                        jsonins.put("ExpenseHeadId", insp.get("ExpenseHeadId"));
+                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("Remarks", insp.get("Remarks"));
+                        jsonins.put("TransactionDate", insp.get("TransactionDate"));
+                        jsonins.put("CreateBy", userId);
+                        jsonins.put("ipAddress",
+                                common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", common.getIMEI());
+                        array.put(jsonins);
+                    }
+                    jsonExpense.put("Master", array);
+
+                    sendJSon = jsonExpense.toString();
+
+                    // To invoke json web service to create payment
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "CreateOutletExpense", common.url);
+                } else {
+                    return "No outlet expense pending to be send.";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                db.close();
+            }
+        }
+
+        // After execution of json web service to create payment
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        db.open();
+                        db.Update_OutletExpenseIsSync();
+                        db.close();
+                    }
+                    if (common.isConnected()) {
+                        AsyncOutletSaleWSCall task = new AsyncOutletSaleWSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showAlert(StockAdjustmentList.this, result, false);
+                    common.showToast("Error: " + result);
+                }
+            } catch (Exception e) {
+                common.showAlert(StockAdjustmentList.this,
+                        "Unable to fetch response from server.", false);
+            }
+
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Outlet Expense...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="To make web service class to post data of outlet sale">
+    private class AsyncOutletSaleWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                StockAdjustmentList.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            // Will contain the raw JSON response as a string.
+            try {
+                responseJSON = "";
+                JSONObject jsonOutletSale = new JSONObject();
+
+                // to get outlet sale from database
+                db.open();
+                ArrayList<HashMap<String, String>> insmast = db.getUnSyncOutletSale();
+                db.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to post outlet sale
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("UserId", insp.get("CreateBy"));
+                        jsonins.put("CustomerId", insp.get("CustomerId"));
+                        jsonins.put("SaleType", insp.get("SaleType"));
+                        jsonins.put("SaleDate", insp.get("SaleDate"));
+                        jsonins.put("AndroidDate", insp.get("SaleDate"));
+                        jsonins.put("ipAddress", common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", insp.get("Imei"));
+                        array.put(jsonins);
+                    }
+                    jsonOutletSale.put("Master", array);
+
+                    JSONObject jsonDetails = new JSONObject();
+                    // To get outlet sale details from database
+                    db.open();
+                    ArrayList<HashMap<String, String>> insdet = db.getUnSyncOutletSaleDetail();
+                    db.close();
+                    if (insdet != null && insdet.size() > 0) {
+
+                        // To make json string to post outlet sale details
+                        JSONArray arraydet = new JSONArray();
+                        for (HashMap<String, String> insd : insdet) {
+                            JSONObject jsondet = new JSONObject();
+                            jsondet.put("UniqueId", insd.get("UniqueId"));
+                            jsondet.put("SkuId", insd.get("SkuId"));
+                            jsondet.put("Quantity", insd.get("Qty"));
+                            jsondet.put("Rate", insd.get("Rate"));
+                            jsondet.put("SaleRate", insd.get("SaleRate"));
+                            arraydet.put(jsondet);
+                        }
+                        jsonDetails.put("Detail", arraydet);
+                    }
+                    sendJSon = jsonOutletSale + "~" + jsonDetails;
+                    // To invoke json web service to create outlet sale
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "CreateOutletSale", common.url);
+                } else {
+                    return "No outlet sale pending to be send.~";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                db.close();
+            }
+        }
+
+        // After execution of json web service to create outlet sale
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        db.open();
+                        db.UpdateOutletSaleIsSync();
+                        db.close();
+                    }
+                    if (common.isConnected()) {
+
+                        AsyncPendingDeliveryStatusWSCall task = new AsyncPendingDeliveryStatusWSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showToast("Error: " + result);
+                }
+
+            } catch (Exception e) {
+
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Posting Sale Details...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
 
     //<editor-fold desc="Async class Class to handle fetch Adjustment web service call as separate thread">
     private class AsyncStockReturnListWSCall extends AsyncTask<String, Void, String> {
