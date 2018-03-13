@@ -9,6 +9,7 @@
     <string name="enterpassword">पास वर्ड दर्ज करें</string>
     <string name="password_hint_">पासवर्ड दर्ज करें *</string>
     <string name="username">उपयोगकर्ता नाम *</string>
+    <string name="userlogin">USER LOGIN</string>
     <string name="password">पासवर्ड *</string>
     <string name="password_hint">पासवर्ड दर्ज करें</string>
     <string name="password_required">कृप्या पास्वर्ड दर्ज करें</string>
@@ -136,6 +137,7 @@
     <string name="enter_contactPerson">संपर्क व्यक्ति दर्ज करें</string>
     <string name="contactPersonMobile">मोबाइल#*</string>
     <string name="mobile">मोबाइल#</string>
+    <string name="enter_contactPersonMobile">Enter Mobile</string>
     <string name="email">ईमेल आईडी*</string>
     <string name="enter_email">ईमेल आईडी दर्ज करें</string>
     <string name="createcustomer">सक्रियकरण के लिए सबमिट करें</string>
@@ -170,6 +172,7 @@
     <string name="cashDeposit">नकद जमा</string>
     <string name="strRoute">मार्ग *</string>
     <string name="collection">नकद एकत्रित\u20B9</string>
+    <string name="online">ऑनलाइन\u20B9</string>
     <string name="total">कुल</string>
     <string name="totalPayable">कुल देय\u20B9</string>
     <string name="deposit">नकद जमा\u20B9</string>
@@ -238,12 +241,16 @@
 </string>
     <string name="enter_cashamount">नकदी राशि दर्ज करें</string>
     <string name="enter_chequeamount">चेक राशि दर्ज करें</string>
+    <string name="enter_onlineamount">ऑनलाइन राशि दर्ज करें</string>
+    <string name="enter_Remarks">टिप्पणी दर्ज करें</string>
     <string name="cash">नकद</string>
     <string name="cheque">चेक</string>
     <string name="stradd">जोड़े</string>
     <string name="bank">बैंक *</string>
     <string name="cheq">चेक# *</string>
     <string name="cheqamt">चेक\u20B9 *</string>
+    <string name="onlineamt">ऑनलाइन\u20B9 *</string>
+    <string name="onlineremarks">टिप्पणी *</string>
     <string name="cashamt">नकद\u20B9 *</string>
     <string name="enter_cheque">चेक दर्ज करें#</string>
     <string name="strcust">ग्राहक *</string>
@@ -278,11 +285,12 @@
     <string name="label_Leak">लीक</string>
     <string name="label_CreateBy">द्वारा बनाया</string>
     <string name="label_ConversionNo">परिवर्तन#</string>
-    <string name="label_AllocReport">आवंटन विवरण</string>
-    <string name="label_AdjustReportReport">स्टॉक समायोजन विवरण</string>
-    <string name="label_DeliveryReport">डिलिवरी का विवरण</string>
+    <string name="label_AllocReport">आवंटन \nविवरण</string>
+    <string name="label_AdjustReportReport">स्टॉक \nसमायोजन विवरण</string>
+    <string name="label_DeliveryReport">डिलिवरी \nका विवरण</string>
     <string name="label_DeliveryReceipt">वितरण / रसीद\u20B9</string>
-    <string name="label_ConversionReport">स्टॉक परिवर्तन का विवरण</string>
+    <string name="label_ConversionReport">स्टॉक\nपरिवर्तन\nका विवरण</string>
+    <string name="label_OutstandingReport">नकद\nबकाया</string>
     <string name="label_CollectReport">नकद - संग्रह</string>
     <string name="label_Type">प्रकार</string>
     <string name="label_Inventory">इन्वेंटरी</string>
