@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias 'lateralpraxis.co.in'
+            keyPassword 'cuboid@12'
+            storeFile file('D:/LatestAndroid/adt-bundle-windows-x86-20140702/my.keystroke')
+            storePassword 'cuboid@12'
+        }
+    }
     compileSdkVersion 25
     defaultConfig {
         applicationId "lateralpraxis.lpdnd"

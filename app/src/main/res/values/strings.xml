@@ -365,7 +365,6 @@
 
     <!-- Start of Expense Confirmation Variables-->
     <string name="expenseConfirmation">Expense Confirmation</string>
-    <string name="expenseConfirmationHead">Customer - Expense Head - Amount</string>
     <string name="expenseDetails">Expense Details</string>
     <string name="ExpenseHead">Expense Head</string>
     <string name="accept">Accept</string>
