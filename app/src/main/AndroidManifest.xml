@@ -66,11 +66,6 @@
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".DatabaseManager"
-            android:configChanges="locale|orientation|keyboardHidden"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ActivityDemandViewDetail"
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
