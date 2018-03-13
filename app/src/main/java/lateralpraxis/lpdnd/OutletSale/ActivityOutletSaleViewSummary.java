@@ -149,7 +149,7 @@ public class ActivityOutletSaleViewSummary extends Activity {
                 dba.open();
                 String status = dba.GetDeliveryConfirmStatus();
                 dba.close();
-                if (status.equalsIgnoreCase("0")) {
+                if (status.equalsIgnoreCase("0") || status.equalsIgnoreCase("0.0")) {
                     intent = new Intent(context, ActivityOutletSaleCreate.class);
                     startActivity(intent);
                     finish();

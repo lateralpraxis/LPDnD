@@ -248,7 +248,7 @@ public class ActivityOutletSaleCreate extends ListActivity {
                                                     if (!etSaleQty.getText().toString().equalsIgnoreCase(".")) {
                                                         String qty = etSaleQty.getText().toString().trim().length() == 0 ? "0" : String.valueOf(Double.valueOf(etSaleQty.getText().toString().trim()));
                                                         if (Double.parseDouble(qty) != 0) {
-                                                            dba.Insert_OutletSaleDetail(insertDelId.split("~")[1], tvId.getText().toString(), tvItem.getText().toString(), tvRate.getText().toString().replace(",", ""), etSaleRate.getText().toString().replace("-", "0"), tvQty.getText().toString(), qty, userId);
+                                                            dba.Insert_OutletSaleDetail(insertDelId.split("~")[1], tvId.getText().toString(), tvItem.getText().toString(), tvRate.getText().toString().replace(",", ""), etSaleRate.getText().toString().replace("-", "0"), tvQty.getText().toString(), qty, userId, saleType);
                                                         }
                                                     }
                                                 }

@@ -14,7 +14,6 @@ import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -144,9 +143,8 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                     if (etQty.getText().toString().equalsIgnoreCase("."))
                         invalidCount = invalidCount + 1;
                     if (!etQty.getText().toString().equalsIgnoreCase(".")) {
-                        String qty = etQty.length() == 0 ? "0" : etQty
-                                .getText().toString().trim();
-                        if (etQty.length() == 0 || Double.parseDouble(qty) == 0)
+                        //String qty = etQty.length() == 0 ? "0" : etQty.getText().toString().trim();
+                        if (etQty.length() == 0)
                             zeroCount++;
                     }
                 }
@@ -154,10 +152,10 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                     common.showAlert(ActivityDeliveryConfirmationCreateView.this, "Please enter valid quantity!", false);
                 else if (invalidCount > 0 && lang.equalsIgnoreCase("hi"))
                     common.showAlert(ActivityDeliveryConfirmationCreateView.this, "कृपया वैध मात्रा दर्ज करें!", false);
-                else if (totalRow == zeroCount && lang.equalsIgnoreCase("en"))
-                    common.showAlert(ActivityDeliveryConfirmationCreateView.this, "Please enter atleast one quantity!", false);
-                else if (totalRow == zeroCount && lang.equalsIgnoreCase("hi"))
-                    common.showAlert(ActivityDeliveryConfirmationCreateView.this, "कृपया कम से कम एक मात्रा दर्ज करें!", false);
+                else if (zeroCount > 0 && lang.equalsIgnoreCase("en"))
+                    common.showAlert(ActivityDeliveryConfirmationCreateView.this, "Please enter all field!", false);
+                else if (zeroCount > 0 && lang.equalsIgnoreCase("hi"))
+                    common.showAlert(ActivityDeliveryConfirmationCreateView.this, "कृपया सभी मात्रा दर्ज करें!", false);
                 else {
                     Builder alertDialogBuilder = new Builder(mContext);
                     alertDialogBuilder.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
@@ -178,12 +176,12 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                                                 //To validate if user enter only .
                                                 if (!etQty.getText().toString().equalsIgnoreCase(".")) {
                                                     String qty = etQty.getText().toString().trim().length() == 0 ? "0" : String.valueOf(Double.valueOf(etQty.getText().toString().trim()));
-                                                    if (Double.parseDouble(qty) != 0) {
-                                                        JSONObject jsondet = new JSONObject();
-                                                        jsondet.put("Id", tvId.getText().toString());
-                                                        jsondet.put("Quantity", qty);
-                                                        arraydet.put(jsondet);
-                                                    }
+                                                    //if (Double.parseDouble(qty) != 0) {
+                                                    JSONObject jsondet = new JSONObject();
+                                                    jsondet.put("Id", tvId.getText().toString());
+                                                    jsondet.put("Quantity", qty);
+                                                    arraydet.put(jsondet);
+                                                    //}
                                                 }
                                             }
                                             jsonDetails.put("Detail", arraydet);
@@ -221,6 +219,8 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                 qty = Double.parseDouble(tvAmount.getText().toString().replace(",", ""));
             totalQty = totalQty + qty;
         }
+        if (Double.valueOf(totalQty) <= 0)
+            totalQty = totalOldQty;
         return String.valueOf(totalQty);
     }
     //</editor-fold>
@@ -319,6 +319,7 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                                     .getString("F")));
                             wordDelList.add(delmap);
                         }
+                        tvTotalAmount.setText(String.valueOf(totalOldQty));
                         listDelSize = wordDelList.size();
                         if (listDelSize != 0) {
                             listDeliveryView.setAdapter(new CustomAdapter(mContext, wordDelList));
@@ -491,7 +492,6 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
 
             holder.tvId.setText(_listItems.get(arg0).get("Id"));
             holder.tvSku.setText(lang.equalsIgnoreCase("hi") ? _listItems.get(arg0).get("Item") : _listItems.get(arg0).get("Item"));
-
             holder.tvDelivery.setText(_listItems.get(arg0).get("Qty"));
             holder.tvRate.setText(common.stringToTwoDecimal(_listItems.get(arg0).get("Rate")));
             //if (_listItems.get(arg0).get("Qty") != null)
@@ -499,11 +499,8 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
             holder.etQty.setText(_listItems.get(arg0).get("Qty"));
             if (_listItems.get(arg0).get("Sku").equalsIgnoreCase("0")) {
                 // To display decimal point in number key board control
-                holder.etQty
-                        .setFilters(new InputFilter[]{new DecimalDigitsInputFilter(
-                                5, 1)});
-                holder.etQty.setInputType(InputType.TYPE_CLASS_NUMBER
-                        + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                holder.etQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
+                holder.etQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
             } else {
                 // To display only number in key board control
                 int maxLength = 3;
@@ -512,23 +509,27 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                 holder.etQty.setFilters(FilterArray);
                 holder.etQty.setInputType(InputType.TYPE_CLASS_NUMBER);
             }
-            // To display total amount in footer of amount
-            if (lang.equalsIgnoreCase("hi"))
-                tvTotalAmount.setText(Html.fromHtml("<b>कुल: " + common.stringToTwoDecimal(totalOldQty) + "</b>"));
-            else
-                tvTotalAmount.setText(Html.fromHtml("<b>Total: " + common.stringToTwoDecimal(totalOldQty) + "</b>"));
+//
+//            String totQty= common.stringToTwoDecimal(String.valueOf(totalOldQty));
+//            // To display total amount in footer of amount
+//            if (lang.equalsIgnoreCase("hi"))
+//                tvTotalAmount.setText("कुल: " + totQty );
+//                //tvTotalAmount.setText(Html.fromHtml("<b>कुल: " + totQty + "</b>"));
+//            else
+//                tvTotalAmount.setText("Total: " + totQty );
+
             // Instantiates a TextWatcher, to observe value changes and trigger the result calculation
             TextWatcher textWatcher = new TextWatcher() {
                 public void afterTextChanged(Editable s) {
-
                     if (!holder.etQty.getText().toString().equalsIgnoreCase(".")) {
                         if (holder.etQty.getText().toString().equalsIgnoreCase("."))
                             holder.etQty.setText("");
                         if (holder.etQty.getText().toString().trim().length() > 0) {
-                            if (Double.parseDouble(holder.etQty.getText().toString()) == 0) {
-                                holder.etQty.setText("");
-                                holder.tvAmount.setText("");
-                            } else if (Double.parseDouble(holder.etQty.getText().toString().trim()) > Double.parseDouble(holder.tvDelivery.getText().toString().trim())) {
+//                            if (Double.parseDouble(holder.etQty.getText().toString()) == 0) {
+//                                holder.etQty.setText("");
+//                                holder.tvAmount.setText("");
+//                            } else
+                            if (Double.parseDouble(holder.etQty.getText().toString().trim()) > Double.parseDouble(holder.tvDelivery.getText().toString().trim())) {
                                 if (lang.equalsIgnoreCase("hi"))
                                     common.showToast("पुष्टिकरण मात्रा वितरण मात्रा से अधिक नहीं होनी चाहिए!");
                                 else
@@ -542,11 +543,13 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                     } else {
                         holder.tvAmount.setText("");
                     }
+                    String totQty = common.stringToTwoDecimal(GetTotal());
                     // To display total amount in footer of amount
                     if (lang.equalsIgnoreCase("hi"))
-                        tvTotalAmount.setText(Html.fromHtml("<b>कुल: " + common.stringToTwoDecimal(GetTotal()) + "</b>"));
+                        tvTotalAmount.setText("कुल: " + totQty);
+                        //tvTotalAmount.setText(Html.fromHtml("<b>कुल: " + totQty + "</b>"));
                     else
-                        tvTotalAmount.setText(Html.fromHtml("<b>Total: " + common.stringToTwoDecimal(GetTotal()) + "</b>"));
+                        tvTotalAmount.setText("Total: " + totQty);
 
                 }
 

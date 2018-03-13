@@ -1723,6 +1723,9 @@ public class DatabaseAdapter {
             db.execSQL("DELETE FROM OutletPrimaryReceipt;");
             db.execSQL("DELETE FROM OutletPaymentReceipt;");
             db.execSQL("DELETE FROM ExpenseBooking;");
+
+            db.execSQL("DELETE FROM OutletSale;");
+            db.execSQL("DELETE FROM OutletSaleDetail;");
             result = "success";
         } catch (Exception e) {
             e.printStackTrace();
@@ -3582,7 +3585,7 @@ public class DatabaseAdapter {
 
     //<editor-fold desc="Insert_OutletSaleDetail">
     // To insert outlet sale detail records
-    public String Insert_OutletSaleDetail(String outletSaleId, String skuId, String sku, String rate, String saleRate, String Qty, String saleQty, String customerId) {
+    public String Insert_OutletSaleDetail(String outletSaleId, String skuId, String sku, String rate, String saleRate, String Qty, String saleQty, String customerId, String saleType) {
         try {
             result = "fail";
             newValues = new ContentValues();
@@ -3596,8 +3599,9 @@ public class DatabaseAdapter {
 
             long id = db.insert("OutletSaleDetail", null, newValues);
             result = "success~" + id;
-            db.execSQL("UPDATE OutletLedger SET Quantity = Quantity - " + Double.parseDouble(rate) * Double.parseDouble(saleQty) + " WHERE Id = '" + customerId + "' ");
-            //db.execSQL("UPDATE CustomerLedger SET Balance = Balance - " + Double.parseDouble(saleRate) * Double.parseDouble(saleQty) + " WHERE CustomerId = '" + customerId + "'");
+            if (saleType.equalsIgnoreCase("Credit")) {
+                db.execSQL("UPDATE OutletLedger SET Quantity = Quantity - " + Double.parseDouble(rate) * Double.parseDouble(saleQty) + " WHERE Id = '" + customerId + "' ");
+            }
             db.execSQL("UPDATE OutletInventory SET Quantity = Quantity - " + saleQty + " WHERE SKUId ='" + skuId + "'");
             return result;
         } catch (Exception e) {
@@ -3632,6 +3636,9 @@ public class DatabaseAdapter {
     //<editor-fold desc="GetOutletSaleSummery">
     //Method to get outlet sale summery
     public ArrayList<HashMap<String, String>> GetOutletSaleSummery(String filter) {
+
+        db.execSQL("DELETE FROM OutletSaleDetail WHERE OutletSaleId IN (SELECT Id FROM OutletSale WHERE CreateDate < DATE('now', '-1 day'));");
+        db.execSQL("DELETE FROM OutletSale WHERE CreateDate < DATE('now', '-1 day');");
         ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
         selectQuery = "SELECT DISTINCT Id, 'OS'||Id, SaleType, CreateDate FROM OutletSale WHERE CustomerId = '"+filter+"' ORDER BY CAST(Id AS NUMERIC) DESC";
         //Log.i("LPDND", "selectQuery="+masterType+":"+selectQuery);
