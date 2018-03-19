@@ -3,8 +3,8 @@ package lateralpraxis.lpdnd.DeliveryConfirmation;
 //<editor-fold desc="Import">
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog.Builder;
+import android.app.ListActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,7 +28,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -43,11 +42,12 @@ import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
 import lateralpraxis.lpdnd.DecimalDigitsInputFilter;
+import lateralpraxis.lpdnd.ListViewHelper;
 import lateralpraxis.lpdnd.R;
 import lateralpraxis.lpdnd.UserSessionManager;
 //</editor-fold>
 
-public class ActivityDeliveryConfirmationCreateView extends Activity {
+public class ActivityDeliveryConfirmationCreateView extends ListActivity {
 
     //<editor-fold desc="Code for Variable Declaration">
     private final Context mContext = this;
@@ -55,7 +55,6 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
     Common common;
     double totalQty = 0, totalOldQty = 0;
     HashMap<String, String> delmap = null;
-    private ListView listDeliveryView;
     private TextView tvNoRecord;
     private TextView tvName, tvDate, tvInvoice, tvVehicle, tvTotalAmount;
     private Button btnDelivery;
@@ -80,7 +79,6 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
         tvDate = (TextView) findViewById(R.id.tvDate);
         tvInvoice = (TextView) findViewById(R.id.tvInvoice);
         tvVehicle = (TextView) findViewById(R.id.tvVehicle);
-        listDeliveryView = (ListView) findViewById(R.id.listDeliveryView);
         tvNoRecord = (TextView) findViewById(R.id.tvNoRecord);
         tvTotalAmount = (TextView) findViewById(R.id.tvTotalAmount);
         btnDelivery = (Button) findViewById(R.id.btnDelivery);
@@ -136,9 +134,9 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                 // quantity!
                 int zeroCount = 0, totalRow = 0;
                 int invalidCount = 0;
-                for (int i = 0; i < listDeliveryView.getChildCount(); i++) {
+                for (int i = 0; i < getListView().getChildCount(); i++) {
                     totalRow++;
-                    View v = listDeliveryView.getChildAt(i);
+                    View v = getListView().getChildAt(i);
                     EditText etQty = (EditText) v.findViewById(R.id.etConfirmation);
                     if (etQty.getText().toString().equalsIgnoreCase("."))
                         invalidCount = invalidCount + 1;
@@ -169,8 +167,8 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                                         try {
                                             JSONObject jsonDetails = new JSONObject();
                                             JSONArray arraydet = new JSONArray();
-                                            for (int i = 0; i < listDeliveryView.getChildCount(); i++) {
-                                                View v = listDeliveryView.getChildAt(i);
+                                            for (int i = 0; i < getListView().getChildCount(); i++) {
+                                                View v = getListView().getChildAt(i);
                                                 TextView tvId = (TextView) v.findViewById(R.id.tvId);
                                                 EditText etQty = (EditText) v.findViewById(R.id.etConfirmation);
                                                 //To validate if user enter only .
@@ -209,8 +207,8 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
     // To sum of amount and return as total amount
     private String GetTotal() {
         totalQty = 0.0;
-        for (int i = 0; i < listDeliveryView.getChildCount(); i++) {
-            View v = listDeliveryView.getChildAt(i);
+        for (int i = 0; i < getListView().getChildCount(); i++) {
+            View v = getListView().getChildAt(i);
             TextView tvAmount = (TextView) v.findViewById(R.id.tvAmount);
             Double qty = 0.0;
             if (TextUtils.isEmpty(tvAmount.getText().toString().trim()))
@@ -219,7 +217,7 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                 qty = Double.parseDouble(tvAmount.getText().toString().replace(",", ""));
             totalQty = totalQty + qty;
         }
-        if (Double.valueOf(totalQty) <= 0)
+        if (getListView().getChildCount() == 1)
             totalQty = totalOldQty;
         return String.valueOf(totalQty);
     }
@@ -319,17 +317,14 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                                     .getString("F")));
                             wordDelList.add(delmap);
                         }
-                        tvTotalAmount.setText(String.valueOf(totalOldQty));
                         listDelSize = wordDelList.size();
                         if (listDelSize != 0) {
-                            listDeliveryView.setAdapter(new CustomAdapter(mContext, wordDelList));
-                            ViewGroup.LayoutParams params = listDeliveryView.getLayoutParams();
-                            listDeliveryView.setLayoutParams(params);
-                            listDeliveryView.requestLayout();
+                            setListAdapter(new CustomAdapter(mContext, wordDelList));
+                            ListViewHelper.getListViewSize(getListView());
                             tvNoRecord.setVisibility(View.GONE);
                             tvDivider.setVisibility(View.VISIBLE);
                         } else {
-                            listDeliveryView.setAdapter(null);
+                            setListAdapter(null);
                             tvNoRecord.setVisibility(View.VISIBLE);
                             tvDivider.setVisibility(View.GONE);
                         }
@@ -489,7 +484,6 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
             }
             holder.ref = arg0;
             // To bind data from list
-
             holder.tvId.setText(_listItems.get(arg0).get("Id"));
             holder.tvSku.setText(lang.equalsIgnoreCase("hi") ? _listItems.get(arg0).get("Item") : _listItems.get(arg0).get("Item"));
             holder.tvDelivery.setText(_listItems.get(arg0).get("Qty"));
@@ -509,14 +503,6 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                 holder.etQty.setFilters(FilterArray);
                 holder.etQty.setInputType(InputType.TYPE_CLASS_NUMBER);
             }
-//
-//            String totQty= common.stringToTwoDecimal(String.valueOf(totalOldQty));
-//            // To display total amount in footer of amount
-//            if (lang.equalsIgnoreCase("hi"))
-//                tvTotalAmount.setText("कुल: " + totQty );
-//                //tvTotalAmount.setText(Html.fromHtml("<b>कुल: " + totQty + "</b>"));
-//            else
-//                tvTotalAmount.setText("Total: " + totQty );
 
             // Instantiates a TextWatcher, to observe value changes and trigger the result calculation
             TextWatcher textWatcher = new TextWatcher() {
@@ -535,21 +521,21 @@ public class ActivityDeliveryConfirmationCreateView extends Activity {
                                 else
                                     common.showToast("Confirmation quantity should not be exceeded from delivery quantity!");
                                 holder.etQty.setText("");
-                            } else
+                            } else {
                                 holder.tvAmount.setText(common.stringToTwoDecimal(String.valueOf(Double.parseDouble(holder.etQty.getText().toString()) * Double.parseDouble(holder.tvRate.getText().toString().replace(",", "")))));
+
+                                // To display total amount in footer of amount
+                                if (lang.equalsIgnoreCase("hi"))
+                                    tvTotalAmount.setText("कुल: " + common.stringToTwoDecimal(GetTotal()));
+                                else
+                                    tvTotalAmount.setText("Total: " + common.stringToTwoDecimal(GetTotal()));
+                            }
                         } else {
                             holder.tvAmount.setText("");
                         }
                     } else {
                         holder.tvAmount.setText("");
                     }
-                    String totQty = common.stringToTwoDecimal(GetTotal());
-                    // To display total amount in footer of amount
-                    if (lang.equalsIgnoreCase("hi"))
-                        tvTotalAmount.setText("कुल: " + totQty);
-                        //tvTotalAmount.setText(Html.fromHtml("<b>कुल: " + totQty + "</b>"));
-                    else
-                        tvTotalAmount.setText("Total: " + totQty);
 
                 }
 

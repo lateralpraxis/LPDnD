@@ -231,7 +231,8 @@
         </LinearLayout>
 
         <lateralpraxis.lpdnd.NonScrollableListView
-            android:id="@+id/listDeliveryView"
+            android:id="@android:id/list"
+
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:divider="@color/black"
@@ -243,16 +244,20 @@
             android:layout_height="1dp"
             android:background="@color/black"/>
 
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/tvTotalAmount"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:gravity="end"
                 android:textSize="16sp"
                 android:textStyle="bold" />
-
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvNoRecord"
