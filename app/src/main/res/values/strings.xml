@@ -350,6 +350,7 @@
     <string name="label_expensehead">Expense Head *</string>
     <string name="label_expenseheader">Expense Head</string>
     <string name="label_remarkshead">Remarks *</string>
+    <string name="label_choosefile">Choose File</string>
     <!-- End of Expense Booking Variables-->
 
 

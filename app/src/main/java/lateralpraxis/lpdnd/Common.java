@@ -50,9 +50,9 @@ public class Common {
 	static Context c;
 	static HashMap<String, String> user;
 	private static String responseJSON;
-	public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
-	//public final String domain = "http://122.180.148.98:82"; // 82 Port for Development
-	//public final String domain = "http://122.180.148.98:82";
+    //public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
+    public final String domain = "http://122.180.148.98:82"; // 82 Port for Development
+    //public final String domain = "http://122.180.148.98:82";
 	//For Demo Server
 	//public final String domain = "http://54.148.76.44"; // lateralpraxis.co.in
 	//public final String url=domain+"/LPDnD-Ganesh/Shared/Services/Android.asmx";

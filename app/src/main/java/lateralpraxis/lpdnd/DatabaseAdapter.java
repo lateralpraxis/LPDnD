@@ -102,7 +102,7 @@ public class DatabaseAdapter {
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
     OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
-    ExpenseBooking_CREATE ="CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);";
+            ExpenseBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
 
     // Context of the application using the database.
     private final Context context;
@@ -1341,6 +1341,34 @@ public class DatabaseAdapter {
         cursor.close();
         return wordList;
     }
+
+
+    //<editor-fold desc="Code to get Outlet Attachment Fro Sync">
+    public ArrayList<HashMap<String, String>> getOutletAttachmentsForSync() {
+
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+
+        selectQuery = "SELECT UniqueId, ImageName, ImagePath FROM ExpenseBooking WHERE IsImageSync IS NULL AND ImagePath!='' ";
+
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("UploadFileName", cursor.getString(1));
+            map.put("ImagePath", cursor.getString(2));
+
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    public void updateOutletAttachmentStatus(String uniqueId) {
+        selectQuery = "UPDATE ExpenseBooking SET IsImageSync = 1 WHERE UniqueId ='" + uniqueId + "'";
+        db.execSQL(selectQuery);
+    }
+
 
     //Method to Update Attachment Sync Status
     public void updateAttachmentStatus(String uniqueId) {
@@ -3405,7 +3433,7 @@ public class DatabaseAdapter {
     //</editor-fold>
 
     //<editor-fold desc="Code to insert Expense Data in Expense Booking Table">
-    public String Insert_ExpenseBooking(String customerId, String expenseHeadId,String amount,String remarks,String uniqueId) {
+    public String Insert_ExpenseBooking(String customerId, String expenseHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
         try {
             result = "fail";
             newValues = new ContentValues();
@@ -3415,6 +3443,9 @@ public class DatabaseAdapter {
             newValues.put("Remarks", remarks);
             newValues.put("AndroidDate", getDateTime());
             newValues.put("UniqueId", uniqueId);
+            newValues.put("ImagePath", imagePath);
+            newValues.put("ImageName", imageName);
+
             db.insert("ExpenseBooking", null, newValues);
 
             result = "success";
@@ -3466,7 +3497,7 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> getUnSyncOutletExpense() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
 
-        selectQuery = "SELECT UniqueId, CustomerId,ExpenseHeadId,  Amount, AndroidDate, Remarks FROM ExpenseBooking WHERE IsSync IS NULL";
+        selectQuery = "SELECT UniqueId, CustomerId,ExpenseHeadId,  Amount, AndroidDate, Remarks,ImageName FROM ExpenseBooking WHERE IsSync IS NULL";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
@@ -3476,6 +3507,7 @@ public class DatabaseAdapter {
             map.put("Amount", cursor.getString(3));
             map.put("TransactionDate", cursor.getString(4));
             map.put("Remarks", cursor.getString(5));
+            map.put("ImageName", cursor.getString(6));
             wordList.add(map);
         }
         cursor.close();
