@@ -3105,9 +3105,9 @@ public class DatabaseAdapter {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         String prevDate="";
         if (userlang.equalsIgnoreCase("en"))
-            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
         else
-            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
@@ -3115,6 +3115,7 @@ public class DatabaseAdapter {
             map.put("Name", cursor.getString(1));
             map.put("Amount", cursor.getString(2));
             map.put("Remarks", cursor.getString(3));
+            map.put("Id", cursor.getString(4));
             if(prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
                 map.put("Flag", "0");
             else
@@ -3125,6 +3126,31 @@ public class DatabaseAdapter {
         }
         cursor.close();
         return wordList;
+    }
+    //</editor-fold>
+
+
+    //<editor-fold desc="Code to get farmer details by unique id from Main table">
+    public ArrayList<String> getExpenseDetailById(String id, String lang) {
+        ArrayList<String> expensedetails = new ArrayList<String>();
+
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        else
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            expensedetails.add(cursor.getString(0));
+            expensedetails.add(cursor.getString(1));
+            expensedetails.add(cursor.getString(2));
+            expensedetails.add(cursor.getString(3));
+            expensedetails.add(cursor.getString(4));
+            expensedetails.add(cursor.getString(5));
+
+        }
+        cursor.close();
+
+        return expensedetails;
     }
     //</editor-fold>
 

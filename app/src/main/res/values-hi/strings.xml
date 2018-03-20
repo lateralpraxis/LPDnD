@@ -376,5 +376,6 @@
     <string name="label_expenseheader">व्यय हेड</string>
     <string name="label_remarkshead">टिप्पणी *</string>
     <string name="label_choosefile">फ़ाइल चुनें</string>
+    <string name="label_viewfile">अनुलग्नक देखें</string>
     <!-- End of Expense Booking Variables-->
 </resources>

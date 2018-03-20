@@ -3166,7 +3166,7 @@ public class ActivityHomeScreen extends Activity {
 
         @Override
         protected void onPreExecute() {
-            Dialog.setMessage("Uploading Attachments (Step 2/2)..");
+            Dialog.setMessage("Uploading Attachments ..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
@@ -4671,7 +4671,7 @@ public class ActivityHomeScreen extends Activity {
 
         @Override
         protected void onPreExecute() {
-            Dialog.setMessage("Uploading Attachments (Step 2/2)..");
+            Dialog.setMessage("Uploading Attachments ..");
             Dialog.setCancelable(false);
             Dialog.show();
         }

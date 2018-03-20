@@ -301,7 +301,7 @@ public class ActivityAddExpense extends Activity {
         });
         //</editor-fold>
 
-        //<editor-fold desc="Description">
+        //<editor-fold desc="Code to open attachment">
         tvAttach.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 db.openR();
@@ -315,7 +315,7 @@ public class ActivityAddExpense extends Activity {
                     String newPath1 = actPath.split("/")[pathLen - 2];
                     String newPath2 = actPath.split("/")[pathLen - 3];
 
-                    String catType = "Cheque";
+                    String catType = "Expense";
                     // Check for SD Card
                     if (!Environment.getExternalStorageState().equals(
                             Environment.MEDIA_MOUNTED)) {

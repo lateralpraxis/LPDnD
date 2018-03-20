@@ -351,6 +351,7 @@
     <string name="label_expenseheader">Expense Head</string>
     <string name="label_remarkshead">Remarks *</string>
     <string name="label_choosefile">Choose File</string>
+    <string name="label_viewfile">View Attachment</string>
     <!-- End of Expense Booking Variables-->
 
 
