@@ -88,8 +88,10 @@ public class ActivitySearchCustomer extends Activity {
         res.updateConfiguration(conf, dm);
         //</editor-fold>
 
+        //<editor-fold desc="Code to set User Id">
         final HashMap<String, String> user = session.getLoginUserDetails();
         userId = user.get(UserSessionManager.KEY_ID);
+        //</editor-fold>
 
         //<editor-fold desc="Code to Find Controls">
         tvNoRecord = (TextView) findViewById(R.id.tvNoRecord);
@@ -227,6 +229,7 @@ public class ActivitySearchCustomer extends Activity {
                             listCustomer.setLayoutParams(params);
                             listCustomer.requestLayout();
                             tvNoRecord.setVisibility(View.GONE);
+                            listCustomer.setVisibility(View.VISIBLE);
                         } else {
                             listCustomer.setAdapter(null);
                             tvNoRecord.setVisibility(View.VISIBLE);
