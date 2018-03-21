@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 
 import lateralpraxis.lpdnd.ExpenseConfirmation.ExpenseConfirmationList;
+import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
 
 public class ActivityAdminHomeScreen  extends Activity{
 	static final int ITEM_PER_ROW = 2;
@@ -109,6 +110,7 @@ public class ActivityAdminHomeScreen  extends Activity{
 					R.layout.btn_payment,
 					R.layout.btn_cashdeposit,
 					R.layout.btn_expenseconfirmation,
+					R.layout.btn_reconcile,
 					R.layout.btn_report);
 		else
 			views = Arrays.asList(
@@ -223,6 +225,19 @@ public class ActivityAdminHomeScreen  extends Activity{
 							ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
 							task.execute();
 						}
+					}
+				});
+				break;
+			case R.layout.btn_reconcile:
+				btn = (Button) btnLayout.findViewById(R.id.btnReconcile);
+				btn.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						intent = new Intent(context, ActivitySearchCustomer.class);
+						intent.putExtra("From", "Admin");
+						startActivity(intent);
+						finish();
 					}
 				});
 				break;

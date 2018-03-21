@@ -379,6 +379,11 @@
             android:name=".ExpenseBooking.ActivityExpenseDetail"
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Reconciliation.ActivitySearchCustomer"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"></activity>
     </application>
 

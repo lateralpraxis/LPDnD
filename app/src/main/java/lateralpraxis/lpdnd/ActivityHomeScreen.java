@@ -58,6 +58,7 @@ import lateralpraxis.lpdnd.DeliveryConfirmation.ActivityDeliveryConfirmationCrea
 import lateralpraxis.lpdnd.ExpenseBooking.ActivityListBooking;
 import lateralpraxis.lpdnd.OutletPayment.ActivityListPayments;
 import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
+import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
 import lateralpraxis.lpdnd.StockAdjustment.StockAdjustmentList;
 import lateralpraxis.lpdnd.primaryreceipt.ActivityListPrimaryReceipt;
 import lateralpraxis.lpdnd.stockconversion.ActivityListStockConversion;
@@ -151,6 +152,8 @@ public class ActivityHomeScreen extends Activity {
                 views = Arrays.asList(R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
             } else if (userRole.contains("Accountant")) {
                 views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
+            } else if (userRole.contains("Reconciliation User")) {
+                views = Arrays.asList(R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
             }
 
             go.performClick();
@@ -465,6 +468,19 @@ public class ActivityHomeScreen extends Activity {
                     @Override
                     public void onClick(View v) {
                         intent = new Intent(context, ActivityListBooking.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                break;
+            case R.layout.btn_reconcile:
+                btn = (Button) btnLayout.findViewById(R.id.btnReconcile);
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        intent = new Intent(context, ActivitySearchCustomer.class);
+                        intent.putExtra("From", "Admin");
                         startActivity(intent);
                         finish();
                     }

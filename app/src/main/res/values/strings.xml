@@ -70,29 +70,6 @@
     <string name="menu_deliveryView">DELIVERY</string>
     <string name="view_delivery">View Delivery</string>
     <string name="create_delivery">Create Delivery</string>
-    <string name="menu_cashDeposit">DEPOSIT</string>
-    <string name="menu_payment">PAYMENT</string>
-    <string name="menu_return">RETURNS</string>
-    <string name="menu_syncTrans">SYNC</string>
-    <string name="menu_masters">MASTERS</string>
-    <string name="menu_reports">REPORTS</string>
-    <string name="menu_logout">Log Out</string>
-    <string name="menu_complaint_feedback">Post Query</string>
-    <string name="deliveryPayment">Delivery &amp; Payment</string>
-    <string name="menu_vehicle">VEHICLE</string>
-    <string name="menu_customer">CUSTOMER</string>
-    <string name="menu_rate">RATE</string>
-    <string name="menu_stockAdjust">STOCK\nADJUSTMENT</string>
-    <string name="menu_stockConvert">CONVERSION</string>
-    <string name="menu_stockInve">INVENTORY</string>
-    <string name="menu_stockOutstanding">PENDING</string>
-    <string name="menu_DelRec">DELIVERY\n/RECEIPT(C)</string>
-    <string name="menu_VehDelRec">DELIVERY\n/RECEIPT(V)</string>
-    <string name="menu_primaryreceipt">Primary\nReceipt</string>
-    <string name="menu_expense">Expense</string>
-    <string name="menu_stockAdjustment">STOCK\nADJUSTMENT</string>
-    <string name="menu_expenseconfirmation">EXPENSE\nCONFIRMATION</string>
-    <string name="menu_deliveryConfirmation">DELIVERY\nCONFIRMATION</string>
     <string name="place_order">Create Demand</string>
     <string name="go">View</string>
     <string name="show_password">Show Password</string>
@@ -166,6 +143,36 @@
     <string name="Demand">Demand</string>
     <string name="Delivery">Delivery</string>
 
+    <!--<editor-fold desc="Start Of Menu Declaration">-->
+    <string name="menu_cashDeposit">DEPOSIT</string>
+    <string name="menu_payment">PAYMENT</string>
+    <string name="menu_return">RETURNS</string>
+    <string name="menu_syncTrans">SYNC</string>
+    <string name="menu_masters">MASTERS</string>
+    <string name="menu_reports">REPORTS</string>
+    <string name="menu_logout">Log Out</string>
+    <string name="menu_complaint_feedback">Post Query</string>
+    <string name="deliveryPayment">Delivery &amp; Payment</string>
+    <string name="menu_vehicle">VEHICLE</string>
+    <string name="menu_customer">CUSTOMER</string>
+    <string name="menu_rate">RATE</string>
+    <string name="menu_stockAdjust">STOCK\nADJUSTMENT</string>
+    <string name="menu_stockConvert">CONVERSION</string>
+    <string name="menu_stockInve">INVENTORY</string>
+    <string name="menu_stockOutstanding">PENDING</string>
+    <string name="menu_DelRec">DELIVERY\n/RECEIPT(C)</string>
+    <string name="menu_VehDelRec">DELIVERY\n/RECEIPT(V)</string>
+    <string name="menu_primaryreceipt">Primary\nReceipt</string>
+    <string name="menu_expense">Expense</string>
+    <string name="menu_stockAdjustment">STOCK\nADJUSTMENT</string>
+    <string name="menu_expenseconfirmation">EXPENSE\nCONFIRMATION</string>
+    <string name="menu_deliveryConfirmation">DELIVERY\nCONFIRMATION</string>
+    <string name="menu_StockReturnView">Stock Return</string>
+    <string name="menu_outlet_sale">Sale</string>
+    <string name="menu_reconcile">Reconciliation</string>
+    <!--</editor-fold>-->
+
+
     <!-- Cash Deposit -->
     <string name="balancePayable">Balance Payable\u20B9</string>
     <string name="cashDeposit">Cash Deposit</string>
@@ -177,7 +184,6 @@
     <string name="deposit">Cash Deposited\u20B9</string>
     <string name="Return">Returned</string>
     <string name="Leakage">Leakage</string>
-    <string name="menu_StockReturnView">Stock Return</string>
     <string name="CreateStockReturn">[ Create Stock Return ]</string>
     <string name="CreateStockReturnHead">Create Stock Return</string>
     <string name="viewStockReturn">View Stock Return</string>
@@ -326,7 +332,6 @@
     <!-- End of Stock Conversion Variables-->
 
     <!-- Outlet Sale  -->
-    <string name="menu_outlet_sale">Sale</string>
     <string name="view_sale">View Sale</string>
     <string name="create_sale">Create Sale</string>
     <string name="credit">Credit</string>
@@ -381,4 +386,9 @@
     <string name="label_Adjtype">Type</string>
     <string name="label_status">Status</string>
     <!-- End of Expense Confirmation Variables-->
+
+    <!-- Start of Reconciliation Variables-->
+    <string name="label_SearchHead">Customer</string>
+    <string name="hint_search">Enter Search Text...</string>
+    <!-- End of Reconciliation Variables-->
 </resources>
