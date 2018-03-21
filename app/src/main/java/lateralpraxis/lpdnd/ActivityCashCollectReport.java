@@ -120,15 +120,15 @@ public class ActivityCashCollectReport   extends Activity {
 			//On click of add button
 			@Override
 			public void onClick(View arg0) {
-				if(spCompany.getSelectedItemPosition()==0)
-					common.showToast(lang.equalsIgnoreCase("hi")?"कृपया कंपनी का चयन करें।":"Please select company.");
-				else
-				{
+//				if(spCompany.getSelectedItemPosition()==0)
+//					common.showToast(lang.equalsIgnoreCase("hi")?"कृपया कंपनी का चयन करें।":"Please select company.");
+//				else
+//				{
 					if (common.isConnected()) {
 						AsyncCashDepositListWSCall task = new AsyncCashDepositListWSCall();
 						task.execute();
 					}
-				}
+//				}
 			}
 		});
 

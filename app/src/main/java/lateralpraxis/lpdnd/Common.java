@@ -50,7 +50,7 @@ public class Common {
 	static Context c;
 	static HashMap<String, String> user;
 	private static String responseJSON;
-	public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
+	public final String domain = "http://122.180.148.98:82"; // 81 Port for QA
 	//public final String domain = "http://122.180.148.98:82"; // 82 Port for Development
 	//public final String domain = "http://122.180.148.98:82";
 	//For Demo Server

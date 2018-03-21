@@ -65,7 +65,7 @@ public class AllocationReport extends Activity {
 	private TextView tvDate,tvEmpty;
 	private ListView listAllocation;
 	private Button btnGo;
-	private Spinner spCentre;
+	private Spinner spCentre, spCompany;
 	/*End of code to declare Controls*/
 	
 	//On create method similar to page load
@@ -101,6 +101,7 @@ public class AllocationReport extends Activity {
 			tvEmpty = (TextView) findViewById(R.id.tvEmpty);
 			btnGo= (Button) findViewById(R.id.btnGo);
 			spCentre= (Spinner) findViewById(R.id.spCentre);
+			spCompany= (Spinner) findViewById(R.id.spCompany);
 			dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 			dateFormatter_database = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
@@ -112,21 +113,26 @@ public class AllocationReport extends Activity {
 			if (common.isConnected()) {
 			AsyncCentreWSCall task = new AsyncCentreWSCall();
 			task.execute();
+
+			AsyncCompanyWSCall taskComp = new AsyncCompanyWSCall();
+			taskComp.execute();
 			}
 
 			btnGo.setOnClickListener(new View.OnClickListener() {
 				//On click of add button
 				@Override
 				public void onClick(View arg0) {
-					if(spCentre.getSelectedItemPosition()==0)
-						common.showToast(lang.equalsIgnoreCase("hi")?"कृपया केंद्र का चयन करें।":"Please select centre.");
-					else
-					{
+//					if(spCentre.getSelectedItemPosition()==0)
+//						common.showToast(lang.equalsIgnoreCase("hi")?"कृपया केंद्र का चयन करें।":"Please select centre.");
+//					else if(spCompany.getSelectedItemPosition()==0)
+//						common.showToast(lang.equalsIgnoreCase("hi")?"कृपया कंपनी का चयन करें।":"Please select company.");
+//					else
+//					{
 						if (common.isConnected()) {
 							AsyncAllocationListWSCall task = new AsyncAllocationListWSCall();
 							task.execute();
 						}
-					}
+//					}
 				}
 			});
 
@@ -340,15 +346,15 @@ public class AllocationReport extends Activity {
 			@Override
 			protected String doInBackground(String... params) {
 				try {
-					String[] name = {"action", "lang", "centreId", "userId", "date"};
+					String[] name = {"action", "lang", "centreId", "userId", "date", "compId"};
 					String dateString;
 					Date date = new Date();
 					date = dateFormatter_display.parse(tvDate.getText().toString().trim());
 					dateString = dateFormatter_database.format(date);
-					String[] value = {"ReadAllocation",lang,((CustomType)spCentre.getSelectedItem()).getId(),userId,  dateString};
+					String[] value = {"ReadAllocation",lang,((CustomType)spCentre.getSelectedItem()).getId(),userId,  dateString, ((CustomType)spCompany.getSelectedItem()).getId()};
 					responseJSON = "";
 					//Call method of web service to download data from server
-					responseJSON = common.CallJsonWS(name, value, "ReadReport", common.url);
+					responseJSON = common.CallJsonWS(name, value, "ReadAllReport", common.url);
 					return "";
 				} catch (SocketTimeoutException e) {
 					return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
@@ -473,5 +479,69 @@ public class AllocationReport extends Activity {
 			inflater.inflate(R.menu.menu_home, menu);
 			return true;
 		}
+
+	//To bind Company to spCompany
+	private class AsyncCompanyWSCall extends AsyncTask<String, Void, String> {
+		private ProgressDialog Dialog = new ProgressDialog(AllocationReport.this);
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+				db.open();
+				db.deleteMISCompany();
+				db.close();
+				String[] name = { "action", "userId", "role" };
+				String[] value = { "ReadCompany", userId, "" };
+				responseJSON = "";
+				// Call method of web service to download route from server
+				responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+						common.url);
+
+			} catch (SocketTimeoutException e) {
+				return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+			} catch (final Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				return "ERROR: " + "Unable to fetch response from server.";
+			}
+			return "";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				if (!result.contains("ERROR: ")) {
+					JSONArray jsonArray = new JSONArray(responseJSON);
+
+					for (int i = 0; i < jsonArray.length(); ++i) {
+						db.open();
+						db.Insert_MISCompany(jsonArray.getJSONObject(i).getString("A"), jsonArray.getJSONObject(i).getString("B"));
+						db.close();
+					}
+
+					//Code to bind Centres in spinner
+					spCompany.setAdapter(DataAdapter("miscompany",""));
+				} else {
+					common.showAlert(AllocationReport.this, result, false);
+				}
+			} catch (Exception e) {
+				common.showAlert(AllocationReport.this, "Company Downloading failed: " + e.toString(), false);
+			}
+			Dialog.dismiss();
+		}
+
+		@Override
+		protected void onPreExecute() {
+			Dialog.setMessage("Downloading Company..");
+			Dialog.setCancelable(false);
+			Dialog.show();
+
+		}
+
+		@Override
+		protected void onProgressUpdate(Void... values) {
+		}
+
+	}
 
 }

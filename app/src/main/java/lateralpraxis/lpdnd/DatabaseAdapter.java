@@ -294,9 +294,9 @@ public class DatabaseAdapter {
         else if (masterType == "company")
             labels.add(new CustomType("0", "...Select Company"));
         else if (masterType == "centre")
-            labels.add(new CustomType("0", "...Select Centre"));
+            labels.add(new CustomType("0", "Select All"));
         else if (masterType == "miscompany")
-            labels.add(new CustomType("0", "...Select Company"));
+            labels.add(new CustomType("0", "Select All"));
         else
             labels.add(new CustomType("0", "...Select"));
         while (cursor.moveToNext()) {

@@ -121,15 +121,15 @@ public class ActivityVehDelVsRecReport extends Activity{
 				//On click of add button
 				@Override
 				public void onClick(View arg0) {
-					if(spCentre.getSelectedItemPosition()==0)
-						common.showToast(lang.equalsIgnoreCase("hi")?"कृपया केंद्र का चयन करें।":"Please select centre.");
-					else
-					{
+//					if(spCentre.getSelectedItemPosition()==0)
+//						common.showToast(lang.equalsIgnoreCase("hi")?"कृपया केंद्र का चयन करें।":"Please select centre.");
+//					else
+//					{
 						if (common.isConnected()) {
 							AsyncVehiclewiseDeliveryReceiptListWSCall task = new AsyncVehiclewiseDeliveryReceiptListWSCall();
 							task.execute();
 						}
-					}
+//					}
 				}
 			});
 

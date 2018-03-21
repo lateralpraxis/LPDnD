@@ -123,17 +123,17 @@ public class ActivityDemandReport  extends Activity {
 			//On click of add button
 			@Override
 			public void onClick(View arg0) {
-				if(spCentre.getSelectedItemPosition()==0)
-					common.showToast(lang.equalsIgnoreCase("hi")?"कृपया केंद्र का चयन करें।":"Please select centre.");
-				else if(spCompany.getSelectedItemPosition()==0)
-					common.showToast(lang.equalsIgnoreCase("hi")?"कृपया कंपनी का चयन करें।":"Please select company.");
-				else
-				{
+//				if(spCentre.getSelectedItemPosition()==0)
+//					common.showToast(lang.equalsIgnoreCase("hi")?"कृपया केंद्र का चयन करें।":"Please select centre.");
+//				else if(spCompany.getSelectedItemPosition()==0)
+//					common.showToast(lang.equalsIgnoreCase("hi")?"कृपया कंपनी का चयन करें।":"Please select company.");
+//				else
+//				{
 					if (common.isConnected()) {
 						AsyncDemandListWSCall task = new AsyncDemandListWSCall();
 						task.execute();
 					}
-				}
+//				}
 			}
 		});
 
@@ -337,15 +337,15 @@ public class ActivityDemandReport  extends Activity {
 		@Override
 		protected String doInBackground(String... params) {
 			try {
-				String[] name = {"action", "lang", "centreId", "userId", "date"};
+				String[] name = {"action", "lang", "centreId", "userId", "date", "compId"};
 				String dateString;
 				Date date = new Date();
 				date = dateFormatter_display.parse(tvDate.getText().toString().trim());
 				dateString = dateFormatter_database.format(date);
-				String[] value = {"ReadDemand",lang,((CustomType)spCentre.getSelectedItem()).getId(),userId,  dateString};
+				String[] value = {"ReadDemand",lang,((CustomType)spCentre.getSelectedItem()).getId(),userId,  dateString, ((CustomType)spCompany.getSelectedItem()).getId()};
 				responseJSON = "";
 				//Call method of web service to download data from server
-				responseJSON = common.CallJsonWS(name, value, "ReadReport", common.url);
+				responseJSON = common.CallJsonWS(name, value, "ReadAllReport", common.url);
 				return "";
 			} catch (SocketTimeoutException e) {
 				return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
