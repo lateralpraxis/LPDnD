@@ -336,7 +336,7 @@ public class ActivitySearchCustomer extends Activity {
 
             final HashMap<String, String> itemData = _listData.get(position);
             holder.tvCustId.setText(itemData.get("CustomerId"));
-            holder.tvCashAmount.setText(common.convertToDisplayDateFormat(itemData.get("CashAmount")));
+            holder.tvCashAmount.setText(itemData.get("CashAmount"));
             holder.tvCreditAmount.setText(itemData.get("CreditAmount"));
             holder.tvCustomerName.setText(itemData.get("CustomerName"));
 

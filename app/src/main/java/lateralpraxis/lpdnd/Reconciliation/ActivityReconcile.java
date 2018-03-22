@@ -28,7 +28,7 @@ public class ActivityReconcile extends Activity {
     //<editor-fold desc="Code for Variable Declaration">
     String lang = "en", userId, custId, custName, cashAmt, creditAmt, From;
     //<editor-fold desc="Code to Declare Controls">
-    private TextView tvCustomerId, tvCustomer;
+    private TextView tvCustomerId, tvCustomer, tvCash, tvCredit;
     //</editor-fold>
     private UserSessionManager session;
 
@@ -77,10 +77,14 @@ public class ActivityReconcile extends Activity {
         //<editor-fold desc="Code to Find Controls">
         tvCustomerId = (TextView) findViewById(R.id.tvCustomerId);
         tvCustomer = (TextView) findViewById(R.id.tvCustomer);
+        tvCash = (TextView) findViewById(R.id.tvCash);
+        tvCredit = (TextView) findViewById(R.id.tvCredit);
         //</editor-fold>
 
         tvCustomerId.setText(custId);
         tvCustomer.setText(custName);
+        tvCash.setText(common.convertToTwoDecimal(cashAmt));
+        tvCredit.setText(common.convertToTwoDecimal(creditAmt));
     }
 
 

@@ -390,6 +390,9 @@
     <!-- Start of Reconciliation Variables-->
     <string name="label_SearchHead">Customer</string>
     <string name="label_Reconciliation">Reconcile</string>
+    <string name="label_cash">Cash \u20B9</string>
+    <string name="label_credit">Credit \u20B9</string>
     <string name="hint_search">Enter Search Text...</string>
+    <string name="hint_amount">Enter Amount</string>
     <!-- End of Reconciliation Variables-->
 </resources>
