@@ -30,9 +30,9 @@
                 android:id="@+id/etSearchText"
                 style="@style/edit_text"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_weight=".8"
-                android:gravity="top|start"
+                android:gravity="center_vertical"
                 android:hint="@string/hint_search"
                 android:maxLength="10" />
 

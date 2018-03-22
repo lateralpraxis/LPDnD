@@ -383,4 +383,10 @@
     <string name="label_choosefile">फ़ाइल चुनें</string>
     <string name="label_viewfile">अनुलग्नक देखें</string>
     <!-- End of Expense Booking Variables-->
+
+    <!-- Start of Reconciliation Variables-->
+    <string name="label_SearchHead">ग्राहक</string>
+    <string name="label_Reconciliation">मिलान</string>
+    <string name="hint_search">खोज पाठ दर्ज करें...</string>
+    <!-- End of Reconciliation Variables-->
 </resources>

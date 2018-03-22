@@ -486,7 +486,7 @@ public class ActivityHomeScreen extends Activity {
                     @Override
                     public void onClick(View v) {
                         intent = new Intent(context, ActivitySearchCustomer.class);
-                        intent.putExtra("From", "Admin");
+                        intent.putExtra("From", "Reconciliation User");
                         startActivity(intent);
                         finish();
                     }

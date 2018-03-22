@@ -17,6 +17,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -71,7 +72,7 @@ public class ActivitySearchCustomer extends Activity {
         ab.setDisplayHomeAsUpEnabled(true);
         //</editor-fold>
 
-        //<editor-fold desc="Code to set Id from Previous Intent">
+        //<editor-fold desc="Code to set Data from Previous Intent">
         Bundle extras = this.getIntent().getExtras();
         if (extras != null) {
             From = extras.getString("From");
@@ -116,6 +117,22 @@ public class ActivitySearchCustomer extends Activity {
                     AsyncSearchCustomerWSCall task = new AsyncSearchCustomerWSCall();
                     task.execute();
                 }
+            }
+        });
+        //</editor-fold>
+
+
+        //<editor-fold desc="Code to be executed on click of List View">
+        listCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> lv, View item, int position, long id) {
+                Intent intent = new Intent(ActivitySearchCustomer.this, ActivityReconcile.class);
+                intent.putExtra("From", From);
+                intent.putExtra("Id", String.valueOf(((TextView) item.findViewById(R.id.tvCustId)).getText().toString()));
+                intent.putExtra("Name", String.valueOf(((TextView) item.findViewById(R.id.tvCustomerName)).getText().toString()));
+                intent.putExtra("Cash", String.valueOf(((TextView) item.findViewById(R.id.tvCashAmount)).getText().toString()));
+                intent.putExtra("Credit", String.valueOf(((TextView) item.findViewById(R.id.tvCreditAmount)).getText().toString()));
+                startActivity(intent);
+                finish();
             }
         });
         //</editor-fold>
