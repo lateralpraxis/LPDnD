@@ -73,6 +73,16 @@ public class ActivityReport extends Activity {
 				+ user.get(UserSessionManager.KEY_USERNAME) + " [ "
 				+ Html.fromHtml(userRole.replace(",", ", ")) + " ]");
 
+		if (userRole.contains("Route Officer")) {
+			views = Arrays.asList(R.layout.btn_demandreport,R.layout.btn_allocationreport,R.layout.btn_deliveryreport,R.layout.btn_stockconvert,R.layout.btn_stockadjust,R.layout.btn_inventory,R.layout.btn_cashoutstanding,R.layout.btn_custdelrec,R.layout.btn_vehdelrec);
+		} else if (userRole.contains("Collection Officer")) {
+			views = Arrays.asList(R.layout.btn_demandreport,R.layout.btn_allocationreport,R.layout.btn_deliveryreport,R.layout.btn_stockconvert,R.layout.btn_stockadjust,R.layout.btn_inventory,R.layout.btn_cashoutstanding,R.layout.btn_custdelrec,R.layout.btn_vehdelrec);
+		} else if (userRole.contains("Accountant")) {
+			views = Arrays.asList(R.layout.btn_demandreport,R.layout.btn_allocationreport,R.layout.btn_deliveryreport,R.layout.btn_cashdepositreport,R.layout.btn_stockconvert,R.layout.btn_stockadjust,R.layout.btn_inventory,R.layout.btn_cashoutstanding,R.layout.btn_custdelrec,R.layout.btn_vehdelrec);
+		}else if (userRole.contains("Centre User")) {
+			views = Arrays.asList(R.layout.btn_demandreport,R.layout.btn_allocationreport,R.layout.btn_deliveryreport,R.layout.btn_stockconvert,R.layout.btn_stockadjust,R.layout.btn_inventory,R.layout.btn_cashoutstanding,R.layout.btn_custdelrec,R.layout.btn_vehdelrec);
+		}
+
 		go.performClick();
 
 	}

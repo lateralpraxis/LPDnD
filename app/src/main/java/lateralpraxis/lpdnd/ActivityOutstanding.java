@@ -45,6 +45,7 @@ public class ActivityOutstanding  extends Activity {
 	private int year, month, day;
 	private ArrayList<HashMap<String, String>> list;
 	private ArrayList<HashMap<String, String>> wordList = null;
+	private String userRole;
 	HashMap<String, String> map = null;
 	/*End of code for Variable Declaration*/
 
@@ -82,6 +83,7 @@ public class ActivityOutstanding  extends Activity {
 		/*		*/
 		final HashMap<String, String> user = session.getLoginUserDetails();
 		userId = user.get(UserSessionManager.KEY_ID);
+		userRole = user.get(UserSessionManager.KEY_ROLES);
 
 		lang= session.getDefaultLang();
 		Locale myLocale = new Locale(lang);
@@ -100,6 +102,10 @@ public class ActivityOutstanding  extends Activity {
 		RadioRouteOfficer = (RadioButton) findViewById(R.id.RadioRouteOfficer);
 		RadioType = (RadioGroup) findViewById(R.id.RadioType);
 		strType = "ReadCustomerOutStanding";
+		if (userRole.contains("Centre User") || userRole.contains("Route Officer") || userRole.contains("Collection Officer")){
+
+			RadioRouteOfficer.setVisibility(View.INVISIBLE);
+		}
 		if (common.isConnected()) {
 			AsyncCompanyWSCall task = new AsyncCompanyWSCall();
 			task.execute();
