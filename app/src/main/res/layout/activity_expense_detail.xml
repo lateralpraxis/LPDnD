@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical"
-    tools:context="lateralpraxis.lpdnd.ExpenseBooking.ActivityAddExpense">
+    tools:context="lateralpraxis.lpdnd.ExpenseBooking.ActivityExpenseDetail">
 
     <TextView
         style="@style/style_topbar"
@@ -29,20 +29,46 @@
             android:weightSum="1">
 
             <TextView
+                style="@style/style_dataLabel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="@string/dateHead"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvExpenseDate"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:weightSum="1">
+
+            <TextView
+                style="@style/style_dataLabel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="@string/label_expenseheader"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/tvExpenseHead"
-                style="@style/style_dataLabel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:text="@string/label_expensehead"
+                android:layout_weight="0.7"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <Spinner
-                android:id="@+id/spExpenseHead"
-                style="@style/spinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.7" />
         </LinearLayout>
 
         <LinearLayout
@@ -53,23 +79,21 @@
             android:weightSum="1">
 
             <TextView
-                android:id="@+id/tvAmt"
                 style="@style/style_dataLabel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:text="@string/label_amt"
+                android:text="@string/Amount"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/etAmt"
+            <TextView
+                android:id="@+id/tvExpenseAmt"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"
                 android:layout_weight="0.7"
-                android:hint="@string/hintamt"
-                android:maxLength="8"
-                android:textAlignment="viewEnd" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -80,77 +104,48 @@
             android:weightSum="1">
 
             <TextView
-                android:id="@+id/tvRemarks"
                 style="@style/style_dataLabel"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
-                android:text="@string/label_remarkshead"
+                android:text="@string/remarks"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/etRemarks"
+            <TextView
+                android:id="@+id/tvExpenseRemarks"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="end"
                 android:layout_weight="0.7"
-                android:hint="@string/enterRemarks"
-                android:inputType="textMultiLine|text"
-                android:maxLength="200"
-                android:minLines="4"
-                android:textAlignment="viewEnd" />
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/llAttachment"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="2dp"
             android:weightSum="1">
 
-            <Button
-                android:id="@+id/btnUpload"
+            <TextView
+                style="@style/style_dataLabel"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="0.4"
-                android:background="@drawable/button_design"
-                android:text="@string/label_choosefile"
-                android:textColor="#FFFFFF" />
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="@string/label_viewfile"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvAttach"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
                 android:textColor="@color/lpblue"
+                android:textSize="16sp"
                 android:textStyle="bold" />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
 
-            <Button
-                android:id="@+id/btnSave"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_margin="1sp"
-                android:layout_weight=".5"
-                android:background="@drawable/button_design"
-                android:paddingBottom="5sp"
-                android:paddingLeft="10sp"
-                android:paddingRight="10sp"
-                android:paddingTop="5sp"
-                android:text="@string/submit"
-                android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

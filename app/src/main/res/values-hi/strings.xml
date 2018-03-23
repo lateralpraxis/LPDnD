@@ -63,36 +63,6 @@
     <string name="auction_quantity">मात्रा: </string>
     <string name="start_date">आरंभ  तिथि: </string>
     <string name="end_date">अंतिम तिथि: </string>
-    <string name="menu_allocation">आवंटन देखें</string>
-    <string name="menu_allocation_report">आवंटन</string>
-    <string name="menu_stockAdjust">स्टॉक समायोजन</string>
-    <string name="menu_stockConvert">परिवर्तन</string>
-    <string name="menu_stockInve">इन्वेंटरी</string>
-    <string name="menu_stockOutstanding">शेष</string>
-    <string name="menu_DelRec">वितरण/रसीद(C)</string>
-    <string name="menu_VehDelRec">वितरण/रसीद(V)</string>
-    <string name="menu_SyncMaster">Sync Master</string>
-    <string name="menu_demand">डिमांड</string>
-    <string name="view_demand">डिमांड देखें</string>
-    <string name="menu_deliveryView">वितरण</string>
-    <string name="view_delivery">वितरण देखें</string>
-    <string name="create_delivery">वितरण बनाएं</string>
-    <string name="menu_cashDeposit">नकदी जमा</string>
-    <string name="menu_payment">भुगतान</string>
-    <string name="menu_return">रिटर्न</string>
-    <string name="menu_syncTrans">सिंक्रनाइज़ करें</string>
-    <string name="menu_masters">मास्टर्स</string>
-    <string name="menu_reports">रिपोर्ट</string>
-    <string name="menu_logout">लोग आउट</string>
-    <string name="menu_complaint_feedback">प्रश्न भेजें</string>
-    <string name="deliveryPayment">वितरण और भुगतान</string>
-    <string name="menu_vehicle">वाहन</string>
-    <string name="menu_customer">ग्राहक</string>
-    <string name="menu_rate">दर</string>
-    <string name="menu_primaryreceipt">प्राथमिक\nरसीद</string>
-    <string name="menu_expense">व्यय</string>
-    <string name="menu_stockAdjustment">स्टॉक\nसमायोजन</string>
-    <string name="menu_expenseconfirmation">व्यय\nपुष्टि</string>
     <string name="place_order">डिमांड बनायें</string>
     <string name="go">देखें</string>
     <string name="show_password">पासवर्ड दिखाएं </string>
@@ -167,6 +137,43 @@
     <string name="Demand">डिमांड</string>
     <string name="Delivery">वितरण</string>
 
+    <!--<editor-fold desc="Start Of Menu Declaration"">-->
+    <string name="menu_allocation">आवंटन देखें</string>
+    <string name="menu_allocation_report">आवंटन</string>
+    <string name="menu_stockAdjust">स्टॉक समायोजन</string>
+    <string name="menu_stockConvert">परिवर्तन</string>
+    <string name="menu_stockInve">इन्वेंटरी</string>
+    <string name="menu_stockOutstanding">शेष</string>
+    <string name="menu_DelRec">वितरण/रसीद(C)</string>
+    <string name="menu_VehDelRec">वितरण/रसीद(V)</string>
+    <string name="menu_SyncMaster">Sync Master</string>
+    <string name="menu_demand">डिमांड</string>
+    <string name="view_demand">डिमांड देखें</string>
+    <string name="menu_deliveryView">वितरण</string>
+    <string name="view_delivery">वितरण देखें</string>
+    <string name="create_delivery">वितरण बनाएं</string>
+    <string name="menu_cashDeposit">नकदी जमा</string>
+    <string name="menu_payment">भुगतान</string>
+    <string name="menu_return">रिटर्न</string>
+    <string name="menu_syncTrans">सिंक्रनाइज़ करें</string>
+    <string name="menu_masters">मास्टर्स</string>
+    <string name="menu_reports">रिपोर्ट</string>
+    <string name="menu_logout">लोग आउट</string>
+    <string name="menu_complaint_feedback">प्रश्न भेजें</string>
+    <string name="deliveryPayment">वितरण और भुगतान</string>
+    <string name="menu_vehicle">वाहन</string>
+    <string name="menu_customer">ग्राहक</string>
+    <string name="menu_rate">दर</string>
+    <string name="menu_primaryreceipt">प्राथमिक\nरसीद</string>
+    <string name="menu_expense">व्यय</string>
+    <string name="menu_stockAdjustment">स्टॉक\nसमायोजन</string>
+    <string name="menu_expenseconfirmation">व्यय\nपुष्टि</string>
+    <string name="menu_StockReturnView">स्टॉक वापसी</string>
+    <string name="menu_deliveryConfirmation">डिलिवरी\nपुष्टिकरण</string>
+    <string name="menu_outlet_sale">बिक्री</string>
+    <string name="menu_reconcile">मिलान</string>
+    <!--</editor-fold>-->
+
     <!-- Cash Deposit -->
     <string name="balancePayable">बकाया देय राशि\u20B9</string>
     <string name="cashDeposit">नकद जमा</string>
@@ -178,7 +185,6 @@
     <string name="deposit">नकद जमा\u20B9</string>
     <string name="Return">वापसी</string>
     <string name="Leakage">रिसाव</string>
-    <string name="menu_StockReturnView">स्टॉक वापसी</string>
     <string name="CreateStockReturn">[ स्टॉक वापसी बनाएं ]</string>
     <string name="CreateStockReturnHead">स्टॉक वापसी बनाएं</string>
     <string name="viewStockReturn">स्टॉक वापसी देखें</string>
@@ -324,7 +330,6 @@
     <!-- End of Stock Conversion Variables-->
 
     <!-- Outlet Sale  -->
-    <string name="menu_outlet_sale">बिक्री</string>
     <string name="view_sale">बिक्री देखें</string>
     <string name="create_sale">बिक्री बनाएं</string>
     <string name="credit">जमा धन</string>
@@ -333,7 +338,7 @@
     <!-- End of Outlet Sale  -->
 
     <!-- Delivery Confirmation -->
-    <string name="menu_deliveryConfirmation">डिलिवरी\nपुष्टिकरण</string>
+
     <string name="deliveryConfirmation">डिलिवरी निश्चित करना</string>
     <string name="deliveryConfirmationDetails">डिलिवरी पुष्टिकरण विवरण</string>
     <string name="delivery">डिलिवरी</string>
@@ -375,5 +380,16 @@
     <string name="label_expensehead">व्यय हेड *</string>
     <string name="label_expenseheader">व्यय हेड</string>
     <string name="label_remarkshead">टिप्पणी *</string>
+    <string name="label_choosefile">फ़ाइल चुनें</string>
+    <string name="label_viewfile">अनुलग्नक देखें</string>
     <!-- End of Expense Booking Variables-->
+
+    <!-- Start of Reconciliation Variables-->
+    <string name="label_SearchHead">ग्राहक</string>
+    <string name="label_Reconciliation">मिलान</string>
+    <string name="label_cash">नकद \u20B9</string>
+    <string name="label_credit">क्रेडिट \u20B9</string>
+    <string name="hint_search">खोज पाठ दर्ज करें...</string>
+    <string name="hint_amount">राशि दर्ज करें</string>
+    <!-- End of Reconciliation Variables-->
 </resources>

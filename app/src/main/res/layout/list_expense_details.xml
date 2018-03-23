@@ -13,17 +13,21 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5.0dip" >
 
-
+            <TextView
+                android:id="@+id/tvId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"></TextView>
             <TextView
                 android:id="@+id/tvDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="start"
+                android:paddingRight="2dp"
                 android:text="@string/label_date"
                 android:textColor="@color/black"
                 android:textIsSelectable="false"
-                android:paddingRight="2dp"
                 android:textSize="18sp" />
         </TableRow>
         <TableRow

@@ -3,15 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:orientation="vertical"
-    tools:context="lateralpraxis.lpdnd.ExpenseBooking.ActivityAddExpense">
+    tools:context="lateralpraxis.lpdnd.Reconciliation.ActivityReconcile">
 
     <TextView
         style="@style/style_topbar"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        android:text="@string/label_Expense" />
+        android:text="@string/label_Reconciliation" />
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -20,137 +19,118 @@
         android:paddingLeft="5dp"
         android:paddingRight="5dp">
 
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/tvExpenseHead"
-                style="@style/style_dataLabel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:text="@string/label_expensehead"
-                android:textStyle="bold" />
-
-            <Spinner
-                android:id="@+id/spExpenseHead"
-                style="@style/spinner"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.7" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/tvAmt"
-                style="@style/style_dataLabel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:text="@string/label_amt"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etAmt"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_weight="0.7"
-                android:hint="@string/hintamt"
-                android:maxLength="8"
-                android:textAlignment="viewEnd" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
-
-            <TextView
-                android:id="@+id/tvRemarks"
-                style="@style/style_dataLabel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:text="@string/label_remarkshead"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/etRemarks"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_weight="0.7"
-                android:hint="@string/enterRemarks"
-                android:inputType="textMultiLine|text"
-                android:maxLength="200"
-                android:minLines="4"
-                android:textAlignment="viewEnd" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
-
-            <Button
-                android:id="@+id/btnUpload"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_weight="0.4"
-                android:background="@drawable/button_design"
-                android:text="@string/label_choosefile"
-                android:textColor="#FFFFFF" />
-
-            <TextView
-                android:id="@+id/tvAttach"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.6"
-                android:textColor="@color/lpblue"
-                android:textStyle="bold" />
-        </LinearLayout>
-        <LinearLayout
+        <TextView
+            android:id="@+id/tvCustomerId"
+            style="@style/style_dataLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="2dp"
             android:weightSum="1">
 
-            <Button
-                android:id="@+id/btnSave"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <TextView
+                style="@style/style_dataLabel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center_vertical"
+                android:text="@string/label_SearchHead"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCustomer"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="center_vertical"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:weightSum="1">
+
+            <TextView
+                style="@style/style_dataLabel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center_vertical"
+                android:text="@string/label_cash"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCash"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="center_vertical"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:weightSum="1">
+
+            <TextView
+                style="@style/style_dataLabel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center_vertical"
+                android:text="@string/label_cash"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etReconcileAmount"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="end"
-                android:layout_margin="1sp"
-                android:layout_weight=".5"
-                android:background="@drawable/button_design"
-                android:paddingBottom="5sp"
-                android:paddingLeft="10sp"
-                android:paddingRight="10sp"
-                android:paddingTop="5sp"
-                android:text="@string/submit"
-                android:textColor="@color/white" />
+                android:layout_weight="0.7"
+                android:hint="@string/hint_amount"
+                android:maxLength="8"
+                android:textAlignment="viewEnd" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:weightSum="1">
+
+            <TextView
+                style="@style/style_dataLabel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:gravity="center_vertical"
+                android:text="@string/label_credit"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCredit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:gravity="center_vertical"
+                android:textSize="16sp" />
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

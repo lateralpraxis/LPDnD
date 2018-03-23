@@ -58,6 +58,7 @@ import lateralpraxis.lpdnd.DeliveryConfirmation.ActivityDeliveryConfirmationCrea
 import lateralpraxis.lpdnd.ExpenseBooking.ActivityListBooking;
 import lateralpraxis.lpdnd.OutletPayment.ActivityListPayments;
 import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
+import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
 import lateralpraxis.lpdnd.StockAdjustment.StockAdjustmentList;
 import lateralpraxis.lpdnd.primaryreceipt.ActivityListPrimaryReceipt;
 import lateralpraxis.lpdnd.stockconversion.ActivityListStockConversion;
@@ -145,12 +146,20 @@ public class ActivityHomeScreen extends Activity {
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_delivery_confirmation, R.layout.btn_stockconversion,R.layout.btn_stockadjustment, R.layout.btn_outletpayment,R.layout.btn_expensebooking, R.layout.btn_customersync);
                 else
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand);
+            } else if (userRole.contains("Route Officer") && userRole.contains("Reconciliation User")) {
+                views = Arrays.asList(R.layout.btn_allocation, R.layout.btn_demand, R.layout.btn_delivery, R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_return, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
             } else if (userRole.contains("Route Officer")) {
                 views = Arrays.asList(R.layout.btn_allocation, R.layout.btn_demand, R.layout.btn_delivery, R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_return, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
+            } else if (userRole.contains("Collection Officer") && userRole.contains("Reconciliation User")) {
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
             } else if (userRole.contains("Collection Officer")) {
                 views = Arrays.asList(R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
+            } else if (userRole.contains("Accountant") && userRole.contains("Reconciliation User")) {
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
             } else if (userRole.contains("Accountant")) {
                 views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
+            } else if (userRole.contains("Reconciliation User")) {
+                views = Arrays.asList(R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
             }
 
             go.performClick();
@@ -465,6 +474,19 @@ public class ActivityHomeScreen extends Activity {
                     @Override
                     public void onClick(View v) {
                         intent = new Intent(context, ActivityListBooking.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+                break;
+            case R.layout.btn_reconcile:
+                btn = (Button) btnLayout.findViewById(R.id.btnReconcile);
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        intent = new Intent(context, ActivitySearchCustomer.class);
+                        intent.putExtra("From", "Reconciliation User");
                         startActivity(intent);
                         finish();
                     }
@@ -3166,7 +3188,7 @@ public class ActivityHomeScreen extends Activity {
 
         @Override
         protected void onPreExecute() {
-            Dialog.setMessage("Uploading Attachments (Step 2/2)..");
+            Dialog.setMessage("Uploading Attachments ..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
@@ -3324,7 +3346,7 @@ public class ActivityHomeScreen extends Activity {
     }
     //</editor-fold>
 
-    //<editor-fold desc="Async Method to Fetch ompany rate ">
+    //<editor-fold desc="Async Method to Fetch Company rate ">
     private class AsyncCompanyRateWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -4178,6 +4200,7 @@ public class ActivityHomeScreen extends Activity {
                         jsonins.put("Amount", insp.get("Amount"));
                         jsonins.put("Remarks", insp.get("Remarks"));
                         jsonins.put("TransactionDate", insp.get("TransactionDate"));
+                        jsonins.put("UploadFileName", insp.get("ImageName"));
                         jsonins.put("CreateBy", userId);
                         jsonins.put("ipAddress",
                                 common.getDeviceIPAddress(true));
@@ -4511,9 +4534,10 @@ public class ActivityHomeScreen extends Activity {
                         dba.close();
                     }
                     if (common.isConnected()) {
-                        // call method of  json web service
-                        AsyncComplaintWSCall task = new AsyncComplaintWSCall();
+
+                        Async_OutletAttachments_WSCall task = new Async_OutletAttachments_WSCall();
                         task.execute();
+
                     }
                 } else {
                     if (result.contains("null"))
@@ -4531,6 +4555,145 @@ public class ActivityHomeScreen extends Activity {
         @Override
         protected void onPreExecute() {
             Dialog.setMessage("Posting Sale Details...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to send Outlet attachments on the Portal ">
+    private class Async_OutletAttachments_WSCall extends
+            AsyncTask<String, String, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                responseJSON = "";
+
+                JSONObject jsonDocs = new JSONObject();
+
+                dba.open();
+                // Code to fetch data from database and store in hash map
+                ArrayList<HashMap<String, String>> docDet = dba
+                        .getOutletAttachmentsForSync();
+
+                if (docDet != null && docDet.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    try {
+                        int totalFilesCount = docDet.size();
+                        int currentCount = 0;
+                        // Code to loop through hash map and create JSON
+                        for (HashMap<String, String> mast : docDet) {
+                            JSONObject jsonDoc = new JSONObject();
+
+                            currentCount++;
+
+                            jsonDoc.put("UniqueId", mast.get("UniqueId"));
+                            jsonDoc.put("UploadFileName",
+                                    mast.get("UploadFileName"));
+                            File fle = new File(mast.get("ImagePath"));
+                            String flArray = "";
+                            // Code to check if file exists and create byte
+                            // array to be passed to json
+                            if (fle.exists()
+                                    && (fle.getAbsolutePath().contains(".jpg")
+                                    || fle.getAbsolutePath().contains(
+                                    ".png")
+                                    || fle.getAbsolutePath().contains(
+                                    ".gif")
+                                    || fle.getAbsolutePath().contains(
+                                    ".jpeg") || fle
+                                    .getAbsolutePath().contains(".bmp"))) {
+                                BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inPreferredConfig = Bitmap.Config.ALPHA_8;
+                                Bitmap bitmap = BitmapFactory.decodeFile(
+                                        fle.getAbsolutePath(), options);
+                                flArray = getByteArrayFromImage(bitmap);
+
+                                jsonDoc.put("FileArray", flArray);
+
+                                array.put(jsonDoc);
+                                jsonDocs.put("Attachment", array);
+                                String sendJSon = jsonDocs.toString();
+
+                                // Code to send json to portal and store
+                                // response stored in responseJSON
+                                responseJSON = common
+                                        .invokeJSONWS(sendJSon, "json",
+                                                "InsertExpenseAttachments", common.url);
+                                // Check responseJSON and update attachment
+                                // status
+                                if (responseJSON.equals("SUCCESS")) {
+                                    dba.open();
+                                    dba.updateOutletAttachmentStatus(mast
+                                            .get("UniqueId"));
+                                    publishProgress("Attachment(s) Uploaded: "
+                                            + currentCount + "/"
+                                            + totalFilesCount);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+
+                        return "ERROR: Unable to fetch response from server.";
+                    }
+
+                }
+
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Internet is slow";
+            } catch (Exception e) {
+                // TODO: handle exception
+
+                return "ERROR: Unable to fetch response from server.";
+            }
+
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            Dialog.setMessage(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Dialog.dismiss();
+            try {
+                if (!result.contains("ERROR")) {
+                    File dir = new File(
+                            Environment.getExternalStorageDirectory() + "/"
+                                    + "LPDND");
+                    deleteRecursive(dir);
+                    // call method of  json web service
+                    AsyncComplaintWSCall task = new AsyncComplaintWSCall();
+                    task.execute();
+
+                } else {
+                    if (result == null || result == "null"
+                            || result.equals("ERROR: null"))
+                        common.showAlert(ActivityHomeScreen.this,
+                                "Unable to get response from server.", false);
+                    else
+                        common.showAlert(ActivityHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+
+                common.showAlert(
+                        ActivityHomeScreen.this,
+                        "Synchronizing failed - Upload Attachments: "
+                                + e.getMessage(), false);
+            }
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Uploading Attachments ..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
