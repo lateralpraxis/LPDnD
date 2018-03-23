@@ -92,7 +92,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:gravity="center_vertical"
-                android:text="@string/label_cash"
+                android:text="@string/label_mandatecash"
                 android:textStyle="bold" />
 
             <EditText
@@ -131,6 +131,60 @@
                 android:gravity="center_vertical"
                 android:textSize="16sp" />
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/tvRemarks"
+                style="@style/style_dataLabel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="@string/label_optremarkshead"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/etRemarks"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:layout_weight="0.7"
+                android:hint="@string/enterRemarks"
+                android:inputType="textMultiLine|text"
+                android:maxLength="200"
+                android:minLines="4"
+                android:textAlignment="viewEnd" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:orientation="horizontal"
+            android:paddingBottom="2dp"
+            android:weightSum="1">
+
+            <Button
+                android:id="@+id/btnSave"
+                style="?android:attr/buttonBarButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="1sp"
+                android:layout_weight=".5"
+                android:background="@drawable/button_design"
+                android:paddingBottom="5sp"
+                android:paddingLeft="10sp"
+                android:paddingRight="10sp"
+                android:paddingTop="5sp"
+                android:text="@string/submit"
+                android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

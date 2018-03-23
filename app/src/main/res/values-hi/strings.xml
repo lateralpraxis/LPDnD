@@ -388,8 +388,10 @@
     <string name="label_SearchHead">ग्राहक</string>
     <string name="label_Reconciliation">मिलान</string>
     <string name="label_cash">नकद \u20B9</string>
+    <string name="label_mandatecash">नकद \u20B9*</string>
     <string name="label_credit">क्रेडिट \u20B9</string>
     <string name="hint_search">खोज पाठ दर्ज करें...</string>
     <string name="hint_amount">राशि दर्ज करें</string>
+    <string name="label_optremarkshead">टिप्पणी</string>
     <!-- End of Reconciliation Variables-->
 </resources>
