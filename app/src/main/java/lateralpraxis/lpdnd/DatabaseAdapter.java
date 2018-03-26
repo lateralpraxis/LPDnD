@@ -30,6 +30,7 @@ public class DatabaseAdapter {
             Item_CREATE = "CREATE TABLE IF NOT EXISTS Item(Id TEXT, Name TEXT, Type TEXT, Rate TEXT, ProductLocal TEXT, Product TEXT, SkuUnit TEXT, Uom TEXT);",
             Msg_CREATE = "CREATE TABLE IF NOT EXISTS Msg(Id TEXT, Name TEXT);",
             Centre_CREATE = "CREATE TABLE IF NOT EXISTS Centre(Id TEXT, Name TEXT);",
+            ConversionCentre_CREATE = "CREATE TABLE IF NOT EXISTS ConversionCentre(Id TEXT, Name TEXT);",
             MISCompany_CREATE = "CREATE TABLE IF NOT EXISTS MISCompany(Id TEXT, Name TEXT);",
             Route_CREATE = "CREATE TABLE IF NOT EXISTS Route(Id TEXT, Name TEXT, CentreId TEXT);",
             Vehicle_CREATE = "CREATE TABLE IF NOT EXISTS Vehicle(Id TEXT, Name TEXT, RouteId TEXT);",

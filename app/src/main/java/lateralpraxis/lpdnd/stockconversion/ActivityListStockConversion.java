@@ -74,7 +74,7 @@ public class ActivityListStockConversion extends Activity {
     //</editor-fold>
 
     //<editor-fold desc="Code to declare Controls">
-    private TextView tvDate, tvEmpty,linkAddStockConversion;
+    private TextView tvDate, tvEmpty, linkAddStockConversion;
     private ListView listConvert;
     private Button btnGo;
     private TableLayout tableGridHead;
@@ -117,7 +117,7 @@ public class ActivityListStockConversion extends Activity {
         listConvert = (ListView) findViewById(R.id.listConvert);
         tvDate = (TextView) findViewById(R.id.tvDate);
         tvEmpty = (TextView) findViewById(R.id.tvEmpty);
-        linkAddStockConversion= (TextView) findViewById(R.id.linkAddStockConversion);
+        linkAddStockConversion = (TextView) findViewById(R.id.linkAddStockConversion);
         btnGo = (Button) findViewById(R.id.btnGo);
         tableGridHead = (TableLayout) findViewById(R.id.tableGridHead);
         dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
@@ -133,12 +133,11 @@ public class ActivityListStockConversion extends Activity {
             //On click of view delivery button
             @Override
             public void onClick(View arg0) {
-               if(common.isConnected())
-               {
-                   String[] myTaskParams = {"transactions"};
-                   AsyncCustomerValidatePasswordWSCall task = new AsyncCustomerValidatePasswordWSCall();
-                   task.execute(myTaskParams);
-               }
+                if (common.isConnected()) {
+                    String[] myTaskParams = {"transactions"};
+                    AsyncCustomerValidatePasswordWSCall task = new AsyncCustomerValidatePasswordWSCall();
+                    task.execute(myTaskParams);
+                }
             }
         });
         //</editor-fold>
@@ -325,7 +324,7 @@ public class ActivityListStockConversion extends Activity {
 
     //<editor-fold desc="Code to be Bind Data in list view">
     public static class ViewHolder {
-        TextView tvCode, tvDate,tvId;
+        TextView tvCode, tvDate, tvId;
     }
     //</editor-fold>
 
@@ -485,8 +484,8 @@ public class ActivityListStockConversion extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String[] name = { "action", "userId", "role" };
-                String[] value = { "CheckPendingDelivery", userId, "Customer" };
+                String[] name = {"action", "userId", "role"};
+                String[] value = {"CheckPendingDelivery", userId, "Customer"};
                 responseJSON = "";
                 // Call method of web service to download Reatil Outlet Inventory from
                 // server
@@ -510,23 +509,20 @@ public class ActivityListStockConversion extends Activity {
                     JSONArray jsonArray = new JSONArray(responseJSON);
                     db.open();
                     db.DeleteMasterData("DeliveryConfirmStatus");
-                    String status="";
+                    String status = "";
                     for (int i = 0; i < jsonArray.length(); ++i) {
                         db.Insert_DeliveryConfirmStatus(jsonArray.getJSONObject(i)
                                 .getString("A"));
-                        status=jsonArray.getJSONObject(i).getString("A");
+                        status = jsonArray.getJSONObject(i).getString("A");
                     }
                     db.close();
-                    if(status.equalsIgnoreCase("0"))
-                    {
-                        if(common.isConnected()) {
+                    if (status.equalsIgnoreCase("0")) {
+                        if (common.isConnected()) {
                             AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
                             task.execute();
                         }
-                    }
-                    else
-                    {
-                        common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए स्टॉक रूपांतरण की अनुमति नहीं है।":"Deliveries are pending for confirmation hence stock conversion is not allowed.");
+                    } else {
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए स्टॉक रूपांतरण की अनुमति नहीं है।" : "Deliveries are pending for confirmation hence stock conversion is not allowed.");
                     }
 
                 } else {
@@ -562,11 +558,11 @@ public class ActivityListStockConversion extends Activity {
         protected String doInBackground(String... params) {
             try {
 
-                String[] name = {"action","lang","customerId" };
-                String[] value = { "GetProductRawMaterial",lang,userId };
+                String[] name = {"action", "lang", "customerId"};
+                String[] value = {"GetProductRawMaterial", lang, userId};
                 // Call method of web service to Read Conversion Details
                 responseJSON = "";
-                responseJSON = common.CallJsonWS(name, value,"ReadRetailOutletLiveInventory", common.url);
+                responseJSON = common.CallJsonWS(name, value, "ReadRetailOutletLiveInventory", common.url);
                 return "";
             } catch (SocketTimeoutException e) {
                 return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
@@ -582,11 +578,11 @@ public class ActivityListStockConversion extends Activity {
         protected void onPostExecute(String result) {
             try {
                 if (!result.contains("ERROR")) {
-                    String data="";
+                    String data = "";
                     // To display message after response from server
                     JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
                     JSONArray jsonRaw = new JSONArray(responseJSON.split("~")[1]);
-                    if(jsonSKU.length() > 0 || jsonRaw.length() > 0) {
+                    if (jsonSKU.length() > 0 || jsonRaw.length() > 0) {
                         if (jsonSKU.length() > 0) {
                             db.open();
                             db.DeleteMasterData("SKULiveInventory");
@@ -623,8 +619,7 @@ public class ActivityListStockConversion extends Activity {
                         intent.putExtra("UniqueId", UUID.randomUUID().toString());
                         startActivity(intent);
                         finish();
-                    }
-                     else {
+                    } else {
                         common.showToast("There is no data available for Inventory!");
                     }
 
@@ -1169,7 +1164,9 @@ public class ActivityListStockConversion extends Activity {
                     }
                     if (common.isConnected()) {
 
-                        AsyncPendingDeliveryStatusWSCall task = new AsyncPendingDeliveryStatusWSCall();
+                       /* AsyncPendingDeliveryStatusWSCall task = new AsyncPendingDeliveryStatusWSCall();
+                        task.execute();*/
+                        AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
                         task.execute();
                     }
                 } else {

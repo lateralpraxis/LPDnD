@@ -34,6 +34,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         _db.execSQL(DatabaseAdapter.Exceptions_CREATE);
         _db.execSQL(DatabaseAdapter.Item_CREATE);
         _db.execSQL(DatabaseAdapter.Centre_CREATE);
+        _db.execSQL(DatabaseAdapter.ConversionCentre_CREATE);
         _db.execSQL(DatabaseAdapter.MISCompany_CREATE);
         _db.execSQL(DatabaseAdapter.Msg_CREATE);
         _db.execSQL(DatabaseAdapter.Demand_CREATE);
