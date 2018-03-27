@@ -1189,6 +1189,7 @@ public class ActivityListStockConversion extends Activity {
             Dialog.show();
         }
     }
+    //</editor-fold>
 
     // To make web service class to logout user from login
     private class AsyncLogOutWSCall extends AsyncTask<String, Void, String> {

@@ -395,7 +395,37 @@
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:name=".CentreStockConversion.ActivityConversionView"></activity>
+        <activity android:name=".CentreStockConversion.ActivityConversionView"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".CentreStockConversion.ActivityCentreConversion"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".CustomerSettlement.CustomerSettlementCreate"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".CustomerSettlement.CustomerSettlementList"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".StockAdjustment.CentreStockAdjustmentCreate"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".StockAdjustment.CentreStockAdjustmentList"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

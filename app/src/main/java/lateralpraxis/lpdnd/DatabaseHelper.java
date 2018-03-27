@@ -101,6 +101,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         _db.execSQL(DatabaseAdapter.ExpenseHead_CREATE);
         _db.execSQL(DatabaseAdapter.ExpenseBooking_CREATE);
         _db.execSQL(DatabaseAdapter.ExpenseConfirmation_CREATE);
+        _db.execSQL(DatabaseAdapter.CentreSKULiveInventory_CREATE);
+        _db.execSQL(DatabaseAdapter.CentreUserCentres_CREATE);
+        _db.execSQL(DatabaseAdapter.CentreSKU_CREATE);
 
     }
 

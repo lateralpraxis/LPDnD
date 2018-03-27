@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="lateralpraxis.lpdnd.CentreStockConversion.ActivityCentreConversion">
+
+    <TextView
+        style="@style/style_topbar"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:text="@string/label_StockConversion" />
+    <LinearLayout
+        android:id="@+id/llCentre"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:visibility="visible">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.3"
+            android:text="@string/label_centre"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spCentre"
+            style="@style/spinner"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="0.7" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:gravity="end"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btnGo"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/button_design"
+            android:paddingBottom="5dp"
+            android:paddingEnd="10sp"
+            android:paddingLeft="10sp"
+            android:paddingRight="10sp"
+            android:paddingStart="10sp"
+            android:text="@string/label_Search"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp" />
+    </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llMain"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/tvCentreId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
+                android:text="@string/label_Centre"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvCentreName"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7" />
+        </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <TextView
+                    android:id="@+id/tvInventory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    style="@style/style_sectionHead"
+                    android:paddingLeft="4dp"
+                    android:paddingStart="4dp"
+                    android:text="@string/label_Consumed" />
+
+                <LinearLayout
+                    android:id="@+id/llSKU"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:visibility="visible"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tvSKU"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3"
+                        android:text="@string/label_item"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <Spinner
+                        android:id="@+id/spSKU"
+                        style="@style/spinner"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.7" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/label_availqty"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3"
+                        android:text="@string/label_availqty"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvViewQty"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:layout_weight="0.7"
+                        android:textAlignment="viewEnd"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:weightSum="1">
+
+                    <TextView
+                        android:id="@+id/tvQty"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.3"
+                        android:text="@string/label_consumedqty"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <EditText
+                        android:id="@+id/etConsumedQty"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="end"
+                        android:layout_weight="0.7"
+                        android:hint="@string/hintqty"
+                        android:maxLength="6"
+                        android:textAlignment="viewEnd" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:orientation="horizontal"
+                    android:paddingBottom="2dp"
+                    android:weightSum="1">
+
+                    <Button
+                        android:id="@+id/btnAddConsumed"
+                        style="?android:attr/buttonBarButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_margin="1sp"
+                        android:layout_weight=".5"
+                        android:background="@drawable/button_design"
+                        android:paddingBottom="5sp"
+                        android:paddingLeft="10sp"
+                        android:paddingRight="10sp"
+                        android:paddingTop="5sp"
+                        android:text="@string/stradd"
+                        android:textColor="@color/white" />
+                </LinearLayout>
+
+                <TableLayout
+                    android:id="@+id/tableGridHeadConsumed"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
+
+                    <TableRow
+                        android:id="@+id/tableHeaderDet"
+                        style="@style/style_gridheader"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="5.0dip">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".5"
+                            android:paddingLeft="2dp"
+                            android:paddingStart="2dp"
+                            android:text="@string/label_NameReport"
+                            android:textColor="@color/white"
+                            android:textIsSelectable="false"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".3"
+                            android:gravity="end"
+                            android:paddingEnd="2dp"
+                            android:paddingRight="2dp"
+                            android:text="@string/label_quantity"
+                            android:textColor="@color/white"
+                            android:textIsSelectable="false"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight=".2"
+                            android:gravity="end"
+                            android:paddingEnd="2dp"
+                            android:paddingRight="2dp"
+                            android:text="@string/blank"
+                            android:textColor="@color/white"
+                            android:textIsSelectable="false"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+                    </TableRow>
+                </TableLayout>
+
+                <lateralpraxis.lpdnd.NonScrollableListView
+                    android:id="@+id/listConsumed"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/black"
+                    android:dividerHeight="1sp" />
+
+                <TextView
+                    android:id="@+id/tvConsEmpty"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:text="@string/norecord"
+                    android:textColor="@color/black"
+                    android:textSize="16sp" />
+
+
+                <LinearLayout
+                    android:id="@+id/llProduced"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/style_topbar"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:text="@string/label_Produced" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:weightSum="1">
+
+                        <TextView
+                            android:id="@+id/tvProdSKU"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:text="@string/label_item"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/spProdSKU"
+                            style="@style/spinner"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.7" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:weightSum="1">
+
+                        <TextView
+                            android:id="@+id/tvProdQty"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.3"
+                            android:text="@string/label_producedqty"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/etProducedQty"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="end"
+                            android:layout_weight="0.7"
+                            android:hint="@string/hintqty"
+                            android:maxLength="6"
+                            android:textAlignment="viewEnd" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal"
+                        android:paddingBottom="2dp"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:weightSum="1">
+
+                        <Button
+                            android:id="@+id/btnAddProduced"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_margin="1sp"
+                            android:layout_weight=".5"
+                            android:background="@drawable/button_design"
+                            android:paddingBottom="5sp"
+                            android:paddingLeft="10sp"
+                            android:paddingRight="10sp"
+                            android:paddingTop="5sp"
+                            android:text="@string/stradd"
+                            android:textColor="@color/white" />
+                    </LinearLayout>
+
+                    <TableLayout
+                        android:id="@+id/tableGridHeadProduced"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone">
+
+                        <TableRow
+                            style="@style/style_gridheader"
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5.0dip">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".5"
+                                android:paddingLeft="2dp"
+                                android:paddingStart="2dp"
+                                android:text="@string/label_NameReport"
+                                android:textColor="@color/white"
+                                android:textIsSelectable="false"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".3"
+                                android:gravity="end"
+                                android:paddingEnd="2dp"
+                                android:paddingRight="2dp"
+                                android:text="@string/label_quantity"
+                                android:textColor="@color/white"
+                                android:textIsSelectable="false"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight=".2"
+                                android:gravity="end"
+                                android:paddingEnd="2dp"
+                                android:paddingRight="2dp"
+                                android:text="@string/blank"
+                                android:textColor="@color/white"
+                                android:textIsSelectable="false"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </TableRow>
+                    </TableLayout>
+
+                    <lateralpraxis.lpdnd.NonScrollableListView
+                        android:id="@+id/listProduced"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:divider="@color/black"
+                        android:dividerHeight="1sp" />
+
+                    <TextView
+                        android:id="@+id/tvProdEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/norecord"
+                        android:textColor="@color/black" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:orientation="horizontal"
+                        android:paddingBottom="2dp"
+                        android:weightSum="1">
+
+                        <Button
+                            android:id="@+id/btnSubmit"
+                            style="?android:attr/buttonBarButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_margin="1sp"
+                            android:layout_weight=".5"
+                            android:background="@drawable/button_design"
+                            android:paddingBottom="5sp"
+                            android:paddingLeft="10sp"
+                            android:paddingRight="10sp"
+                            android:paddingTop="5sp"
+                            android:text="@string/submit"
+                            android:textColor="@color/white"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

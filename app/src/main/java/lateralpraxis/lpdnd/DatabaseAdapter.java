@@ -80,7 +80,7 @@ public class DatabaseAdapter {
             Complaint_CREATE = "CREATE TABLE IF NOT EXISTS Complaint(Id INTEGER PRIMARY KEY AUTOINCREMENT,ComplaintDate DATETIME,CustomerId TEXT,ComplaintType TEXT,DeviceUniqueId TEXT, ComplaintCategoryId TEXT, FeedBackRating TEXT, CustomerRemark TEXT, IsSync);",
             TempDocTABLE_CREATE = "CREATE TABLE IF NOT EXISTS TempDoc (FileName TEXT)",
 
-    /********************* Tables used in Outlet Sale ******************/
+
     /********************* Tables used in Outlet Sale ******************/
     OutletSale_CREATE = "CREATE TABLE IF NOT EXISTS OutletSale(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT, CustomerId TEXT, Customer TEXT, SaleType TEXT, CreateBy TEXT, CreateDate TEXT, Imei TEXT, IsSync TEXT);",
             OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
@@ -92,17 +92,27 @@ public class DatabaseAdapter {
             SKUMaster_CREATE = "CREATE TABLE IF NOT EXISTS SKUMaster(Id TEXT,Name TEXT, NameLocal TEXT, Units TEXT, SKU TEXT);",
             SaleRateMaster_CREATE = "CREATE TABLE IF NOT EXISTS SaleRateMaster(Id TEXT,Rate TEXT, FromDate TEXT, ToDate TEXT);",
             OutletPrimaryReceipt_CREATE = "CREATE TABLE IF NOT EXISTS OutletPrimaryReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,UniqueId TEXT, CustomerId TEXT, MaterialId TEXT, SKUId TEXT, Quantity TEXT, Amount TEXT,CreateDate TEXT, IsSync TEXT);",
-            OutletConversionConsumedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
+    /********************* Tables used in Outlet Conversion ******************/
+    OutletConversionConsumedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
             OutletConversionProducedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProducedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT,SKUId TEXT, Quantity TEXT);",
             OutletConversion_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversion(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,CustomerId TEXT, AndroidDate TEXT, IsSync TEXT);",
             OutletConversionConsumed_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumed(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
             OutletConversionProduced_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProduced(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,SKUId TEXT, Quantity TEXT);",
+    /********************* Tables used in Checking Delivery Confirmation ******************/
     DeliveryConfirmStatus_CREATE = "CREATE TABLE IF NOT EXISTS DeliveryConfirmStatus(Status TEXT);",
-            SKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS SKULiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
-            RawMaterialLiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialLiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
+    /********************* Tables used in Live SKU Inventory ******************/
+    SKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS SKULiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
+    /********************* Tables used in Live RAW Material Inventory ******************/
+    RawMaterialLiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialLiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
+    /********************* Tables used in Live SKU Inventory for Centre ******************/
+    CentreSKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS CentreSKULiveInventory(CentreId TEXT,Id TEXT, Name TEXT, Quantity TEXT);",
+    /********************* Tables used in SKU for Centre User******************/
+    CentreSKU_CREATE = "CREATE TABLE IF NOT EXISTS CentreSKU(Id TEXT, Name TEXT);",
+    /********************* Tables used for Storing Centre Details For Centre User ******************/
+    CentreUserCentres_CREATE = "CREATE TABLE IF NOT EXISTS CentreUserCentres(Id TEXT, Name TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
-    OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
+            OutletPaymentReceipt_CREATE = "CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
             ExpenseBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
 
     // Context of the application using the database.
@@ -282,7 +292,7 @@ public class DatabaseAdapter {
         else if (masterType == "otherCustomerByRoute")
             selectQuery = "SELECT CustomerId||'~'||RouteId||'~'||Route, Customer, CustomerLocal FROM CustomerMaster WHERE RouteId !='"
                     + filter + "' ORDER BY LOWER(Customer)";
-        //Log.i("LPDND", "selectQuery="+selectQuery);
+
         cursor = db.rawQuery(selectQuery, null);
         if (masterType == "customer" || masterType == "customerByRoute" || masterType == "otherCustomerByRoute")
             labels.add(new CustomType("0", "...Select Customer"));
@@ -329,11 +339,26 @@ public class DatabaseAdapter {
                 else
                     selectQuery = "SELECT Id||'~'||SKU, NameLocal FROM SKUMaster ORDER BY Name COLLATE NOCASE ASC";
                 break;
+            case "centresku":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT Id, Name FROM CentreSKU ORDER BY Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT Id, Name FROM CentreSKU ORDER BY Name COLLATE NOCASE ASC";
+                break;
+            case "centreusercentre":
+                selectQuery = "SELECT Id, Name FROM CentreUserCentres ORDER BY LOWER(Name)";
+                break;
             case "skuinv":
                 if (userlang.equalsIgnoreCase("en"))
                     selectQuery = "SELECT Id, Name FROM SKULiveInventory ORDER BY Name COLLATE NOCASE ASC";
                 else
                     selectQuery = "SELECT Id, Name FROM SKULiveInventory ORDER BY Name COLLATE NOCASE ASC";
+                break;
+            case "centreskuinv":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT Id, Name FROM CentreSKULiveInventory WHERE CentreId ='" + filter + "' ORDER BY Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT Id, Name FROM CentreSKULiveInventory WHERE CentreId ='" + filter + "' ORDER BY Name COLLATE NOCASE ASC";
                 break;
             case "exphead":
                 if (userlang.equalsIgnoreCase("en"))
@@ -350,10 +375,16 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0", "...Select Raw Material"));
             else if (masterType.equalsIgnoreCase("sku"))
                 labels.add(new CustomType("0~0", "...Select SKU"));
+            else if (masterType.equalsIgnoreCase("centreskuinv"))
+                labels.add(new CustomType("0-0", "...Select SKU"));
+            else if (masterType.equalsIgnoreCase("centresku"))
+                labels.add(new CustomType("0-0", "...Select SKU"));
             else if (masterType.equalsIgnoreCase("skuinv"))
                 labels.add(new CustomType("0-0", "...Select SKU"));
             else if (masterType.equalsIgnoreCase("exphead"))
                 labels.add(new CustomType("0", "...Select Expense Head"));
+            else if (masterType.equalsIgnoreCase("centreusercentre"))
+                labels.add(new CustomType("0", "...Select Centre"));
             else
                 labels.add(new CustomType("0", "...Select"));
         } else {
@@ -363,10 +394,16 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0", "...कच्ची सामग्री चयन करें"));
             else if (masterType.equalsIgnoreCase("sku"))
                 labels.add(new CustomType("0~0", "...उत्पाद चयन करें"));
+            else if (masterType.equalsIgnoreCase("centresku"))
+                labels.add(new CustomType("0-0", "...उत्पाद चयन करें"));
             else if (masterType.equalsIgnoreCase("skuinv"))
+                labels.add(new CustomType("0-0", "...उत्पाद चयन करें"));
+            else if (masterType.equalsIgnoreCase("centreskuinv"))
                 labels.add(new CustomType("0-0", "...उत्पाद चयन करें"));
             else if (masterType.equalsIgnoreCase("exphead"))
                 labels.add(new CustomType("0", "...व्यय हेड चयन करें"));
+            else if (masterType.equalsIgnoreCase("centreusercentre"))
+                labels.add(new CustomType("0", "... केंद्र का चयन करें"));
             else
                 labels.add(new CustomType("0", "...चयन करें"));
         }
@@ -2068,7 +2105,7 @@ public class DatabaseAdapter {
         cursor.close();
 
 		/*		int CustomerRateCount;
-		// In demand --item online created
+        // In demand --item online created
 		selectQuery = "SELECT * FROM CustomerRate";// only in Route Officer
 		cursor = db.rawQuery(selectQuery, null);
 		CustomerRateCount = cursor.getCount();
@@ -2160,7 +2197,7 @@ public class DatabaseAdapter {
 
 
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment>0 || countExpense>0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0)
             isRequired = false;
 
         return isRequired;
@@ -3082,15 +3119,14 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
-    public String convertToDisplayDateFormat(String dateValue)
-    {
-        SimpleDateFormat  format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
+    public String convertToDisplayDateFormat(String dateValue) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         String createDateForDB = "";
         Date date = null;
         try {
             date = format.parse(dateValue);
 
-            SimpleDateFormat  dbdateformat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
+            SimpleDateFormat dbdateformat = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
             createDateForDB = dbdateformat.format(date);
 
         } catch (ParseException e) {
@@ -3104,7 +3140,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Method to Fetch Expense Details">
     public ArrayList<HashMap<String, String>> getExpenseDetails() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
-        String prevDate="";
+        String prevDate = "";
         if (userlang.equalsIgnoreCase("en"))
             selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
         else
@@ -3117,11 +3153,11 @@ public class DatabaseAdapter {
             map.put("Amount", cursor.getString(2));
             map.put("Remarks", cursor.getString(3));
             map.put("Id", cursor.getString(4));
-            if(prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
+            if (prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
                 map.put("Flag", "0");
             else
                 map.put("Flag", "1");
-            prevDate =convertToDisplayDateFormat(cursor.getString(0));
+            prevDate = convertToDisplayDateFormat(cursor.getString(0));
 
             wordList.add(map);
         }
@@ -3236,6 +3272,21 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to get Centre SKU Inventory by SKU Id">
+    public String getCentreSkuInventory(String skuId) {
+        String total = "";
+        selectQuery = "SELECT Quantity from CentreSKULiveInventory WHERE Id='" + skuId + "' ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                total = String.valueOf(cursor.getFloat(0));
+            } while (cursor.moveToNext());
+        }
+        return total;
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Code to get Raw Material Inventory by Raw Material Id">
     public String getRawMaterialInventory(String rawId) {
         String total = "";
@@ -3322,7 +3373,7 @@ public class DatabaseAdapter {
 
     //<editor-fold desc="Code to fetch current Credit Amount">
     public String getCreditAmount(String userId) {
-        String creditAmount="0.00";
+        String creditAmount = "0.00";
         selectQuery = "SELECT Quantity FROM OutletLedger WHERE Id = '" + userId + "' ";
         cursor = db.rawQuery(selectQuery, null);
         if (cursor.moveToFirst()) {
@@ -3337,13 +3388,13 @@ public class DatabaseAdapter {
 
     //<editor-fold desc="Code to delete consumption from temporary table by Id">
     public void deleteTempConsumption(String id) {
-        db.execSQL("Delete FROM OutletConversionConsumedTemp WHERE Id ='"+id+"';");
+        db.execSQL("Delete FROM OutletConversionConsumedTemp WHERE Id ='" + id + "';");
     }
     //</editor-fold>
 
     //<editor-fold desc="Code to delete production from temporary table by Id">
     public void deleteTempProduction(String id) {
-        db.execSQL("Delete FROM OutletConversionProducedTemp WHERE Id ='"+id+"';");
+        db.execSQL("Delete FROM OutletConversionProducedTemp WHERE Id ='" + id + "';");
     }
     //</editor-fold>
 
@@ -3373,6 +3424,60 @@ public class DatabaseAdapter {
             newValues.put("Name", name);
             newValues.put("Quantity", quantity);
             db.insert("RawMaterialLiveInventory", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Inventory Data in CentreSKULiveInventory Table">
+    public String Insert_CentreSKULiveInventory(String centreId, String id, String name, String quantity) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("CentreId", centreId);
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+            newValues.put("Quantity", quantity);
+            db.insert("CentreSKULiveInventory", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert SKU in Centre User Table">
+    public String Insert_CentreSKU(String id, String name) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+
+            db.insert("CentreSKU", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Centres for CentreUserCentres Table">
+    public String Insert_CentreUserCentres(String id, String name) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+            db.insert("CentreUserCentres", null, newValues);
             result = "success";
             return result;
         } catch (Exception e) {
@@ -3439,7 +3544,7 @@ public class DatabaseAdapter {
     //</editor-fold>
 
     //<editor-fold desc="Code to insert Outlet Payment Receipt Data in OutletPaymentReceipt Table">
-    public String Insert_OutletPaymentReceipt(String customerId, String amount,String uniqueId) {
+    public String Insert_OutletPaymentReceipt(String customerId, String amount, String uniqueId) {
         try {
             result = "fail";
             newValues = new ContentValues();
@@ -3487,7 +3592,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Method to Fetch Outlet Payment Receipts">
     public ArrayList<HashMap<String, String>> getOutletPayments() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
-            selectQuery = "SELECT AndroidDate, Amount FROM OutletPaymentReceipt ORDER BY AndroidDate DESC";
+        selectQuery = "SELECT AndroidDate, Amount FROM OutletPaymentReceipt ORDER BY AndroidDate DESC";
 
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -3545,7 +3650,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Method to Fetch Data For Synchronizing Stock Conversion">
     public ArrayList<HashMap<String, String>> getConversionForSync() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
-            selectQuery = "SELECT MaterialId, SKUId, Quantity,'C' FROM OutletConversionConsumedTemp UNION ALL SELECT 0, SKUId, Quantity,'P'  FROM OutletConversionProducedTemp";
+        selectQuery = "SELECT MaterialId, SKUId, Quantity,'C' FROM OutletConversionConsumedTemp UNION ALL SELECT 0, SKUId, Quantity,'P'  FROM OutletConversionProducedTemp";
 
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -3699,7 +3804,7 @@ public class DatabaseAdapter {
         db.execSQL("DELETE FROM OutletSaleDetail WHERE OutletSaleId IN (SELECT Id FROM OutletSale WHERE CreateDate < DATE('now', '-1 day'));");
         db.execSQL("DELETE FROM OutletSale WHERE CreateDate < DATE('now', '-1 day');");
         ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String, String>>();
-        selectQuery = "SELECT DISTINCT Id, 'OS'||Id, SaleType, CreateDate FROM OutletSale WHERE CustomerId = '"+filter+"' ORDER BY CAST(Id AS NUMERIC) DESC";
+        selectQuery = "SELECT DISTINCT Id, 'OS'||Id, SaleType, CreateDate FROM OutletSale WHERE CustomerId = '" + filter + "' ORDER BY CAST(Id AS NUMERIC) DESC";
         //Log.i("LPDND", "selectQuery="+masterType+":"+selectQuery);
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -3724,7 +3829,7 @@ public class DatabaseAdapter {
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
             map.put("Item", cursor.getString(0));
-            map.put("Qty", cursor.getString(1).replace(".0",""));
+            map.put("Qty", cursor.getString(1).replace(".0", ""));
             map.put("Rate", cursor.getString(2));
             map.put("Amount", cursor.getString(3));
             map.put("ItemLocal", cursor.getString(4));
