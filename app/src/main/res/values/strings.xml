@@ -165,6 +165,7 @@
     <string name="menu_primaryreceipt">Primary\nReceipt</string>
     <string name="menu_expense">Expense</string>
     <string name="menu_stockAdjustment">STOCK\nADJUSTMENT</string>
+    <string name="menu_customersettlement">CUSTOMER\nSETTLEMENT</string>
     <string name="menu_expenseconfirmation">EXPENSE\nCONFIRMATION</string>
     <string name="menu_deliveryConfirmation">DELIVERY\nCONFIRMATION</string>
     <string name="menu_StockReturnView">Stock Return</string>
@@ -397,4 +398,8 @@
     <string name="hint_search">Enter Search Text...</string>
     <string name="hint_amount">Enter Amount</string>
     <!-- End of Reconciliation Variables-->
+
+    <!-- Start of Customer Settlement Variables-->
+    <string name="customerSettlementDetails">Customer Settlement Details</string>
+    <!-- End of Customer Settlement Variables-->
 </resources>

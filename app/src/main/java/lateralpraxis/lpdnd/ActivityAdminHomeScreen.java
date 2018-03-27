@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 
 import lateralpraxis.lpdnd.CentreStockConversion.ActivityListCentreConversion;
+import lateralpraxis.lpdnd.CustomerSettlement.CustomerSettlementList;
 import lateralpraxis.lpdnd.ExpenseConfirmation.ExpenseConfirmationList;
 import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
 
@@ -111,6 +112,7 @@ public class ActivityAdminHomeScreen  extends Activity{
                     R.layout.btn_cashdeposit,
                     R.layout.btn_expenseconfirmation,
                     R.layout.btn_reconcile,
+					R.layout.btn_customersettlement,
                     R.layout.btn_stockconversion,
                     R.layout.btn_report);
         else if (userRole.contains("System User"))
@@ -234,6 +236,21 @@ public class ActivityAdminHomeScreen  extends Activity{
 						{
 							ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
 							task.execute();
+						}
+					}
+				});
+				break;
+			case R.layout.btn_customersettlement:
+				btn = (Button) btnLayout.findViewById(R.id.btnCustomerSettlement);
+				btn.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						if(common.isConnected())
+						{
+							intent = new Intent(context, CustomerSettlementList.class);
+							startActivity(intent);
+							finish();
 						}
 					}
 				});

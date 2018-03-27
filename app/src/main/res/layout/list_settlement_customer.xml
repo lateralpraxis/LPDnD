@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="3dp"
+        android:orientation="vertical">
+
+        <TableLayout
+            android:id="@+id/tableGridHead"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="visible">
+
+            <TableRow
+                android:id="@+id/tableHeader"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="1"
+                tools:ignore="UselessParent">
+                <TextView
+                    android:id="@+id/tvCustId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/tvCompId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/tvCustName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/tvMob"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+                <TextView
+                    android:id="@+id/tvBalAmt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <!-- 1/0 -->
+
+                <TextView
+                    android:id="@+id/tvCustomerName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".7"
+                    android:text="@string/app_name"
+                    android:textColor="@color/blue"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"
+                    />
+
+                <!-- 1/1 -->
+
+                <TextView
+                    android:id="@+id/tvMobile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:text="@string/app_name"
+                    android:textColor="@color/black"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"
+                    />
+
+                <!-- 1/2 -->
+
+
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableQty"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                tools:ignore="UselessParent">
+
+                <TextView
+                    android:id="@+id/tvEmptyRow"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".2"
+                    android:gravity="left"
+                    android:textColor="@color/black"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/tvCompany"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="@string/app_name"
+                    android:gravity="left"
+                    android:textColor="@color/black"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"/>
+
+
+                <TextView
+                    android:id="@+id/tvAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".3"
+                    android:text="@string/app_name"
+                    android:gravity="end"
+                    android:textAlignment="gravity"
+                    android:textColor="@color/black"
+                    android:textIsSelectable="false"
+                    android:textSize="16sp"/>
+
+                <!-- 1/4 -->
+            </TableRow>
+
+        </TableLayout>
+
+    </LinearLayout>
+</LinearLayout>
