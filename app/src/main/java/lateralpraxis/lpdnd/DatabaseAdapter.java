@@ -106,6 +106,8 @@ public class DatabaseAdapter {
             RawMaterialLiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialLiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
     /********************* Tables used in Live SKU Inventory for Centre ******************/
     CentreSKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS CentreSKULiveInventory(CentreId TEXT,Id TEXT, Name TEXT, Quantity TEXT);",
+    /********************* Tables used in SKU for Centre User******************/
+    CentreSKU_CREATE = "CREATE TABLE IF NOT EXISTS CentreSKU(Id TEXT, Name TEXT);",
     /********************* Tables used for Storing Centre Details For Centre User ******************/
             CentreUserCentres_CREATE = "CREATE TABLE IF NOT EXISTS CentreUserCentres(Id TEXT, Name TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
@@ -256,6 +258,8 @@ public class DatabaseAdapter {
             selectQuery = "SELECT Id, Name FROM CustomerType ORDER BY LOWER(Name)";
         else if (masterType == "centre")
             selectQuery = "SELECT Id, Name FROM Centre ORDER BY LOWER(Name)";
+        else if (masterType == "centreusercentre")
+            selectQuery = "SELECT Id, Name FROM CentreUserCentres ORDER BY LOWER(Name)";
         else if (masterType == "miscompany")
             selectQuery = "SELECT Id, Name FROM MISCompany ORDER BY LOWER(Name)";
         else if (masterType == "country")
@@ -290,7 +294,7 @@ public class DatabaseAdapter {
         else if (masterType == "otherCustomerByRoute")
             selectQuery = "SELECT CustomerId||'~'||RouteId||'~'||Route, Customer, CustomerLocal FROM CustomerMaster WHERE RouteId !='"
                     + filter + "' ORDER BY LOWER(Customer)";
-        //Log.i("LPDND", "selectQuery="+selectQuery);
+
         cursor = db.rawQuery(selectQuery, null);
         if (masterType == "customer" || masterType == "customerByRoute" || masterType == "otherCustomerByRoute")
             labels.add(new CustomType("0", "...Select Customer"));
@@ -302,7 +306,7 @@ public class DatabaseAdapter {
             labels.add(new CustomType("0", "...Select Route"));
         else if (masterType == "company")
             labels.add(new CustomType("0", "...Select Company"));
-        else if (masterType == "centre")
+        else if (masterType == "centre" || masterType == "centreusercentre")
             labels.add(new CustomType("0", "Select All"));
         else if (masterType == "miscompany")
             labels.add(new CustomType("0", "Select All"));
@@ -342,6 +346,12 @@ public class DatabaseAdapter {
                     selectQuery = "SELECT Id, Name FROM SKULiveInventory ORDER BY Name COLLATE NOCASE ASC";
                 else
                     selectQuery = "SELECT Id, Name FROM SKULiveInventory ORDER BY Name COLLATE NOCASE ASC";
+                break;
+            case "centreskuinv":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT Id, Name FROM CentreSKULiveInventory WHERE CentreId ='" + filter + "' ORDER BY Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT Id, Name FROM CentreSKULiveInventory WHERE CentreId ='" + filter + "' ORDER BY Name COLLATE NOCASE ASC";
                 break;
             case "exphead":
                 if (userlang.equalsIgnoreCase("en"))
@@ -3400,6 +3410,24 @@ public class DatabaseAdapter {
             newValues.put("Name", name);
             newValues.put("Quantity", quantity);
             db.insert("CentreSKULiveInventory", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert SKU in Centre User Table">
+    public String Insert_CentreSKU(String id, String name) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+
+            db.insert("CentreSKU", null, newValues);
             result = "success";
             return result;
         } catch (Exception e) {

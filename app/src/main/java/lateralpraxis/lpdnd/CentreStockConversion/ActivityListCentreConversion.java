@@ -572,8 +572,9 @@ public class ActivityListCentreConversion extends Activity {
                     String data = "";
                     // To display message after response from server
                     JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
-                    JSONArray jsonRaw = new JSONArray(responseJSON.split("~")[1]);
-                    if (jsonSKU.length() > 0 || jsonRaw.length() > 0) {
+                    JSONArray jsonCentre = new JSONArray(responseJSON.split("~")[1]);
+                    JSONArray jsonCentreSKU = new JSONArray(responseJSON.split("~")[1]);
+                    if (jsonSKU.length() > 0 || jsonCentre.length() > 0 || jsonCentreSKU.length() > 0) {
                         if (jsonSKU.length() > 0) {
                             db.open();
                             db.DeleteMasterData("CentreSKULiveInventory");
@@ -592,14 +593,27 @@ public class ActivityListCentreConversion extends Activity {
 
                             }
                         }
-                        if (jsonRaw.length() > 0) {
+                        if (jsonCentre.length() > 0) {
                             db.open();
                             db.DeleteMasterData("CentreUserCentres");
                             db.close();
-                            for (int i = 0; i < jsonRaw.length(); ++i) {
+                            for (int i = 0; i < jsonCentre.length(); ++i) {
                                 db.open();
-                                db.Insert_CentreUserCentres(jsonRaw.getJSONObject(i)
-                                        .getString("A"), jsonRaw.getJSONObject(i)
+                                db.Insert_CentreUserCentres(jsonCentre.getJSONObject(i)
+                                        .getString("A"), jsonCentre.getJSONObject(i)
+                                        .getString("B"));
+                                db.close();
+                            }
+
+                        }
+                        if (jsonCentreSKU.length() > 0) {
+                            db.open();
+                            db.DeleteMasterData("CentreSKU");
+                            db.close();
+                            for (int i = 0; i < jsonCentre.length(); ++i) {
+                                db.open();
+                                db.Insert_CentreSKU(jsonCentre.getJSONObject(i)
+                                        .getString("A"), jsonCentre.getJSONObject(i)
                                         .getString("B"));
                                 db.close();
                             }

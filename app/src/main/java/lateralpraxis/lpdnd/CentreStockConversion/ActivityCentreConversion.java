@@ -92,6 +92,7 @@ public class ActivityCentreConversion extends Activity {
     String responseJSON, sendJSon;
     private UserSessionManager session;
     //</editor-fold>
+
     //<editor-fold desc="Code for Variable Declaration">
     private ArrayList<HashMap<String, String>> wordListCons = null;
     private ArrayList<HashMap<String, String>> listCons;
@@ -104,10 +105,10 @@ public class ActivityCentreConversion extends Activity {
     //</editor-fold>
 
     //<editor-fold desc="Code for Control Declaration">
-    private Spinner spSKU, spProdSKU;
-    private LinearLayout llProduced;
+    private Spinner spSKU, spProdSKU,spCentre;
+    private LinearLayout llProduced,llCentre,llMain;
     private EditText etConsumedQty, etProducedQty;
-    private Button btnAddConsumed, btnAddProduced, btnSubmit;
+    private Button btnAddConsumed, btnAddProduced, btnSubmit,btnGo;
     private TextView tvProdEmpty, tvConsEmpty, tvInventory, tvViewQty;
     private ListView listConsumed, listProduced;
     private TableLayout tableGridHeadConsumed, tableGridHeadProduced;
@@ -153,13 +154,17 @@ public class ActivityCentreConversion extends Activity {
 
         //<editor-fold desc="Code to find controls">
         llProduced = (LinearLayout) findViewById(R.id.llProduced);
+        llCentre = (LinearLayout) findViewById(R.id.llCentre);
+        llMain = (LinearLayout) findViewById(R.id.llMain);
         spSKU = (Spinner) findViewById(R.id.spSKU);
         spProdSKU = (Spinner) findViewById(R.id.spProdSKU);
+        spCentre= (Spinner) findViewById(R.id.spCentre);
         etConsumedQty = (EditText) findViewById(R.id.etConsumedQty);
         etProducedQty = (EditText) findViewById(R.id.etProducedQty);
         btnAddConsumed = (Button) findViewById(R.id.btnAddConsumed);
         btnAddProduced = (Button) findViewById(R.id.btnAddProduced);
         btnSubmit = (Button) findViewById(R.id.btnSubmit);
+        btnGo = (Button) findViewById(R.id.btnGo);
         tvProdEmpty = (TextView) findViewById(R.id.tvProdEmpty);
         tvConsEmpty = (TextView) findViewById(R.id.tvConsEmpty);
         tvInventory = (TextView) findViewById(R.id.tvInventory);
@@ -180,6 +185,7 @@ public class ActivityCentreConversion extends Activity {
         etProducedQty.setFilters(FilterProdArray);
         etProducedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
         //</editor-fold>
+
         //<editor-fold desc="Code to be executed on change of text">
         TextWatcher textWatcher = new TextWatcher() {
             public void afterTextChanged(Editable s) {
@@ -251,8 +257,10 @@ public class ActivityCentreConversion extends Activity {
             }
         });
         //</editor-fold>
+
         //<editor-fold desc="Code to Bind Spinners">
-        spSKU.setAdapter(DataAdapter("skuinv", ""));
+        spCentre.setAdapter(DataAdapter("centreusercentre", ""));
+        spSKU.setAdapter(DataAdapter("centreskuinv", ""));
         spProdSKU.setAdapter(DataAdapter("sku", ""));
         //</editor-fold>
 
