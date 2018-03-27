@@ -414,6 +414,18 @@
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".StockAdjustment.CentreStockAdjustmentCreate"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".StockAdjustment.CentreStockAdjustmentList"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

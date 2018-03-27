@@ -37,6 +37,7 @@ import lateralpraxis.lpdnd.CentreStockConversion.ActivityListCentreConversion;
 import lateralpraxis.lpdnd.CustomerSettlement.CustomerSettlementList;
 import lateralpraxis.lpdnd.ExpenseConfirmation.ExpenseConfirmationList;
 import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
+import lateralpraxis.lpdnd.StockAdjustment.CentreStockAdjustmentList;
 
 public class ActivityAdminHomeScreen  extends Activity{
 	static final int ITEM_PER_ROW = 2;
@@ -105,26 +106,27 @@ public class ActivityAdminHomeScreen  extends Activity{
 					+ Html.fromHtml(userRole.replace(",", ", ")) + " ]");
 		}
 
-        if (userRole.contains("System User") && userRole.contains("Centre User"))
-            views = Arrays.asList(
-                    R.layout.btn_delivery,
-                    R.layout.btn_payment,
-                    R.layout.btn_cashdeposit,
-                    R.layout.btn_expenseconfirmation,
-                    R.layout.btn_reconcile,
-					R.layout.btn_customersettlement,
-                    R.layout.btn_stockconversion,
-                    R.layout.btn_report);
-        else if (userRole.contains("System User"))
-            views = Arrays.asList(
+		if (userRole.contains("System User") && userRole.contains("Centre User"))
+			views = Arrays.asList(
 					R.layout.btn_delivery,
 					R.layout.btn_payment,
 					R.layout.btn_cashdeposit,
 					R.layout.btn_expenseconfirmation,
 					R.layout.btn_reconcile,
+					R.layout.btn_customersettlement,
+					R.layout.btn_stockconversion,
+					R.layout.btn_report);
+		else if (userRole.contains("System User"))
+			views = Arrays.asList(
+					R.layout.btn_delivery,
+					R.layout.btn_payment,
+					R.layout.btn_cashdeposit,
+					R.layout.btn_expenseconfirmation,
+					R.layout.btn_reconcile,
+					R.layout.btn_stockadjustment,
 					R.layout.btn_report);
 		else if (userRole.contains("Centre User"))
-			views = Arrays.asList(R.layout.btn_stockconversion, R.layout.btn_report);
+			views = Arrays.asList(R.layout.btn_stockconversion, R.layout.btn_stockadjustment, R.layout.btn_report);
 		else
 			views = Arrays.asList(R.layout.btn_report);
 
@@ -255,6 +257,18 @@ public class ActivityAdminHomeScreen  extends Activity{
 					}
 				});
 				break;
+			case R.layout.btn_stockadjustment:
+				btn = (Button) btnLayout.findViewById(R.id.btnStockAdjustment);
+				btn.setOnClickListener(new View.OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						intent = new Intent(context, CentreStockAdjustmentList.class);
+						startActivity(intent);
+						finish();
+					}
+				});
+				break;
 			case R.layout.btn_reconcile:
 				btn = (Button) btnLayout.findViewById(R.id.btnReconcile);
 				btn.setOnClickListener(new View.OnClickListener() {
@@ -273,8 +287,8 @@ public class ActivityAdminHomeScreen  extends Activity{
 				btn.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-                        intent = new Intent(context, ActivityListCentreConversion.class);
-                        startActivity(intent);
+						intent = new Intent(context, ActivityListCentreConversion.class);
+						startActivity(intent);
 						finish();
 					}
 				});
@@ -290,7 +304,7 @@ public class ActivityAdminHomeScreen  extends Activity{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.menu_home_screen, menu);
+		inflater.inflate(R.menu.menu_home_screen, menu);
 		return true;
 	}
 
