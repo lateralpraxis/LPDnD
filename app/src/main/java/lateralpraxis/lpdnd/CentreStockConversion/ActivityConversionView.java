@@ -35,13 +35,14 @@ import lateralpraxis.lpdnd.R;
 import lateralpraxis.lpdnd.UserSessionManager;
 
 public class ActivityConversionView extends Activity {
+
     private final Context mContext = this;
     //<editor-fold desc="Code for Class Declaraion">
     DatabaseAdapter db;
     Common common;
-    HashMap<String, String> consmap = null;
-    //</editor-fold>
     HashMap<String, String> prodmap = null;
+    //</editor-fold>
+    HashMap<String, String> consmap = null;
     private UserSessionManager session;
     //</editor-fold>
     //<editor-fold desc="Code to declare controls">
