@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import lateralpraxis.lpdnd.ActivityHomeScreen;
+import lateralpraxis.lpdnd.ActivityAdminHomeScreen;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
 import lateralpraxis.lpdnd.DecimalDigitsInputFilter;
@@ -91,7 +91,6 @@ public class CentreStockAdjustmentCreate extends Activity {
     DatabaseAdapter db;
     Common common;
     String lang = "en";
-    String type = "Raw";
     String responseJSON, sendJSon;
     private UserSessionManager session;
     //</editor-fold>
@@ -105,20 +104,18 @@ public class CentreStockAdjustmentCreate extends Activity {
     //</editor-fold>
 
     //<editor-fold desc="Code for Control Declaration">
-    private RadioGroup RadioType;
-    private RadioButton RadioRaw, RadioSKU;
-    private Spinner spRawMaterial, spSKU;
-    private LinearLayout llRawMaterial, llSKU;
+    private Spinner spCentre, spSKU;
+    private LinearLayout llSKU, llCentre, llMain ;
     private EditText etAdjustedQty, etRemarks;
-    private Button btnAdd;
-    private TextView tvInventory, tvAvailable, tvAdjusted, tvAdjustedLabel;
+    private Button btnAdd, btnGo;
+    private TextView tvInventory, tvAvailable, tvAdjusted, tvAdjustedLabel, tvCentreId, tvCentreName;
     //</editor-fold>
 
     //<editor-fold desc="Code to be executed on On Create Method">
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_stock_adjustment);
+        setContentView(R.layout.activity_centre_create_stock_adjustment);
 
         //<editor-fold desc="Code for setting Action Bar">
         ActionBar ab = getActionBar();
@@ -149,20 +146,20 @@ public class CentreStockAdjustmentCreate extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to find controls">
-        llRawMaterial = (LinearLayout) findViewById(R.id.llRawMaterial);
+
         llSKU = (LinearLayout) findViewById(R.id.llSKU);
-        RadioType = (RadioGroup) findViewById(R.id.RadioType);
-        RadioRaw = (RadioButton) findViewById(R.id.RadioRaw);
-        RadioSKU = (RadioButton) findViewById(R.id.RadioSKU);
-        spRawMaterial = (Spinner) findViewById(R.id.spRawMaterial);
+        spCentre = (Spinner) findViewById(R.id.spCentre);
         spSKU = (Spinner) findViewById(R.id.spSKU);
         etAdjustedQty = (EditText) findViewById(R.id.etAdjustedQty);
         etRemarks = (EditText) findViewById(R.id.etRemarks);
         btnAdd = (Button) findViewById(R.id.btnAdd);
+        btnGo = (Button) findViewById(R.id.btnGo);
         tvInventory = (TextView) findViewById(R.id.tvInventory);
         tvAvailable = (TextView) findViewById(R.id.tvAvailable);
         tvAdjusted = (TextView) findViewById(R.id.tvAdjusted);
         tvAdjustedLabel = (TextView) findViewById(R.id.tvAdjustedLabel);
+        tvCentreId = (TextView) findViewById(R.id.tvCentreId);
+        tvCentreName = (TextView) findViewById(R.id.tvCentreName);
         tvInventory.setText("0");
         //</editor-fold>
 
@@ -172,37 +169,29 @@ public class CentreStockAdjustmentCreate extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to Bind Spinners">
-        spRawMaterial.setAdapter(DataAdapter("rawmaterialinv", ""));
-        spSKU.setAdapter(DataAdapter("skuinv", ""));
+        spCentre.setAdapter(DataAdapter("centreusercentre", ""));
         //</editor-fold>
 
-        //<editor-fold desc="Code to be exceuted on change of Radio Button">
-        RadioType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+        //<editor-fold desc="Code to be executed on Button Go Click">
+        btnGo.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                View radioButton = RadioType.findViewById(checkedId);
-                int index = RadioType.indexOfChild(radioButton);
-                spRawMaterial.setSelection(0);
-                spSKU.setSelection(0);
-                etAdjustedQty.setText("");
-                etRemarks.setText("");
-                tvAdjusted.setText("");
-                tvInventory.setText("0");
-                tvAdjustedLabel.setText("");
-                if (index == 0) {
-                    llRawMaterial.setVisibility(View.VISIBLE);
-                    llSKU.setVisibility(View.GONE);
-                    etAdjustedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
-                    etAdjustedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-                    type = "Raw";
+            public void onClick(View arg0) {
+                if (spCentre.getSelectedItemPosition() == 0) {
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया केंद्र का चयन करें" : "Please select centre.");
                 } else {
-                    llRawMaterial.setVisibility(View.GONE);
-                    llSKU.setVisibility(View.VISIBLE);
-                    type = "SKU";
+                    llCentre.setVisibility(View.GONE);
+                    llMain.setVisibility(View.VISIBLE);
+                    tvCentreId.setText(((CustomType) spCentre.getSelectedItem()).getId());
+                    tvCentreName.setText(((CustomType) spCentre.getSelectedItem()).getName());
+                    spSKU.setAdapter(DataAdapter("centreskuinv", ((CustomType) spCentre.getSelectedItem()).getId()));
                 }
+
             }
         });
         //</editor-fold>
+
 
         //<editor-fold desc="Code to be executed on Selected Index change on Consumed SKU Spinner">
         spSKU.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -260,13 +249,13 @@ public class CentreStockAdjustmentCreate extends Activity {
         //<editor-fold desc="Code to be executed on change of text">
         TextWatcher textWatcher = new TextWatcher() {
             public void afterTextChanged(Editable s) {
-                    if (!etAdjustedQty.getText().toString().equalsIgnoreCase(".")) {
-                        if (etAdjustedQty.getText().toString().equalsIgnoreCase("."))
-                            etAdjustedQty.setText("");
-
-                    } else {
+                if (!etAdjustedQty.getText().toString().equalsIgnoreCase(".")) {
+                    if (etAdjustedQty.getText().toString().equalsIgnoreCase("."))
                         etAdjustedQty.setText("");
-                    }
+
+                } else {
+                    etAdjustedQty.setText("");
+                }
 
             }
 
@@ -279,39 +268,13 @@ public class CentreStockAdjustmentCreate extends Activity {
         etAdjustedQty.addTextChangedListener(textWatcher);
         //</editor-fold>
 
-
-        //<editor-fold desc="Code to be executed on Selected Index change on Consumed Raw Material Spinner">
-        spRawMaterial.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> arg0, View arg1,
-                                       int arg2, long arg3) {
-                etAdjustedQty.setText("");
-                tvAdjustedLabel.setText("");
-                tvAvailable.setText("");
-                db.open();
-                tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
-                tvAvailable.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
-                db.close();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> arg0) {
-                // TODO Auto-generated method stub
-
-            }
-
-        });
-        //</editor-fold>
-
         //<editor-fold desc="Code to be executed on Click of Button ">
         btnAdd.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
 
-                if (type.equalsIgnoreCase("Raw") && spRawMaterial.getSelectedItemPosition() == 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "कच्ची सामग्री अनिवार्य है।" : "Raw Material is mandatory.");
-                else if (type.equalsIgnoreCase("SKU") && spSKU.getSelectedItemPosition() == 0)
+                if (spSKU.getSelectedItemPosition() == 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पाद अनिवार्य है।" : "SKU is mandatory.");
                 else if (String.valueOf(etAdjustedQty.getText()).trim().equals(""))
                     common.showToast(lang.equalsIgnoreCase("hi") ? "मात्रा अनिवार्य है।" : "Quantity is mandatory.");
@@ -328,7 +291,7 @@ public class CentreStockAdjustmentCreate extends Activity {
                                 public void onClick(DialogInterface dialog,
                                                     int id) {
                                     if (common.isConnected()) {
-                                        AsyncCreateStockAdjustmentWSCall task = new AsyncCreateStockAdjustmentWSCall();
+                                        AsyncCreateCentreStockAdjustmentWSCall task = new AsyncCreateCentreStockAdjustmentWSCall();
                                         task.execute();
                                     }
                                 }
@@ -383,7 +346,7 @@ public class CentreStockAdjustmentCreate extends Activity {
                             @Override
                             public void onClick(DialogInterface dialog,
                                                 int id) {
-                                Intent i = new Intent(CentreStockAdjustmentCreate.this, ActivityHomeScreen.class);
+                                Intent i = new Intent(CentreStockAdjustmentCreate.this, ActivityAdminHomeScreen.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(i);
                                 finish();
@@ -422,7 +385,7 @@ public class CentreStockAdjustmentCreate extends Activity {
                     @Override
                     public void onClick(DialogInterface dialog,
                                         int id) {
-                        Intent i = new Intent(CentreStockAdjustmentCreate.this, ActivityHomeScreen.class);
+                        Intent i = new Intent(CentreStockAdjustmentCreate.this, ActivityAdminHomeScreen.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
                         finish();
@@ -442,30 +405,22 @@ public class CentreStockAdjustmentCreate extends Activity {
     }
 
     //<editor-fold desc="Async Method to Post Stock Adjustment Details">
-    private class AsyncCreateStockAdjustmentWSCall extends AsyncTask<String, Void, String> {
+    private class AsyncCreateCentreStockAdjustmentWSCall extends AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(CentreStockAdjustmentCreate.this);
 
         @Override
         protected String doInBackground(String... params) {
             try {
-                String customerId = "";
+                String userId = "";
                 HashMap<String, String> user = session.getLoginUserDetails();
-                customerId = user.get(UserSessionManager.KEY_ID);
-                String rmId = "";
+                userId = user.get(UserSessionManager.KEY_ID);
                 String skuId = "";
-                if (type.equalsIgnoreCase("Raw")) {
-                    rmId = ((CustomType) spRawMaterial.getSelectedItem()).getId();
-                    skuId = "0";
-                } else {
-                    rmId = "0";
-                    skuId = ((CustomType) spSKU.getSelectedItem()).getId().split("-")[0];
-                }
-
-                String[] name = {"uniqueId", "customerId", "rawMaterialId", "skuId", "currentInventory", "newInventory", "remarks", "userId", "ipAddress", "machine"};
-                String[] value = {uniqueId, customerId, rmId, skuId, tvInventory.getText().toString(), etAdjustedQty.getText().toString(), etRemarks.getText().toString(), customerId, common.getDeviceIPAddress(true), common.getIMEI()};
+                skuId = ((CustomType) spSKU.getSelectedItem()).getId().split("-")[0];
+                String[] name = {"uniqueId", "centreId", "skuId", "currentInventory", "newInventory", "remarks", "userId", "ipAddress", "machine"};
+                String[] value = {uniqueId, tvCentreId.getText().toString(), skuId, tvInventory.getText().toString(), etAdjustedQty.getText().toString(), etRemarks.getText().toString(), userId, common.getDeviceIPAddress(true), common.getIMEI()};
                 responseJSON = "";
                 // Call method of web service to stock adjustment from server
-                responseJSON = common.CallJsonWS(name, value, "CreateStockAdjustment", common.url);
+                responseJSON = common.CallJsonWS(name, value, "CreateCentreStockAdjustment", common.url);
                 return responseJSON;
             } catch (SocketTimeoutException e) {
                 return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
@@ -501,7 +456,7 @@ public class CentreStockAdjustmentCreate extends Activity {
         // To display Posting Stock Adjustment Message
         @Override
         protected void onPreExecute() {
-            Dialog.setMessage("Posting Stock Adjustment...");
+            Dialog.setMessage("Posting Centre Stock Adjustment...");
             Dialog.setCancelable(false);
             Dialog.show();
         }
