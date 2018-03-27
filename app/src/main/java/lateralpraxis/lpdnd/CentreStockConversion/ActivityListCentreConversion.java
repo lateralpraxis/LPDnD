@@ -610,10 +610,10 @@ public class ActivityListCentreConversion extends Activity {
                             db.open();
                             db.DeleteMasterData("CentreSKU");
                             db.close();
-                            for (int i = 0; i < jsonCentre.length(); ++i) {
+                            for (int i = 0; i < jsonCentreSKU.length(); ++i) {
                                 db.open();
-                                db.Insert_CentreSKU(jsonCentre.getJSONObject(i)
-                                        .getString("A"), jsonCentre.getJSONObject(i)
+                                db.Insert_CentreSKU(jsonCentreSKU.getJSONObject(i)
+                                        .getString("A"), jsonCentreSKU.getJSONObject(i)
                                         .getString("B"));
                                 db.close();
                             }
