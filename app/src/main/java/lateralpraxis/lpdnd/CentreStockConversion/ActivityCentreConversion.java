@@ -347,7 +347,7 @@ public class ActivityCentreConversion extends Activity {
 
                         wordListCons = new ArrayList<HashMap<String, String>>();
                         db.openR();
-                        wordListCons = db.getTempConsumed();
+                        wordListCons = db.getCentreTempConsumed();
                         conslistSize = wordListCons.size();
                         if (conslistSize != 0) {
                             listConsumed.setAdapter(new CustomAdapter(mContext, wordListCons));
@@ -396,7 +396,7 @@ public class ActivityCentreConversion extends Activity {
 
                         wordListProd = new ArrayList<HashMap<String, String>>();
                         db.openR();
-                        wordListProd = db.getTempProduced();
+                        wordListProd = db.getCentreTempProduced();
                         prodlistSize = wordListProd.size();
                         if (prodlistSize != 0) {
                              listProduced.setAdapter(new CustomAdapterProduced(mContext, wordListProd));
