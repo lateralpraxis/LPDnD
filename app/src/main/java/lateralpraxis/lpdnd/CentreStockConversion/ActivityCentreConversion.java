@@ -260,8 +260,6 @@ public class ActivityCentreConversion extends Activity {
 
         //<editor-fold desc="Code to Bind Spinners">
         spCentre.setAdapter(DataAdapter("centreusercentre", ""));
-        spSKU.setAdapter(DataAdapter("centreskuinv", ""));
-        spProdSKU.setAdapter(DataAdapter("sku", ""));
         //</editor-fold>
 
         //<editor-fold desc="Code to be executed on Selected Index change on Consumed SKU Spinner">
@@ -453,6 +451,27 @@ public class ActivityCentreConversion extends Activity {
                         });
                 AlertDialog alertnew = builder1.create();
                 alertnew.show();
+
+            }
+        });
+        //</editor-fold>
+
+        //<editor-fold desc="Code to be executed on Button Go Click">
+        btnGo.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                if (spCentre.getSelectedItemPosition() == 0)
+                {
+                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया केंद्र का चयन करें":"Please select centre.");
+                }
+                else
+                {
+                    llCentre.setVisibility(View.GONE);
+                    llMain.setVisibility(View.VISIBLE);
+                    spSKU.setAdapter(DataAdapter("centreskuinv", ""));
+                    spProdSKU.setAdapter(DataAdapter("centresku", ""));
+                }
 
             }
         });
