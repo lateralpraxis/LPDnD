@@ -44,10 +44,12 @@ public class ActivityConversionView extends Activity {
     //</editor-fold>
     HashMap<String, String> consmap = null;
     private UserSessionManager session;
-    //</editor-fold>
+
     //<editor-fold desc="Code to declare controls">
     private TextView tvCode, tvDate;
     private ListView listConsumed, listProduced;
+    //</editor-fold>
+
     //<editor-fold desc="Code for Declaring Variables">
     private String lang = "", id = "", responseJSON = "";
     private ArrayList<HashMap<String, String>> wordConsList = null;
