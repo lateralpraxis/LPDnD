@@ -33,9 +33,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lateralpraxis.lpdnd.CentreStockConversion.ActivityListCentreConversion;
 import lateralpraxis.lpdnd.ExpenseConfirmation.ExpenseConfirmationList;
 import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
-import lateralpraxis.lpdnd.stockconversion.ActivityListStockConversion;
 
 public class ActivityAdminHomeScreen  extends Activity{
 	static final int ITEM_PER_ROW = 2;
@@ -104,9 +104,17 @@ public class ActivityAdminHomeScreen  extends Activity{
 					+ Html.fromHtml(userRole.replace(",", ", ")) + " ]");
 		}
 
-
-		if (userRole.contains("System User"))
-			views = Arrays.asList(
+        if (userRole.contains("System User") && userRole.contains("Centre User"))
+            views = Arrays.asList(
+                    R.layout.btn_delivery,
+                    R.layout.btn_payment,
+                    R.layout.btn_cashdeposit,
+                    R.layout.btn_expenseconfirmation,
+                    R.layout.btn_reconcile,
+                    R.layout.btn_stockconversion,
+                    R.layout.btn_report);
+        else if (userRole.contains("System User"))
+            views = Arrays.asList(
 					R.layout.btn_delivery,
 					R.layout.btn_payment,
 					R.layout.btn_cashdeposit,
@@ -248,8 +256,8 @@ public class ActivityAdminHomeScreen  extends Activity{
 				btn.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						intent = new Intent(context, ActivityListStockConversion.class);
-						startActivity(intent);
+                        intent = new Intent(context, ActivityListCentreConversion.class);
+                        startActivity(intent);
 						finish();
 					}
 				});

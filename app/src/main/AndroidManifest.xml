@@ -389,7 +389,13 @@
             android:name=".Reconciliation.ActivityReconcile"
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".CentreStockConversion.ActivityListCentreConversion"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity android:name=".CentreStockConversion.ActivityConversionView"></activity>
     </application>
 
 </manifest>
