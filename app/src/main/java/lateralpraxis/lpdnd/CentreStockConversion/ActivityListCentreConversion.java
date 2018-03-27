@@ -157,7 +157,7 @@ public class ActivityListCentreConversion extends Activity {
         //<editor-fold desc="Code to be executed on click of List View">
         listConvert.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> lv, View item, int position, long id) {
-                Intent intent = new Intent(ActivityListCentreConversion.this, ActivityListCentreConversion.class);
+                Intent intent = new Intent(ActivityListCentreConversion.this, ActivityConversionView.class);
                 intent.putExtra("Id", String.valueOf(((TextView) item.findViewById(R.id.tvId)).getText().toString()));
                 startActivity(intent);
                 finish();
@@ -214,7 +214,7 @@ public class ActivityListCentreConversion extends Activity {
     }
     //</editor-fold>
 
-    //Event Triggered on Clicking Back
+    //<editor-fold desc="Event Triggered on Clicking Back">
     @Override
     public void onBackPressed() {
         Intent i = new Intent(ActivityListCentreConversion.this, ActivityAdminHomeScreen.class);
@@ -223,7 +223,9 @@ public class ActivityListCentreConversion extends Activity {
         startActivity(i);
         finish();
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Code to Set Option Menu">
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -232,10 +234,75 @@ public class ActivityListCentreConversion extends Activity {
     }
     //</editor-fold>
 
+
     //<editor-fold desc="Code to Bind Data in List">
     public static class ViewHolder {
         TextView tvCode, tvDate, tvId;
     }
+    public class CustomAdapter extends BaseAdapter {
+        private Context docContext;
+        private LayoutInflater mInflater;
+
+        public CustomAdapter(Context context, ArrayList<HashMap<String, String>> lvList) {
+            this.docContext = context;
+            mInflater = LayoutInflater.from(docContext);
+            list = lvList;
+        }
+
+        @Override
+        public int getCount() {
+            return list.size();
+        }
+
+        @Override
+        public Object getItem(int arg0) {
+            return list.get(arg0);
+        }
+
+        @Override
+        public long getItemId(int arg0) {
+            return arg0;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+
+            return getCount();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+
+            return position;
+        }
+
+        @Override
+        public View getView(final int arg0, View arg1, ViewGroup arg2) {
+
+
+            final ViewHolder holder;
+            if (arg1 == null) {
+                arg1 = mInflater.inflate(R.layout.list_stock_conversion, null);
+                holder = new ViewHolder();
+                holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
+                holder.tvCode = (TextView) arg1.findViewById(R.id.tvCode);
+                holder.tvDate = (TextView) arg1.findViewById(R.id.tvDate);
+
+
+                arg1.setTag(holder);
+
+            } else {
+                holder = (ViewHolder) arg1.getTag();
+            }
+            holder.tvId.setText(list.get(arg0).get("Id"));
+            holder.tvCode.setText(list.get(arg0).get("Code"));
+            holder.tvDate.setText(common.convertToDisplayDateFormat(list.get(arg0).get("Date")));
+
+            arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
+            return arg1;
+        }
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Async class Class to handle fetch Adjustment web service call as separate thread">
     private class AsyncStockReturnListListWSCall extends AsyncTask<String, Void, String> {
@@ -315,70 +382,6 @@ public class ActivityListCentreConversion extends Activity {
             Dialog.setMessage("Downloading Stock Conversion..");
             Dialog.setCancelable(false);
             Dialog.show();
-        }
-    }
-
-    public class CustomAdapter extends BaseAdapter {
-        private Context docContext;
-        private LayoutInflater mInflater;
-
-        public CustomAdapter(Context context, ArrayList<HashMap<String, String>> lvList) {
-            this.docContext = context;
-            mInflater = LayoutInflater.from(docContext);
-            list = lvList;
-        }
-
-        @Override
-        public int getCount() {
-            return list.size();
-        }
-
-        @Override
-        public Object getItem(int arg0) {
-            return list.get(arg0);
-        }
-
-        @Override
-        public long getItemId(int arg0) {
-            return arg0;
-        }
-
-        @Override
-        public int getViewTypeCount() {
-
-            return getCount();
-        }
-
-        @Override
-        public int getItemViewType(int position) {
-
-            return position;
-        }
-
-        @Override
-        public View getView(final int arg0, View arg1, ViewGroup arg2) {
-
-
-            final ViewHolder holder;
-            if (arg1 == null) {
-                arg1 = mInflater.inflate(R.layout.list_stock_conversion, null);
-                holder = new ViewHolder();
-                holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
-                holder.tvCode = (TextView) arg1.findViewById(R.id.tvCode);
-                holder.tvDate = (TextView) arg1.findViewById(R.id.tvDate);
-
-
-                arg1.setTag(holder);
-
-            } else {
-                holder = (ViewHolder) arg1.getTag();
-            }
-            holder.tvId.setText(list.get(arg0).get("Id"));
-            holder.tvCode.setText(list.get(arg0).get("Code"));
-            holder.tvDate.setText(common.convertToDisplayDateFormat(list.get(arg0).get("Date")));
-
-            arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
-            return arg1;
         }
     }
     //</editor-fold>

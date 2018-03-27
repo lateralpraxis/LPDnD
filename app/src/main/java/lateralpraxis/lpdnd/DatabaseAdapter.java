@@ -80,7 +80,7 @@ public class DatabaseAdapter {
             Complaint_CREATE = "CREATE TABLE IF NOT EXISTS Complaint(Id INTEGER PRIMARY KEY AUTOINCREMENT,ComplaintDate DATETIME,CustomerId TEXT,ComplaintType TEXT,DeviceUniqueId TEXT, ComplaintCategoryId TEXT, FeedBackRating TEXT, CustomerRemark TEXT, IsSync);",
             TempDocTABLE_CREATE = "CREATE TABLE IF NOT EXISTS TempDoc (FileName TEXT)",
 
-    /********************* Tables used in Outlet Sale ******************/
+
     /********************* Tables used in Outlet Sale ******************/
     OutletSale_CREATE = "CREATE TABLE IF NOT EXISTS OutletSale(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT, CustomerId TEXT, Customer TEXT, SaleType TEXT, CreateBy TEXT, CreateDate TEXT, Imei TEXT, IsSync TEXT);",
             OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
@@ -92,13 +92,17 @@ public class DatabaseAdapter {
             SKUMaster_CREATE = "CREATE TABLE IF NOT EXISTS SKUMaster(Id TEXT,Name TEXT, NameLocal TEXT, Units TEXT, SKU TEXT);",
             SaleRateMaster_CREATE = "CREATE TABLE IF NOT EXISTS SaleRateMaster(Id TEXT,Rate TEXT, FromDate TEXT, ToDate TEXT);",
             OutletPrimaryReceipt_CREATE = "CREATE TABLE IF NOT EXISTS OutletPrimaryReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,UniqueId TEXT, CustomerId TEXT, MaterialId TEXT, SKUId TEXT, Quantity TEXT, Amount TEXT,CreateDate TEXT, IsSync TEXT);",
-            OutletConversionConsumedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
+    /********************* Tables used in Outlet Conversion ******************/
+    OutletConversionConsumedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT, MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
             OutletConversionProducedTemp_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProducedTemp(Id INTEGER PRIMARY KEY AUTOINCREMENT,SKUId TEXT, Quantity TEXT);",
             OutletConversion_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversion(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,CustomerId TEXT, AndroidDate TEXT, IsSync TEXT);",
             OutletConversionConsumed_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionConsumed(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,MaterialId TEXT, SKUId TEXT, Quantity TEXT);",
             OutletConversionProduced_CREATE = "CREATE TABLE IF NOT EXISTS OutletConversionProduced(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT,SKUId TEXT, Quantity TEXT);",
+    /********************* Tables used in Checking Delivery Confirmation ******************/
     DeliveryConfirmStatus_CREATE = "CREATE TABLE IF NOT EXISTS DeliveryConfirmStatus(Status TEXT);",
+    /********************* Tables used in Live SKU Inventory ******************/
             SKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS SKULiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
+    /********************* Tables used in Live RAW Material Inventory ******************/
             RawMaterialLiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialLiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",

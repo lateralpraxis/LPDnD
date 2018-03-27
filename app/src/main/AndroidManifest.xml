@@ -395,7 +395,8 @@
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
-        <activity android:name=".CentreStockConversion.ActivityConversionView"></activity>
+        <activity android:name=".CentreStockConversion.ActivityConversionView" />
+        <activity android:name=".CentreStockConversion.ActivityCentreConversion"></activity>
     </application>
 
 </manifest>
