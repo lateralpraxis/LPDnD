@@ -2,16 +2,19 @@ package lateralpraxis.lpdnd.CentreStockConversion;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,12 +25,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.net.SocketTimeoutException;
 import java.text.SimpleDateFormat;
@@ -36,8 +43,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.UUID;
 
 import lateralpraxis.lpdnd.ActivityAdminHomeScreen;
+import lateralpraxis.lpdnd.ActivityChangePassword;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
 import lateralpraxis.lpdnd.R;
@@ -383,6 +392,329 @@ public class ActivityListCentreConversion extends Activity {
             Dialog.setCancelable(false);
             Dialog.show();
         }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to Validate User">
+    private class AsyncValidatePasswordWSCall extends
+            AsyncTask<String, Void, String> {
+        String source = "";
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityListCentreConversion.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try { // if this button is clicked, close
+
+                source = params[0];
+                db.openR();
+                HashMap<String, String> user = session.getLoginUserDetails();
+                // Creation of JSON string for posting validating data
+                JSONObject json = new JSONObject();
+                json.put("username", user.get(UserSessionManager.KEY_CODE));
+                json.put("password", user.get(UserSessionManager.KEY_PWD));
+                json.put("imei", common.getIMEI());
+                json.put("version", db.getVersion());
+                String JSONStr = json.toString();
+
+                // Store response fetched from server in responseJSON variable
+                responseJSON = common.invokeJSONWS(JSONStr, "json",
+                        "ValidatePassword", common.url);
+
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                // e.printStackTrace();
+                return "ERROR: Unable to fetch response from server.";
+            }
+            return "";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                // Check if result contains error
+                if (!result.contains("ERROR")) {
+                    String passExpired = responseJSON.split("~")[0];
+                    String passServer = responseJSON.split("~")[1];
+                    String membershipError = responseJSON.split("~")[2];
+                    // Check if password is expire and open change password
+                    // intent
+                    if (passExpired.toLowerCase(Locale.US).equals("yes")) {
+                        Intent intent = new Intent(mContext,
+                                ActivityChangePassword.class);
+                        intent.putExtra("fromwhere", "login");
+                        startActivity(intent);
+                        finish();
+                    }
+                    // Code to check other validations
+                    else if (passServer.toLowerCase(Locale.US).equals("no")) {
+                        String resp = "";
+
+                        if (membershipError.toLowerCase(Locale.US).contains(
+                                "NO_USER".toLowerCase(Locale.US))) {
+                            resp = "There is no user in the system";
+                        } else if (membershipError.toLowerCase(Locale.US)
+                                .contains("BARRED".toLowerCase(Locale.US))) {
+                            resp = "Your account has been barred by the Administrator.";
+                        } else if (membershipError.toLowerCase(Locale.US)
+                                .contains("LOCKED".toLowerCase(Locale.US))) {
+                            resp = "Your account has been locked out because "
+                                    + "you have exceeded the maximum number of incorrect login attempts. "
+                                    + "Please contact the System Admin to "
+                                    + "unblock your account.";
+                        } else if (membershipError.toLowerCase(Locale.US)
+                                .contains("LOGINFAILED".toLowerCase(Locale.US))) {
+                            resp = "Invalid password. "
+                                    + "Password is case-sensitive. "
+                                    + "Access to the system will be disabled after "
+                                    + responseJSON.split("~")[3] + " "
+                                    + "consecutive wrong attempts.\n"
+                                    + "Number of Attempts remaining: "
+                                    + responseJSON.split("~")[4];
+                        } else {
+                            resp = "Password mismatched. Enter latest password!";
+                        }
+
+                        showChangePassWindow(source, resp);
+                    }
+
+                    // If version does not match logout user
+                    if (responseJSON.contains("NOVERSION")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(
+                                mContext);
+                        builder.setMessage(
+                                "Application is running an older version. Please install latest version.!")
+                                .setCancelable(false)
+                                .setPositiveButton(
+                                        "OK",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(
+                                                    DialogInterface dialog,
+                                                    int id) {
+                                                // Code to call async method
+                                                // for posting transactions
+                                                if (common.isConnected()) {
+                                                    AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
+                                                    task.execute();
+                                                }
+                                            }
+                                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                    } else {
+                        if (common.isConnected()) {
+                            AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
+                            task.execute();
+                        }
+                    }
+
+                } else {
+                    common.showAlert(ActivityListCentreConversion.this,
+                            "Unable to fetch response from server.", false);
+                }
+
+            } catch (Exception e) {
+                common.showAlert(ActivityListCentreConversion.this,
+                        "Validating credentials failed: " + e.toString(), false);
+            }
+            Dialog.dismiss();
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Validating your credentials..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+
+        }
+
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to Fetch LiveInventory Fro Retail Outlet">
+    private class AsyncLiveInventoryDetailWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityListCentreConversion.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+                String[] name = {"action", "lang", "userId"};
+                String[] value = {"GetCentreLiveInventory", lang, userId};
+                // Call method of web service to Read Live Inventory For Centre
+                responseJSON = "";
+                responseJSON = common.CallJsonWS(name, value, "ReadCentreLiveInventory", common.url);
+                return "";
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                return "ERROR: " + e.getMessage();
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    String data = "";
+                    // To display message after response from server
+                    JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
+                    JSONArray jsonRaw = new JSONArray(responseJSON.split("~")[1]);
+                    if (jsonSKU.length() > 0 || jsonRaw.length() > 0) {
+                        if (jsonSKU.length() > 0) {
+                            db.open();
+                            db.DeleteMasterData("CentreSKULiveInventory");
+                            db.close();
+                            if (jsonSKU.length() > 0) {
+                                for (int i = 0; i < jsonSKU.length(); ++i) {
+                                    db.open();
+                                    db.Insert_CentreSKULiveInventory(jsonSKU.getJSONObject(i)
+                                            .getString("A"),jsonSKU.getJSONObject(i)
+                                            .getString("B"), jsonSKU.getJSONObject(i)
+                                            .getString("C"), jsonSKU.getJSONObject(i)
+                                            .getString("D").replace(".00", ""));
+                                    db.close();
+
+                                }
+
+                            }
+                        }
+                        if (jsonRaw.length() > 0) {
+                            db.open();
+                            db.DeleteMasterData("CentreUserCentres");
+                            db.close();
+                            for (int i = 0; i < jsonRaw.length(); ++i) {
+                                db.open();
+                                db.Insert_CentreUserCentres(jsonRaw.getJSONObject(i)
+                                        .getString("A"), jsonRaw.getJSONObject(i)
+                                        .getString("B"));
+                                db.close();
+                            }
+
+                        }
+                        Intent intent = new Intent(ActivityListCentreConversion.this,
+                                ActivityCentreConversion.class);
+                        intent.putExtra("UniqueId", UUID.randomUUID().toString());
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        common.showToast("There is no data available for Inventory!");
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                common.showToast("Centre Inventory Downloading failed: " + e.toString());
+                Intent intent = new Intent(mContext, ActivityListCentreConversion.class);
+                startActivity(intent);
+                finish();
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Outlet Inventory..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to show Change Password Window">
+    private void showChangePassWindow(final String source, final String resp) {
+        LayoutInflater li = LayoutInflater.from(mContext);
+        View promptsView = li.inflate(R.layout.dialog_password_prompt, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                mContext);
+        alertDialogBuilder.setView(promptsView);
+        // Code to find controls in dialog
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.etPassword);
+
+        final CheckBox ckShowPass = (CheckBox) promptsView
+                .findViewById(R.id.ckShowPass);
+
+        final TextView tvMsg = (TextView) promptsView.findViewById(R.id.tvMsg);
+
+        tvMsg.setText(resp);
+
+        ckShowPass.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,
+                                         boolean isChecked) {
+                int start, end;
+
+                if (!isChecked) {
+                    start = userInput.getSelectionStart();
+                    end = userInput.getSelectionEnd();
+                    userInput
+                            .setTransformationMethod(new PasswordTransformationMethod());
+                    userInput.setSelection(start, end);
+                } else {
+                    start = userInput.getSelectionStart();
+                    end = userInput.getSelectionEnd();
+                    userInput.setTransformationMethod(null);
+                    userInput.setSelection(start, end);
+                }
+
+            }
+        });
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton("Submit",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String password = userInput.getText().toString().trim();
+                                if (password.length() > 0) {
+                                    // Code to update password in session and
+                                    // call validate Async Method
+                                    session.updatePassword(password);
+
+                                    String[] myTaskParams = {source};
+                                    AsyncValidatePasswordWSCall task = new AsyncValidatePasswordWSCall();
+                                    task.execute(myTaskParams);
+                                } else {
+                                    // Display message if password is not
+                                    // enetered
+                                    common.showToast("Password is mandatory");
+                                }
+                            }
+                        })
+                .setNegativeButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
     }
     //</editor-fold>
 }

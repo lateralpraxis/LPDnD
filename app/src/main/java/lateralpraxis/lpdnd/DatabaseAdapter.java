@@ -104,6 +104,10 @@ public class DatabaseAdapter {
             SKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS SKULiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
     /********************* Tables used in Live RAW Material Inventory ******************/
             RawMaterialLiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialLiveInventory(Id TEXT, Name TEXT, Quantity TEXT);",
+    /********************* Tables used in Live SKU Inventory for Centre ******************/
+    CentreSKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS CentreSKULiveInventory(CentreId TEXT,Id TEXT, Name TEXT, Quantity TEXT);",
+    /********************* Tables used for Storing Centre Details For Centre User ******************/
+            CentreUserCentres_CREATE = "CREATE TABLE IF NOT EXISTS CentreUserCentres(Id TEXT, Name TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
     OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
@@ -3377,6 +3381,42 @@ public class DatabaseAdapter {
             newValues.put("Name", name);
             newValues.put("Quantity", quantity);
             db.insert("RawMaterialLiveInventory", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Inventory Data in CentreSKULiveInventory Table">
+    public String Insert_CentreSKULiveInventory(String centreId,String id, String name, String quantity) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("CentreId", centreId);
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+            newValues.put("Quantity", quantity);
+            db.insert("CentreSKULiveInventory", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Centres for CentreUserCentres Table">
+    public String Insert_CentreUserCentres(String id, String name) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+            db.insert("CentreUserCentres", null, newValues);
             result = "success";
             return result;
         } catch (Exception e) {
