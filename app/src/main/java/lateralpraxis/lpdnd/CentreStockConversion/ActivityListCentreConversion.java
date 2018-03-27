@@ -132,9 +132,9 @@ public class ActivityListCentreConversion extends Activity {
             @Override
             public void onClick(View arg0) {
                 if (common.isConnected()) {
-                    /*String[] myTaskParams = {"transactions"};
-                    AsyncCustomerValidatePasswordWSCall task = new AsyncCustomerValidatePasswordWSCall();
-                    task.execute(myTaskParams);*/
+                    String[] myTaskParams = {"transactions"};
+                    AsyncValidatePasswordWSCall task = new AsyncValidatePasswordWSCall();
+                    task.execute(myTaskParams);
                 }
             }
         });
@@ -444,7 +444,7 @@ public class ActivityListCentreConversion extends Activity {
                     if (passExpired.toLowerCase(Locale.US).equals("yes")) {
                         Intent intent = new Intent(mContext,
                                 ActivityChangePassword.class);
-                        intent.putExtra("fromwhere", "login");
+                        intent.putExtra("fromwhere", "stockconversion");
                         startActivity(intent);
                         finish();
                     }
