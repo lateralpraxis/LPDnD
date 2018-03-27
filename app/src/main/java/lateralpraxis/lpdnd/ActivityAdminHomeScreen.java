@@ -71,7 +71,7 @@ public class ActivityAdminHomeScreen  extends Activity{
 
 		// To create object of database
 		dba = new DatabaseAdapter(getApplicationContext());
-		/*try {
+		try {
 			common.copyDBToSDCard("ganeshdairy.db");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -80,7 +80,7 @@ public class ActivityAdminHomeScreen  extends Activity{
 					"DataBackup Issue");
 			dba.close();
 			// e.printStackTrace();
-		}*/
+		}
 		 /*--------Start of Code to find controls -----------------------------*/
 		tvHeader = (TextView) findViewById(R.id.tvHeader);
 		go = (Button) findViewById(R.id.btnGo);

@@ -618,7 +618,8 @@ public class ActivityListCentreConversion extends Activity {
                                 db.Insert_CentreSKU(jsonCentreSKU.getJSONObject(i)
                                         .getString("A"), jsonCentreSKU.getJSONObject(i)
                                         .getString("B"),jsonCentreSKU.getJSONObject(i)
-                                        .getString("C") );
+                                        .getString("C"),jsonCentreSKU.getJSONObject(i)
+                                        .getString("D") );
                                 db.close();
                             }
 

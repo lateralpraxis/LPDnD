@@ -107,7 +107,7 @@ public class DatabaseAdapter {
     /********************* Tables used in Live SKU Inventory for Centre ******************/
     CentreSKULiveInventory_CREATE = "CREATE TABLE IF NOT EXISTS CentreSKULiveInventory(CentreId TEXT,Id TEXT, Name TEXT, Quantity TEXT);",
     /********************* Tables used in SKU for Centre User******************/
-    CentreSKU_CREATE = "CREATE TABLE IF NOT EXISTS CentreSKU(Id TEXT, Name TEXT, NameLocal TEXT);",
+    CentreSKU_CREATE = "CREATE TABLE IF NOT EXISTS CentreSKU(Id TEXT, Name TEXT, NameLocal TEXT, SKUId TEXT);",
     /********************* Tables used for Storing Centre Details For Centre User ******************/
     CentreUserCentres_CREATE = "CREATE TABLE IF NOT EXISTS CentreUserCentres(Id TEXT, Name TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
@@ -3355,9 +3355,9 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> getCentreTempConsumed() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         if (userlang.equalsIgnoreCase("en"))
-            selectQuery = "SELECT tmp.Id, ifnull(sm.Name,rm.Name||' '||rm.Uom) AS Name, tmp.Quantity, (CASE WHEN tmp.SKUId=0 THEN 'RAW' ELSE 'SKU' END) FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN CentreSKU sm ON tmp.SKUId = sm.Id LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
+            selectQuery = "SELECT tmp.Id, ifnull(sm.Name,rm.Name||' '||rm.Uom) AS Name, tmp.Quantity, (CASE WHEN tmp.SKUId=0 THEN 'RAW' ELSE 'SKU' END) FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN CentreSKU sm ON tmp.SKUId = sm.SKUId LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
         else
-            selectQuery = "SELECT tmp.Id, ifnull(sm.NameLocal,rm.NameLocal||' '||rm.Uom) AS Name, tmp.Quantity, (CASE WHEN tmp.SKUId=0 THEN 'RAW' ELSE 'SKU' END) FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN CentreSKU sm ON tmp.SKUId = sm.Id LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
+            selectQuery = "SELECT tmp.Id, ifnull(sm.NameLocal,rm.NameLocal||' '||rm.Uom) AS Name, tmp.Quantity, (CASE WHEN tmp.SKUId=0 THEN 'RAW' ELSE 'SKU' END) FROM OutletConversionConsumedTemp tmp LEFT OUTER JOIN CentreSKU sm ON tmp.SKUId = sm.SKUId LEFT OUTER JOIN RawMaterialMaster rm ON tmp.MaterialId = rm.Id ORDER BY Name";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
@@ -3396,9 +3396,9 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> getCentreTempProduced() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         if (userlang.equalsIgnoreCase("en"))
-            selectQuery = "SELECT tmp.Id, sm.Name , tmp.Quantity FROM OutletConversionProducedTemp tmp LEFT OUTER JOIN CentreSKU sm ON tmp.SKUId = sm.Id ORDER BY sm.Name";
+            selectQuery = "SELECT tmp.Id, sm.Name , tmp.Quantity FROM OutletConversionProducedTemp tmp LEFT OUTER JOIN CentreSKU sm ON tmp.SKUId = sm.SKUId ORDER BY sm.Name";
         else
-            selectQuery = "SELECT tmp.Id, sm.NameLocal , tmp.Quantity FROM OutletConversionProducedTemp tmp LEFT OUTER JOIN CentreSKU sm ON tmp.SKUId = sm.Id ORDER BY sm.Name";
+            selectQuery = "SELECT tmp.Id, sm.NameLocal , tmp.Quantity FROM OutletConversionProducedTemp tmp LEFT OUTER JOIN CentreSKU sm ON tmp.SKUId = sm.SKUId ORDER BY sm.Name";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
@@ -3494,13 +3494,14 @@ public class DatabaseAdapter {
     //</editor-fold>
 
     //<editor-fold desc="Code to insert SKU in Centre User Table">
-    public String Insert_CentreSKU(String id, String name, String nameLocal) {
+    public String Insert_CentreSKU(String id, String name, String nameLocal, String skuId) {
         try {
             result = "fail";
             newValues = new ContentValues();
             newValues.put("Id", id);
             newValues.put("Name", name);
             newValues.put("NameLocal", nameLocal);
+            newValues.put("SKUId", skuId);
 
             db.insert("CentreSKU", null, newValues);
             result = "success";

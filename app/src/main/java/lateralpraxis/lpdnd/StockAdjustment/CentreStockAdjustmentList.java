@@ -30,8 +30,6 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -749,9 +747,11 @@ public class CentreStockAdjustmentList extends Activity {
                             db.close();
                             for (int i = 0; i < jsonCentre.length(); ++i) {
                                 db.open();
-                                db.Insert_CentreSKU(jsonCentre.getJSONObject(i)
-                                        .getString("A"), jsonCentre.getJSONObject(i)
-                                        .getString("B"));
+                                db.Insert_CentreSKU(jsonCentreSKU.getJSONObject(i)
+                                        .getString("A"), jsonCentreSKU.getJSONObject(i)
+                                        .getString("B"), jsonCentreSKU.getJSONObject(i)
+                                        .getString("C"), jsonCentreSKU.getJSONObject(i)
+                                        .getString("D"));
                                 db.close();
                             }
 
