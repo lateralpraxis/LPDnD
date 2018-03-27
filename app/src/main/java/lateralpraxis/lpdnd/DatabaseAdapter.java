@@ -3272,6 +3272,21 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to get Centre SKU Inventory by SKU Id">
+    public String getCentreSkuInventory(String skuId) {
+        String total = "";
+        selectQuery = "SELECT Quantity from CentreSKULiveInventory WHERE Id='" + skuId + "' ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                total = String.valueOf(cursor.getFloat(0));
+            } while (cursor.moveToNext());
+        }
+        return total;
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Code to get Raw Material Inventory by Raw Material Id">
     public String getRawMaterialInventory(String rawId) {
         String total = "";

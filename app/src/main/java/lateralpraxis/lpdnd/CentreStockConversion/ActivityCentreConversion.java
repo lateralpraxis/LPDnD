@@ -105,13 +105,14 @@ public class ActivityCentreConversion extends Activity {
     //</editor-fold>
 
     //<editor-fold desc="Code for Control Declaration">
-    private Spinner spSKU, spProdSKU,spCentre;
-    private LinearLayout llProduced,llCentre,llMain;
+    private Spinner spSKU, spProdSKU, spCentre;
+    private LinearLayout llProduced, llCentre, llMain;
     private EditText etConsumedQty, etProducedQty;
-    private Button btnAddConsumed, btnAddProduced, btnSubmit,btnGo;
-    private TextView tvProdEmpty, tvConsEmpty, tvInventory, tvViewQty;
+    private Button btnAddConsumed, btnAddProduced, btnSubmit, btnGo;
+    private TextView tvProdEmpty, tvConsEmpty, tvInventory, tvViewQty, tvCentreId, tvCentreName;
     private ListView listConsumed, listProduced;
     private TableLayout tableGridHeadConsumed, tableGridHeadProduced;
+
     //</editor-fold>
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,7 +159,7 @@ public class ActivityCentreConversion extends Activity {
         llMain = (LinearLayout) findViewById(R.id.llMain);
         spSKU = (Spinner) findViewById(R.id.spSKU);
         spProdSKU = (Spinner) findViewById(R.id.spProdSKU);
-        spCentre= (Spinner) findViewById(R.id.spCentre);
+        spCentre = (Spinner) findViewById(R.id.spCentre);
         etConsumedQty = (EditText) findViewById(R.id.etConsumedQty);
         etProducedQty = (EditText) findViewById(R.id.etProducedQty);
         btnAddConsumed = (Button) findViewById(R.id.btnAddConsumed);
@@ -169,6 +170,8 @@ public class ActivityCentreConversion extends Activity {
         tvConsEmpty = (TextView) findViewById(R.id.tvConsEmpty);
         tvInventory = (TextView) findViewById(R.id.tvInventory);
         tvViewQty = (TextView) findViewById(R.id.tvViewQty);
+        tvCentreId = (TextView) findViewById(R.id.tvCentreId);
+        tvCentreName = (TextView) findViewById(R.id.tvCentreName);
         listConsumed = (ListView) findViewById(R.id.listConsumed);
         listProduced = (ListView) findViewById(R.id.listProduced);
         tableGridHeadConsumed = (TableLayout) findViewById(R.id.tableGridHeadConsumed);
@@ -229,13 +232,10 @@ public class ActivityCentreConversion extends Activity {
         etProducedQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                {
-                    if(Pattern.matches(fpRegex, etProducedQty.getText()))
-                    {
+                if (!hasFocus) {
+                    if (Pattern.matches(fpRegex, etProducedQty.getText())) {
 
-                    }
-                    else
+                    } else
                         etProducedQty.setText("");
 
                 }
@@ -244,13 +244,10 @@ public class ActivityCentreConversion extends Activity {
         etConsumedQty.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                {
-                    if(Pattern.matches(fpRegex, etConsumedQty.getText()))
-                    {
+                if (!hasFocus) {
+                    if (Pattern.matches(fpRegex, etConsumedQty.getText())) {
 
-                    }
-                    else
+                    } else
                         etConsumedQty.setText("");
 
                 }
@@ -269,8 +266,8 @@ public class ActivityCentreConversion extends Activity {
                                        int arg2, long arg3) {
                 etConsumedQty.setText("");
                 db.open();
-                tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
-                tvViewQty.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
+                tvInventory.setText(db.getCentreSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
+                tvViewQty.setText(db.getCentreSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
                 db.close();
                 if (((CustomType) spSKU.getSelectedItem()).getId().split("-")[1].equalsIgnoreCase("0")) {
                     etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
@@ -399,7 +396,7 @@ public class ActivityCentreConversion extends Activity {
                         wordListProd = db.getTempProduced();
                         prodlistSize = wordListProd.size();
                         if (prodlistSize != 0) {
-                           // listProduced.setAdapter(new CustomAdapterProduced(mContext, wordListProd));
+                            // listProduced.setAdapter(new CustomAdapterProduced(mContext, wordListProd));
 
                             ViewGroup.LayoutParams params = listProduced.getLayoutParams();
                             listProduced.setLayoutParams(params);
@@ -461,14 +458,13 @@ public class ActivityCentreConversion extends Activity {
 
             @Override
             public void onClick(View arg0) {
-                if (spCentre.getSelectedItemPosition() == 0)
-                {
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया केंद्र का चयन करें":"Please select centre.");
-                }
-                else
-                {
+                if (spCentre.getSelectedItemPosition() == 0) {
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया केंद्र का चयन करें" : "Please select centre.");
+                } else {
                     llCentre.setVisibility(View.GONE);
                     llMain.setVisibility(View.VISIBLE);
+                    tvCentreId.setText(((CustomType) spCentre.getSelectedItem()).getId());
+                    tvCentreName.setText(((CustomType) spCentre.getSelectedItem()).getName());
                     spSKU.setAdapter(DataAdapter("centreskuinv", ((CustomType) spCentre.getSelectedItem()).getId()));
                     spProdSKU.setAdapter(DataAdapter("centresku", ""));
                 }
