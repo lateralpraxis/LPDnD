@@ -375,6 +375,8 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0", "...Select Raw Material"));
             else if (masterType.equalsIgnoreCase("sku"))
                 labels.add(new CustomType("0~0", "...Select SKU"));
+            else if (masterType.equalsIgnoreCase("centreskuinv"))
+                labels.add(new CustomType("0-0", "...Select SKU"));
             else if (masterType.equalsIgnoreCase("centresku"))
                 labels.add(new CustomType("0-0", "...Select SKU"));
             else if (masterType.equalsIgnoreCase("skuinv"))
@@ -393,8 +395,10 @@ public class DatabaseAdapter {
             else if (masterType.equalsIgnoreCase("sku"))
                 labels.add(new CustomType("0~0", "...उत्पाद चयन करें"));
             else if (masterType.equalsIgnoreCase("centresku"))
-                labels.add(new CustomType("0~0", "...उत्पाद चयन करें"));
+                labels.add(new CustomType("0-0", "...उत्पाद चयन करें"));
             else if (masterType.equalsIgnoreCase("skuinv"))
+                labels.add(new CustomType("0-0", "...उत्पाद चयन करें"));
+            else if (masterType.equalsIgnoreCase("centreskuinv"))
                 labels.add(new CustomType("0-0", "...उत्पाद चयन करें"));
             else if (masterType.equalsIgnoreCase("exphead"))
                 labels.add(new CustomType("0", "...व्यय हेड चयन करें"));

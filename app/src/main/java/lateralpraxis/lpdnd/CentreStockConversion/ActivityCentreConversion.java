@@ -469,7 +469,7 @@ public class ActivityCentreConversion extends Activity {
                 {
                     llCentre.setVisibility(View.GONE);
                     llMain.setVisibility(View.VISIBLE);
-                    spSKU.setAdapter(DataAdapter("centreskuinv", ""));
+                    spSKU.setAdapter(DataAdapter("centreskuinv", ((CustomType) spCentre.getSelectedItem()).getId()));
                     spProdSKU.setAdapter(DataAdapter("centresku", ""));
                 }
 
