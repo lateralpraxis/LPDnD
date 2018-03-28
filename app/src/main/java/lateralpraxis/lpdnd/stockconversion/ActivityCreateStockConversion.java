@@ -104,6 +104,7 @@ public class ActivityCreateStockConversion extends Activity {
     String responseJSON, sendJSon;
     private UserSessionManager session;
     //</editor-fold>
+
     //<editor-fold desc="Code for Variable Declaration">
     private ArrayList<HashMap<String, String>> wordListCons = null;
     private ArrayList<HashMap<String, String>> listCons;

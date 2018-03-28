@@ -30,8 +30,6 @@ import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -76,12 +74,10 @@ public class CentreStockAdjustmentList extends Activity {
     //</editor-fold>
 
     //<editor-fold desc="Code to declare Controls">
-    private TextView tvFromDate, tvEmpty,linkAddStockAdjustment, tvToDate, tvItem, tvAdjDate, tvExistInv, tvAdjQty, tvNewInv, tvReason;
+    private TextView tvFromDate, tvEmpty, linkAddStockAdjustment, tvToDate, tvItem, tvAdjDate, tvExistInv, tvAdjQty, tvNewInv, tvReason;
     private ListView listConvert;
     private Button btnGo;
     private TableLayout tableGridHead;
-    private RadioGroup RadioType;
-    private RadioButton RadioRaw, RadioProduct;
     //</editor-fold>
 
     //<editor-fold desc="Methods to display the Calendar">
@@ -107,7 +103,7 @@ public class CentreStockAdjustmentList extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list_stock_adjustment);
+        setContentView(R.layout.activity_list_centre_stock_adjustment);
 
         //<editor-fold desc="Code to set Action Bar">
         ActionBar ab = getActionBar();
@@ -138,9 +134,6 @@ public class CentreStockAdjustmentList extends Activity {
         tableGridHead = (TableLayout) findViewById(R.id.tableGridHead);
         dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
         dateFormatter_database = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-        RadioType = (RadioGroup) findViewById(R.id.RadioType);
-        RadioRaw = (RadioButton) findViewById(R.id.RadioRaw);
-        RadioProduct = (RadioButton) findViewById(R.id.RadioProduct);
         //</editor-fold>
 
         calendar = Calendar.getInstance();
@@ -178,20 +171,12 @@ public class CentreStockAdjustmentList extends Activity {
         //<editor-fold desc="Code to be executed on Click of Go Button">
         btnGo.setOnClickListener(new View.OnClickListener() {
             //On click of add button
-
-
             @Override
             public void onClick(View arg0) {
 
-                // get selected radio button from radioGroup
-                int selectedId = RadioType.getCheckedRadioButtonId();
-
-                // find the radiobutton by returned id
-                RadioButton radioButton = (RadioButton) findViewById(selectedId);
-                rdButtonSelectedText = radioButton.getText().toString();
                 //Call method to get Adjustment List
                 if (common.isConnected()) {
-                    AsyncStockReturnListWSCall task = new AsyncStockReturnListWSCall();
+                    AsyncStockAdjustmentListWSCall task = new AsyncStockAdjustmentListWSCall();
                     task.execute();
                 }
             }
@@ -409,7 +394,7 @@ public class CentreStockAdjustmentList extends Activity {
 
             final ViewHolder holder;
             if (arg1 == null) {
-                arg1 = mInflater.inflate(R.layout.activity_list_stock_adjustment_data, null);
+                arg1 = mInflater.inflate(R.layout.activity_list_centre_stock_adjustment_data, null);
                 holder = new ViewHolder();
                 holder.tvAdjDate = (TextView) arg1.findViewById(R.id.tvAdjDate);
                 holder.tvItem = (TextView) arg1.findViewById(R.id.tvItem);
@@ -440,6 +425,110 @@ public class CentreStockAdjustmentList extends Activity {
         }
     }
     //</editor-fold>
+
+
+    //<editor-fold desc="Async class Class to handle fetch Adjustment web service call as separate thread">
+    private class AsyncStockAdjustmentListWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(CentreStockAdjustmentList.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String[] name = { "lang", "fromDate", "toDate", "userId"};
+                String fromDateString, toDateString, strRemarks;
+                Date fromDate = new Date();
+                fromDate = dateFormatter_display.parse(tvFromDate.getText().toString().trim());
+                fromDateString = dateFormatter_database.format(fromDate);
+                Date toDate = new Date();
+
+                toDate = dateFormatter_display.parse(tvToDate.getText().toString().trim());
+                toDateString = dateFormatter_database.format(toDate);
+                String[] value = {lang, fromDateString, toDateString, userId};
+                responseJSON = "";
+                //Call method of web service to download data from server
+                responseJSON = common.CallJsonWS(name, value, "GetCentreStockAdjustmentData", common.url);
+                return "";
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        //After execution of web service
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR: ")) {
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    wordList = new ArrayList<HashMap<String, String>>();
+                    String prevName = "";
+                    if (jsonArray.length() > 0) {
+                        for (int i = 0; i < jsonArray.length(); ++i) {
+                            map = new HashMap<String, String>();
+                            map.put("Id", jsonArray.getJSONObject(i)
+                                    .getString("Id"));
+                            map.put("AdjustDate", jsonArray.getJSONObject(i)
+                                    .getString("AdjustDate"));
+                            map.put("Item", jsonArray.getJSONObject(i)
+                                    .getString("Item"));
+                            map.put("ExistingInventory", jsonArray.getJSONObject(i)
+                                    .getString("ExistingInventory"));
+                            map.put("Quantity", jsonArray.getJSONObject(i)
+                                    .getString("Quantity"));
+                            map.put("NewInventory", jsonArray.getJSONObject(i)
+                                    .getString("NewInventory"));
+                            map.put("Reason", jsonArray.getJSONObject(i)
+                                    .getString("Reason"));
+                            if(prevName.equalsIgnoreCase(jsonArray.getJSONObject(i)
+                                    .getString("Id")))
+                                map.put("Flag", "1");
+                            else
+                                map.put("Flag", "0");
+                            prevName=jsonArray.getJSONObject(i)
+                                    .getString("Id");
+                            wordList.add(map);
+                        }
+
+                    } else {
+                        if (result.contains("null")) {
+                            result = "Server not responding. Please try again later.";
+                            common.showAlert(CentreStockAdjustmentList.this, result, false);
+                        }
+                    }
+                    listSize = wordList.size();
+                    if (listSize != 0) {
+                        listConvert.setAdapter(new CentreStockAdjustmentList.CustomAdapter(mContext, wordList));
+                        ViewGroup.LayoutParams params = listConvert.getLayoutParams();
+                        listConvert.setLayoutParams(params);
+                        //listConvert.requestLayout();
+                        tvEmpty.setVisibility(View.GONE);
+                        listConvert.requestLayout();
+                        tableGridHead.setVisibility(View.VISIBLE);
+
+                    } else {
+                        listConvert.setAdapter(null);
+                        tvEmpty.setVisibility(View.VISIBLE);
+                        tableGridHead.setVisibility(View.GONE);
+                    }
+                }
+            } catch (Exception e) {
+                common.showAlert(CentreStockAdjustmentList.this, "Centre Stock Adjustment Downloading failed: " + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        //To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Centre Stock Adjustment..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
 
     //<editor-fold desc="Code to Validate Retail Outlet Customer">
     private class AsyncCustomerValidatePasswordWSCall extends
@@ -542,7 +631,7 @@ public class CentreStockAdjustmentList extends Activity {
                                                 // Code to call async method
                                                 // for posting transactions
                                                 if (common.isConnected()) {
-                                                    AsyncCustomerPrimaryReceiptWSCall task = new AsyncCustomerPrimaryReceiptWSCall();
+                                                    AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
                                                     task.execute();
                                                 }
                                             }
@@ -552,7 +641,7 @@ public class CentreStockAdjustmentList extends Activity {
 
                     } else {
                         if (common.isConnected()) {
-                            AsyncCustomerPrimaryReceiptWSCall task = new AsyncCustomerPrimaryReceiptWSCall();
+                            AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
                             task.execute();
                         }
                     }
@@ -585,581 +674,7 @@ public class CentreStockAdjustmentList extends Activity {
     }
     //</editor-fold>
 
-
-    //<editor-fold desc="Async for Posting Primary Receipt for Retail Outlet">
-    private class AsyncCustomerPrimaryReceiptWSCall extends AsyncTask<String, Void, String> {
-        private ProgressDialog Dialog = new ProgressDialog(
-                CentreStockAdjustmentList.this);
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            // Will contain the raw JSON response as a string.
-            try {
-
-                responseJSON = "";
-
-                JSONObject jsonPayment = new JSONObject();
-                db.open();
-                // to get Primary Receipt from database
-                ArrayList<HashMap<String, String>> insmast = db
-                        .getUnSyncPrimaryReceipt();
-                db.close();
-                if (insmast != null && insmast.size() > 0) {
-                    JSONArray array = new JSONArray();
-                    // To make json string to post payment
-                    for (HashMap<String, String> insp : insmast) {
-                        JSONObject jsonins = new JSONObject();
-                        jsonins.put("UniqueId", insp.get("UniqueId"));
-                        jsonins.put("CustomerId", insp.get("CustomerId"));
-                        jsonins.put("MaterialId", insp.get("MaterialId"));
-                        jsonins.put("SkuId", insp.get("SKUId"));
-                        jsonins.put("Quantity", insp.get("Quantity"));
-                        jsonins.put("Amount", insp.get("Amount"));
-                        jsonins.put("TransactionDate", insp.get("CreateDate"));
-                        jsonins.put("CreateBy", userId);
-                        jsonins.put("ipAddress",
-                                common.getDeviceIPAddress(true));
-                        jsonins.put("Machine", common.getIMEI());
-                        array.put(jsonins);
-                    }
-                    jsonPayment.put("PrimaryReceipt", array);
-
-                    sendJSon = jsonPayment.toString();
-
-                    // To invoke json web service to create payment
-                    responseJSON = common.invokeJSONWS(sendJSon, "json",
-                            "InsertPimaryReceipt", common.url);
-                } else {
-                    return "No primary receipt pending to be send.";
-                }
-                return responseJSON;
-            } catch (Exception e) {
-                // TODO: handle exception
-                return "ERROR: " + "Unable to get response from server.";
-            } finally {
-                db.close();
-            }
-        }
-
-        // After execution of json web service to create Primary Receipt
-        @Override
-        protected void onPostExecute(String result) {
-
-            try {
-                // To display message after response from server
-                if (!result.contains("ERROR")) {
-                    if (responseJSON.equalsIgnoreCase("success")) {
-                        db.open();
-                        db.Update_PrimaryReceiptIsSync();
-                        db.close();
-                    }
-                    if (common.isConnected()) {
-                        // call method of Sync Pending Outlet Payments
-                        AsyncCustomerPaymentsWSCall task = new AsyncCustomerPaymentsWSCall();
-                        task.execute();
-                    }
-                } else {
-                    if (result.contains("null"))
-                        result = "Server not responding.";
-                    common.showAlert(CentreStockAdjustmentList.this, result, false);
-                    common.showToast("Error: " + result);
-                }
-            } catch (Exception e) {
-                common.showAlert(CentreStockAdjustmentList.this,
-                        "Unable to fetch response from server.", false);
-            }
-
-            Dialog.dismiss();
-        }
-
-        // To display message on screen within process
-        @Override
-        protected void onPreExecute() {
-
-            Dialog.setMessage("Posting Primary Receipt...");
-            Dialog.setCancelable(false);
-            Dialog.show();
-        }
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Async method for Posting Outlet Payment for Retail Outlet">
-    private class AsyncCustomerPaymentsWSCall extends AsyncTask<String, Void, String> {
-        private ProgressDialog Dialog = new ProgressDialog(
-                CentreStockAdjustmentList.this);
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            // Will contain the raw JSON response as a string.
-            try {
-
-                responseJSON = "";
-
-                JSONObject jsonPayment = new JSONObject();
-                db.open();
-                // to get Primary Receipt from database
-                ArrayList<HashMap<String, String>> insmast = db.getUnSyncOutletPayment();
-                db.close();
-                if (insmast != null && insmast.size() > 0) {
-                    JSONArray array = new JSONArray();
-                    // To make json string to post payment
-                    for (HashMap<String, String> insp : insmast) {
-                        JSONObject jsonins = new JSONObject();
-                        jsonins.put("UniqueId", insp.get("UniqueId"));
-                        jsonins.put("CustomerId", insp.get("CustomerId"));
-                        jsonins.put("Amount", insp.get("Amount"));
-                        jsonins.put("TransactionDate", insp.get("AndroidDate"));
-                        jsonins.put("CreateBy", userId);
-                        jsonins.put("ipAddress",
-                                common.getDeviceIPAddress(true));
-                        jsonins.put("Machine", common.getIMEI());
-                        array.put(jsonins);
-                    }
-                    jsonPayment.put("Payments", array);
-
-                    sendJSon = jsonPayment.toString();
-
-                    // To invoke json web service to create payment
-                    responseJSON = common.invokeJSONWS(sendJSon, "json",
-                            "InsertOutletPayment", common.url);
-                } else {
-                    return "No outlet payment pending to be send.";
-                }
-                return responseJSON;
-            } catch (Exception e) {
-                // TODO: handle exception
-                return "ERROR: " + "Unable to get response from server.";
-            } finally {
-                db.close();
-            }
-        }
-
-        // After execution of json web service to create payment
-        @Override
-        protected void onPostExecute(String result) {
-
-            try {
-                // To display message after response from server
-                if (!result.contains("ERROR")) {
-                    if (responseJSON.equalsIgnoreCase("success")) {
-                        db.open();
-                        db.Update_PaymentReceiptIsSync();
-                        db.close();
-                    }
-                    if (common.isConnected()) {
-                        // call method of Post Customer Expense
-                        AsyncCustomerExpenseWSCall task = new AsyncCustomerExpenseWSCall();
-                        task.execute();
-                    }
-                } else {
-                    if (result.contains("null"))
-                        result = "Server not responding.";
-                    common.showAlert(CentreStockAdjustmentList.this, result, false);
-                    common.showToast("Error: " + result);
-                }
-            } catch (Exception e) {
-                common.showAlert(CentreStockAdjustmentList.this,
-                        "Unable to fetch response from server.", false);
-            }
-
-            Dialog.dismiss();
-        }
-
-        // To display message on screen within process
-        @Override
-        protected void onPreExecute() {
-
-            Dialog.setMessage("Posting Outlet Payment...");
-            Dialog.setCancelable(false);
-            Dialog.show();
-        }
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Async method for Posting Outlet Expense for Retail Outlet">
-    private class AsyncCustomerExpenseWSCall extends AsyncTask<String, Void, String> {
-        private ProgressDialog Dialog = new ProgressDialog(
-                CentreStockAdjustmentList.this);
-
-        @Override
-        protected String doInBackground(String... params) {
-
-            // Will contain the raw JSON response as a string.
-            try {
-
-                responseJSON = "";
-
-                JSONObject jsonExpense = new JSONObject();
-                db.open();
-                // to get Primary Receipt from database
-                ArrayList<HashMap<String, String>> insmast = db
-                        .getUnSyncOutletExpense();
-                db.close();
-                if (insmast != null && insmast.size() > 0) {
-                    JSONArray array = new JSONArray();
-                    // To make json string to post payment
-                    for (HashMap<String, String> insp : insmast) {
-                        JSONObject jsonins = new JSONObject();
-                        jsonins.put("UniqueId", insp.get("UniqueId"));
-                        jsonins.put("CustomerId", insp.get("CustomerId"));
-                        jsonins.put("ExpenseHeadId", insp.get("ExpenseHeadId"));
-                        jsonins.put("Amount", insp.get("Amount"));
-                        jsonins.put("Remarks", insp.get("Remarks"));
-                        jsonins.put("TransactionDate", insp.get("TransactionDate"));
-                        jsonins.put("CreateBy", userId);
-                        jsonins.put("ipAddress",
-                                common.getDeviceIPAddress(true));
-                        jsonins.put("Machine", common.getIMEI());
-                        array.put(jsonins);
-                    }
-                    jsonExpense.put("Master", array);
-
-                    sendJSon = jsonExpense.toString();
-
-                    // To invoke json web service to create payment
-                    responseJSON = common.invokeJSONWS(sendJSon, "json",
-                            "CreateOutletExpense", common.url);
-                } else {
-                    return "No outlet expense pending to be send.";
-                }
-                return responseJSON;
-            } catch (Exception e) {
-                // TODO: handle exception
-                return "ERROR: " + "Unable to get response from server.";
-            } finally {
-                db.close();
-            }
-        }
-
-        // After execution of json web service to create payment
-        @Override
-        protected void onPostExecute(String result) {
-
-            try {
-                // To display message after response from server
-                if (!result.contains("ERROR")) {
-                    if (responseJSON.equalsIgnoreCase("success")) {
-                        db.open();
-                        db.Update_OutletExpenseIsSync();
-                        db.close();
-                    }
-                    if (common.isConnected()) {
-                        AsyncOutletSaleWSCall task = new AsyncOutletSaleWSCall();
-                        task.execute();
-                    }
-                } else {
-                    if (result.contains("null"))
-                        result = "Server not responding.";
-                    common.showAlert(CentreStockAdjustmentList.this, result, false);
-                    common.showToast("Error: " + result);
-                }
-            } catch (Exception e) {
-                common.showAlert(CentreStockAdjustmentList.this,
-                        "Unable to fetch response from server.", false);
-            }
-
-            Dialog.dismiss();
-        }
-
-        // To display message on screen within process
-        @Override
-        protected void onPreExecute() {
-
-            Dialog.setMessage("Posting Outlet Expense...");
-            Dialog.setCancelable(false);
-            Dialog.show();
-        }
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="To make web service class to post data of outlet sale">
-    private class AsyncOutletSaleWSCall extends AsyncTask<String, Void, String> {
-        private ProgressDialog Dialog = new ProgressDialog(
-                CentreStockAdjustmentList.this);
-
-        @Override
-        protected String doInBackground(String... params) {
-            // Will contain the raw JSON response as a string.
-            try {
-                responseJSON = "";
-                JSONObject jsonOutletSale = new JSONObject();
-
-                // to get outlet sale from database
-                db.open();
-                ArrayList<HashMap<String, String>> insmast = db.getUnSyncOutletSale();
-                db.close();
-                if (insmast != null && insmast.size() > 0) {
-                    JSONArray array = new JSONArray();
-                    // To make json string to post outlet sale
-                    for (HashMap<String, String> insp : insmast) {
-                        JSONObject jsonins = new JSONObject();
-
-                        jsonins.put("UniqueId", insp.get("UniqueId"));
-                        jsonins.put("UserId", insp.get("CreateBy"));
-                        jsonins.put("CustomerId", insp.get("CustomerId"));
-                        jsonins.put("SaleType", insp.get("SaleType"));
-                        jsonins.put("SaleDate", insp.get("SaleDate"));
-                        jsonins.put("AndroidDate", insp.get("SaleDate"));
-                        jsonins.put("ipAddress", common.getDeviceIPAddress(true));
-                        jsonins.put("Machine", insp.get("Imei"));
-                        array.put(jsonins);
-                    }
-                    jsonOutletSale.put("Master", array);
-
-                    JSONObject jsonDetails = new JSONObject();
-                    // To get outlet sale details from database
-                    db.open();
-                    ArrayList<HashMap<String, String>> insdet = db.getUnSyncOutletSaleDetail();
-                    db.close();
-                    if (insdet != null && insdet.size() > 0) {
-
-                        // To make json string to post outlet sale details
-                        JSONArray arraydet = new JSONArray();
-                        for (HashMap<String, String> insd : insdet) {
-                            JSONObject jsondet = new JSONObject();
-                            jsondet.put("UniqueId", insd.get("UniqueId"));
-                            jsondet.put("SkuId", insd.get("SkuId"));
-                            jsondet.put("Quantity", insd.get("Qty"));
-                            jsondet.put("Rate", insd.get("Rate"));
-                            jsondet.put("SaleRate", insd.get("SaleRate"));
-                            arraydet.put(jsondet);
-                        }
-                        jsonDetails.put("Detail", arraydet);
-                    }
-                    sendJSon = jsonOutletSale + "~" + jsonDetails;
-                    // To invoke json web service to create outlet sale
-                    responseJSON = common.invokeJSONWS(sendJSon, "json",
-                            "CreateOutletSale", common.url);
-                } else {
-                    return "No outlet sale pending to be send.~";
-                }
-                return responseJSON;
-            } catch (Exception e) {
-                // TODO: handle exception
-                return "ERROR: " + "Unable to get response from server.";
-            } finally {
-                db.close();
-            }
-        }
-
-        // After execution of json web service to create outlet sale
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                // To display message after response from server
-                if (!result.contains("ERROR")) {
-                    if (responseJSON.equalsIgnoreCase("success")) {
-                        db.open();
-                        db.UpdateOutletSaleIsSync();
-                        db.close();
-                    }
-                    if (common.isConnected()) {
-
-                        AsyncPendingDeliveryStatusWSCall task = new AsyncPendingDeliveryStatusWSCall();
-                        task.execute();
-                    }
-                } else {
-                    if (result.contains("null"))
-                        result = "Server not responding.";
-                    common.showToast("Error: " + result);
-                }
-
-            } catch (Exception e) {
-
-            }
-            Dialog.dismiss();
-        }
-
-        // To display message on screen within process
-        @Override
-        protected void onPreExecute() {
-            Dialog.setMessage("Posting Sale Details...");
-            Dialog.setCancelable(false);
-            Dialog.show();
-        }
-    }
-
-    //<editor-fold desc="Async class Class to handle fetch Adjustment web service call as separate thread">
-    private class AsyncStockReturnListWSCall extends AsyncTask<String, Void, String> {
-        private ProgressDialog Dialog = new ProgressDialog(CentreStockAdjustmentList.this);
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                String[] name = { "lang", "fromDate", "toDate", "customerId", "prRm"};
-                String fromDateString, toDateString, strRemarks;
-                Date fromDate = new Date();
-                fromDate = dateFormatter_display.parse(tvFromDate.getText().toString().trim());
-                fromDateString = dateFormatter_database.format(fromDate);
-                Date toDate = new Date();
-
-                toDate = dateFormatter_display.parse(tvToDate.getText().toString().trim());
-                toDateString = dateFormatter_database.format(toDate);
-                String[] value = {lang, fromDateString, toDateString, userId, rdButtonSelectedText};
-                responseJSON = "";
-                //Call method of web service to download data from server
-                responseJSON = common.CallJsonWS(name, value, "GetStockAdjustmentData", common.url);
-                return "";
-            } catch (SocketTimeoutException e) {
-                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
-            } catch (final Exception e) {
-                // TODO: handle exception
-                return "ERROR: " + "Unable to get response from server.";
-            }
-        }
-
-        //After execution of web service
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                if (!result.contains("ERROR: ")) {
-                    JSONArray jsonArray = new JSONArray(responseJSON);
-                    wordList = new ArrayList<HashMap<String, String>>();
-                    String prevName = "";
-                    if (jsonArray.length() > 0) {
-                        for (int i = 0; i < jsonArray.length(); ++i) {
-                            map = new HashMap<String, String>();
-                            map.put("Id", jsonArray.getJSONObject(i)
-                                    .getString("Id"));
-                            map.put("AdjustDate", jsonArray.getJSONObject(i)
-                                    .getString("AdjustDate"));
-                            map.put("Item", jsonArray.getJSONObject(i)
-                                    .getString("Item"));
-                            map.put("ExistingInventory", jsonArray.getJSONObject(i)
-                                    .getString("ExistingInventory"));
-                            map.put("Quantity", jsonArray.getJSONObject(i)
-                                    .getString("Quantity"));
-                            map.put("NewInventory", jsonArray.getJSONObject(i)
-                                    .getString("NewInventory"));
-                            map.put("Reason", jsonArray.getJSONObject(i)
-                                    .getString("Reason"));
-                            if(prevName.equalsIgnoreCase(jsonArray.getJSONObject(i)
-                                    .getString("Id")))
-                                map.put("Flag", "1");
-                            else
-                                map.put("Flag", "0");
-                            prevName=jsonArray.getJSONObject(i)
-                                    .getString("Id");
-                            wordList.add(map);
-                        }
-
-                    } else {
-                        if (result.contains("null")) {
-                            result = "Server not responding. Please try again later.";
-                            common.showAlert(CentreStockAdjustmentList.this, result, false);
-                        }
-                    }
-                    listSize = wordList.size();
-                    if (listSize != 0) {
-                        listConvert.setAdapter(new CustomAdapter(mContext, wordList));
-                        ViewGroup.LayoutParams params = listConvert.getLayoutParams();
-                        listConvert.setLayoutParams(params);
-                        //listConvert.requestLayout();
-                        tvEmpty.setVisibility(View.GONE);
-                        listConvert.requestLayout();
-                        tableGridHead.setVisibility(View.VISIBLE);
-
-                    } else {
-                        listConvert.setAdapter(null);
-                        tvEmpty.setVisibility(View.VISIBLE);
-                        tableGridHead.setVisibility(View.GONE);
-                    }
-                }
-            } catch (Exception e) {
-                common.showAlert(CentreStockAdjustmentList.this, "Stock Adjustment Downloading failed: " + "Unable to get response from server.", false);
-            }
-            Dialog.dismiss();
-        }
-
-        //To display message on screen within process
-        @Override
-        protected void onPreExecute() {
-            Dialog.setMessage("Downloading Stock Adjustment..");
-            Dialog.setCancelable(false);
-            Dialog.show();
-        }
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Code to Download Pending Delivery Status">
-    private class AsyncPendingDeliveryStatusWSCall extends
-            AsyncTask<String, Void, String> {
-        private ProgressDialog Dialog = new ProgressDialog(
-                CentreStockAdjustmentList.this);
-
-        @Override
-        protected String doInBackground(String... params) {
-            try {
-                String[] name = { "action", "userId", "role" };
-                String[] value = { "CheckPendingDelivery", userId, "Customer" };
-                responseJSON = "";
-                // Call method of web service to download Reatil Outlet Inventory from
-                // server
-                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
-                        common.url);
-                return responseJSON;
-            } catch (SocketTimeoutException e) {
-                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
-            } catch (final Exception e) {
-                // TODO: handle exception
-                return "ERROR: " + "Unable to get response from server.";
-            }
-        }
-
-        // After execution of web service to download Retail Outlet Inventory
-        @Override
-        protected void onPostExecute(String result) {
-            try {
-                if (!result.contains("ERROR")) {
-                    // To display message after response from server
-                    JSONArray jsonArray = new JSONArray(responseJSON);
-                    db.open();
-                    db.DeleteMasterData("DeliveryConfirmStatus");
-                    String status="";
-                    for (int i = 0; i < jsonArray.length(); ++i) {
-                        db.Insert_DeliveryConfirmStatus(jsonArray.getJSONObject(i)
-                                .getString("A"));
-                        status=jsonArray.getJSONObject(i).getString("A");
-                    }
-                    db.close();
-                    if(status.equalsIgnoreCase("0"))
-                    {
-                        if(common.isConnected()) {
-                            AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
-                            task.execute();
-                        }
-                    }
-                    else
-                    {
-                        common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए स्टॉक रूपांतरण की अनुमति नहीं है।":"Deliveries are pending for confirmation hence stock adjustment is not allowed.");
-                    }
-
-                } else {
-                    if (result.contains("null") || result == "")
-                        result = "Server not responding. Please try again later.";
-                    common.showAlert(CentreStockAdjustmentList.this, result, false);
-                }
-            } catch (Exception e) {
-                common.showAlert(CentreStockAdjustmentList.this,
-                        "Pending Delivery Status Downloading failed: "
-                                + "Unable to get response from server.", false);
-            }
-            Dialog.dismiss();
-        }
-
-        // To display message on screen within process
-        @Override
-        protected void onPreExecute() {
-            Dialog.setMessage("Downloading Pending Delivery Status..");
-            Dialog.setCancelable(false);
-            Dialog.show();
-        }
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Async Method to Fetch LiveInventory For Centre">
+    //<editor-fold desc="Async Method to Fetch LiveInventory Fro Retail Outlet">
     private class AsyncLiveInventoryDetailWSCall extends
             AsyncTask<String, Void, String> {
         private ProgressDialog Dialog = new ProgressDialog(
@@ -1169,11 +684,11 @@ public class CentreStockAdjustmentList extends Activity {
         protected String doInBackground(String... params) {
             try {
 
-                String[] name = {"lang","id" };
-                String[] value = { lang, userId };
-                // Call method of web service to Read Conversion Details
+                String[] name = {"action", "lang", "userId"};
+                String[] value = {"GetCentreLiveInventory", lang, userId};
+                // Call method of web service to Read Live Inventory For Centre
                 responseJSON = "";
-                responseJSON = common.CallJsonWS(name, value,"GetProductStockAdjustmentForCentre", common.url);
+                responseJSON = common.CallJsonWS(name, value, "ReadCentreLiveInventory", common.url);
                 return "";
             } catch (SocketTimeoutException e) {
                 return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
@@ -1189,49 +704,64 @@ public class CentreStockAdjustmentList extends Activity {
         protected void onPostExecute(String result) {
             try {
                 if (!result.contains("ERROR")) {
-                    String data="";
+                    String data = "";
                     // To display message after response from server
                     JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
-                    JSONArray jsonRaw = new JSONArray(responseJSON.split("~")[1]);
-                    if(jsonSKU.length() > 0 || jsonRaw.length() > 0) {
+                    JSONArray jsonCentre = new JSONArray(responseJSON.split("~")[1]);
+                    JSONArray jsonCentreSKU = new JSONArray(responseJSON.split("~")[1]);
+                    if (jsonSKU.length() > 0 || jsonCentre.length() > 0 || jsonCentreSKU.length() > 0) {
                         if (jsonSKU.length() > 0) {
                             db.open();
-                            db.DeleteMasterData("SKULiveInventory");
+                            db.DeleteMasterData("CentreSKULiveInventory");
                             db.close();
                             if (jsonSKU.length() > 0) {
                                 for (int i = 0; i < jsonSKU.length(); ++i) {
                                     db.open();
-                                    db.Insert_SKULiveInventory(jsonSKU.getJSONObject(i)
-                                            .getString("A"), jsonSKU.getJSONObject(i)
+                                    db.Insert_CentreSKULiveInventory(jsonSKU.getJSONObject(i)
+                                            .getString("A"),jsonSKU.getJSONObject(i)
                                             .getString("B"), jsonSKU.getJSONObject(i)
-                                            .getString("C").replace(".00", ""));
+                                            .getString("C"), jsonSKU.getJSONObject(i)
+                                            .getString("D").replace(".00", ""));
                                     db.close();
 
                                 }
 
                             }
                         }
-                        if (jsonRaw.length() > 0) {
+                        if (jsonCentre.length() > 0) {
                             db.open();
-                            db.DeleteMasterData("RawMaterialLiveInventory");
+                            db.DeleteMasterData("CentreUserCentres");
                             db.close();
-                            for (int i = 0; i < jsonRaw.length(); ++i) {
+                            for (int i = 0; i < jsonCentre.length(); ++i) {
                                 db.open();
-                                db.Insert_RawMaterialLiveInventory(jsonRaw.getJSONObject(i)
-                                        .getString("A"), jsonRaw.getJSONObject(i)
-                                        .getString("B"), jsonRaw.getJSONObject(i)
-                                        .getString("C").replace(".00", ""));
+                                db.Insert_CentreUserCentres(jsonCentre.getJSONObject(i)
+                                        .getString("A"), jsonCentre.getJSONObject(i)
+                                        .getString("B"));
+                                db.close();
+                            }
+
+                        }
+                        if (jsonCentreSKU.length() > 0) {
+                            db.open();
+                            db.DeleteMasterData("CentreSKU");
+                            db.close();
+                            for (int i = 0; i < jsonCentre.length(); ++i) {
+                                db.open();
+                                db.Insert_CentreSKU(jsonCentreSKU.getJSONObject(i)
+                                        .getString("A"), jsonCentreSKU.getJSONObject(i)
+                                        .getString("B"), jsonCentreSKU.getJSONObject(i)
+                                        .getString("C"), jsonCentreSKU.getJSONObject(i)
+                                        .getString("D"));
                                 db.close();
                             }
 
                         }
                         Intent intent = new Intent(CentreStockAdjustmentList.this,
-                                StockAdjustmentCreate.class);
+                                CentreStockAdjustmentCreate.class);
                         intent.putExtra("UniqueId", UUID.randomUUID().toString());
                         startActivity(intent);
                         finish();
-                    }
-                    else {
+                    } else {
                         common.showToast("There is no data available for Inventory!");
                     }
 
@@ -1241,7 +771,7 @@ public class CentreStockAdjustmentList extends Activity {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                common.showToast("Outlet Inventory Downloading failed: " + e.toString());
+                common.showToast("Centre Inventory Downloading failed: " + e.toString());
                 Intent intent = new Intent(mContext, CentreStockAdjustmentList.class);
                 startActivity(intent);
                 finish();
@@ -1252,7 +782,7 @@ public class CentreStockAdjustmentList extends Activity {
         // To display message on screen within process
         @Override
         protected void onPreExecute() {
-            Dialog.setMessage("Downloading Outlet Inventory..");
+            Dialog.setMessage("Downloading Centre Inventory..");
             Dialog.setCancelable(false);
             Dialog.show();
         }

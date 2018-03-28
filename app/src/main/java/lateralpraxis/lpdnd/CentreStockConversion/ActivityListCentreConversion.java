@@ -90,6 +90,8 @@ public class ActivityListCentreConversion extends Activity {
             };
 
     //</editor-fold>
+
+    //<editor-fold desc="Code to be executed on OnCreate">
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,6 +176,7 @@ public class ActivityListCentreConversion extends Activity {
         });
         //</editor-fold>
     }
+    //</editor-fold>
 
     //<editor-fold desc="Methods to Display Selected Date in TextView">
     private void showDate(String date) {
@@ -573,7 +576,7 @@ public class ActivityListCentreConversion extends Activity {
                     // To display message after response from server
                     JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
                     JSONArray jsonCentre = new JSONArray(responseJSON.split("~")[1]);
-                    JSONArray jsonCentreSKU = new JSONArray(responseJSON.split("~")[1]);
+                    JSONArray jsonCentreSKU = new JSONArray(responseJSON.split("~")[2]);
                     if (jsonSKU.length() > 0 || jsonCentre.length() > 0 || jsonCentreSKU.length() > 0) {
                         if (jsonSKU.length() > 0) {
                             db.open();
@@ -610,11 +613,13 @@ public class ActivityListCentreConversion extends Activity {
                             db.open();
                             db.DeleteMasterData("CentreSKU");
                             db.close();
-                            for (int i = 0; i < jsonCentre.length(); ++i) {
+                            for (int i = 0; i < jsonCentreSKU.length(); ++i) {
                                 db.open();
-                                db.Insert_CentreSKU(jsonCentre.getJSONObject(i)
-                                        .getString("A"), jsonCentre.getJSONObject(i)
-                                        .getString("B"));
+                                db.Insert_CentreSKU(jsonCentreSKU.getJSONObject(i)
+                                        .getString("A"), jsonCentreSKU.getJSONObject(i)
+                                        .getString("B"),jsonCentreSKU.getJSONObject(i)
+                                        .getString("C"),jsonCentreSKU.getJSONObject(i)
+                                        .getString("D") );
                                 db.close();
                             }
 
