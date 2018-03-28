@@ -143,7 +143,7 @@ public class ActivityHomeScreen extends Activity {
 
             if (userRole.equalsIgnoreCase("Customer")) {
                 if (customerType.equalsIgnoreCase("Retail Outlet"))
-                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_delivery_confirmation, R.layout.btn_stockconversion,R.layout.btn_stockadjustment, R.layout.btn_outletpayment,R.layout.btn_expensebooking, R.layout.btn_customersync);
+                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_delivery_confirmation, R.layout.btn_stockconversion, R.layout.btn_stockadjustment, R.layout.btn_outletpayment, R.layout.btn_expensebooking, R.layout.btn_customersync);
                 else
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand);
             } else if (userRole.contains("Route Officer") && userRole.contains("Reconciliation User")) {
@@ -2418,6 +2418,76 @@ public class ActivityHomeScreen extends Activity {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Async Method to fetch Expense Head Data From Portal">
+    private class AsyncCentreExpenseHeadWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String[] name = {"action", "userId", "role"};
+                String[] value = {"ReadExpenseHead", userId, userRole};
+                responseJSON = "";
+                // Call method of web service to download Reatil Outlet Inventory from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        // After execution of web service to download Retail Outlet Inventory
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    dba.open();
+                    dba.DeleteMasterData("ExpenseHead");
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        dba.Insert_ExpenseHead(jsonArray.getJSONObject(i)
+                                .getString("A"), jsonArray.getJSONObject(i)
+                                .getString("B"), jsonArray.getJSONObject(i)
+                                .getString("C"));
+                    }
+                    dba.close();
+                    if (common.isConnected()) {
+                        AsyncCustomerRateWSCall task = new AsyncCustomerRateWSCall();
+                        task.execute(result);
+
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Expense Head Downloading failed: "
+                                + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Expense Head..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Async Method to call RetailOutletInventory web service call as separate thread">
     private class AsyncRetailOutletInventoryWSCall extends
             AsyncTask<String, Void, String> {
@@ -3242,8 +3312,13 @@ public class ActivityHomeScreen extends Activity {
                     dba.close();
                     if (common.isConnected()) {
                         // call method of get route json web service
-                        AsyncCustomerRateWSCall task = new AsyncCustomerRateWSCall();
-                        task.execute(result);
+                        if (userRole.contains("Accountant")) {
+                            AsyncCentreExpenseHeadWSCall task = new AsyncCentreExpenseHeadWSCall();
+                            task.execute(result);
+                        } else {
+                            AsyncCustomerRateWSCall task = new AsyncCustomerRateWSCall();
+                            task.execute(result);
+                        }
                     } else {
                         common.showAlert(ActivityHomeScreen.this,
                                 "Unable to connect to Internet !", false);
@@ -3925,7 +4000,7 @@ public class ActivityHomeScreen extends Activity {
                                     // service
                                     // commented
                                     /*
-									 * AsyncRouteWSCall task = new
+                                     * AsyncRouteWSCall task = new
 									 * AsyncRouteWSCall ();
 									 * task.execute(params);
 									 */
