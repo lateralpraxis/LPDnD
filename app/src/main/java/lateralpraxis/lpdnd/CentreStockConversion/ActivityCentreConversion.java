@@ -3,12 +3,14 @@ package lateralpraxis.lpdnd.CentreStockConversion;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -31,6 +33,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -89,10 +94,6 @@ public class ActivityCentreConversion extends Activity {
 
     //<editor-fold desc="Code for class declaration">
     DatabaseAdapter db;
-    Common common;
-    String lang = "en";
-    String type = "Raw";
-    String responseJSON, sendJSon;
     private UserSessionManager session;
     //</editor-fold>
 
@@ -105,6 +106,10 @@ public class ActivityCentreConversion extends Activity {
     private ArrayList<HashMap<String, String>> listProd;
     private int prodlistSize = 0;
     private String uniqueId = "";
+    Common common;
+    String lang = "en";
+    String type = "Raw";
+    String responseJSON, sendJSon;
     //</editor-fold>
 
     //<editor-fold desc="Code for Control Declaration">
@@ -436,8 +441,8 @@ public class ActivityCentreConversion extends Activity {
                             public void onClick(DialogInterface dialog,
                                                 int id) {
                                 if (common.isConnected()) {
-                                    /*AsyncOutletConversionWSCall task = new AsyncOutletConversionWSCall();
-                                    task.execute();*/
+                                    AsyncCentreConversionWSCall task = new AsyncCentreConversionWSCall();
+                                    task.execute();
                                 }
                             }
                         }).setNegativeButton(lang.equalsIgnoreCase("hi") ? "नहीं" : "No",
@@ -810,6 +815,117 @@ public class ActivityCentreConversion extends Activity {
         AlertDialog alertnew = builder1.create();
         alertnew.show();
 
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to Post Centre Conversion Details">
+    private class AsyncCentreConversionWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityCentreConversion.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonMaster = new JSONObject();
+
+                String customerId = "";
+                HashMap<String, String> user = session.getLoginUserDetails();
+                customerId = user.get(UserSessionManager.KEY_ID);
+                JSONArray array = new JSONArray();
+                // To make json string to post delivery
+
+                JSONObject jsonins = new JSONObject();
+                jsonins.put("UniqueId", uniqueId);
+                jsonins.put("CentreId", tvCentreId.getText().toString());
+                jsonins.put("ipAddress", common.getDeviceIPAddress(true));
+                jsonins.put("Machine", common.getIMEI());
+                jsonins.put("CreateBy", customerId);
+                array.put(jsonins);
+                jsonMaster.put("Master", array);
+
+                JSONObject jsonDetails = new JSONObject();
+                // To get Conversion details from database
+                db.open();
+                ArrayList<HashMap<String, String>> insdet = db.getConversionForSync();
+                db.close();
+                if (insdet != null && insdet.size() > 0) {
+
+                    // To make json string to post delivery details
+                    JSONArray arraydet = new JSONArray();
+                    for (HashMap<String, String> insd : insdet) {
+                        JSONObject jsondet = new JSONObject();
+                        jsondet.put("MaterialId", insd.get("RawMaterialId"));
+                        jsondet.put("SkuId", insd.get("SkuId"));
+                        jsondet.put("Quantity", insd.get("Quantity"));
+                        jsondet.put("SkuType", insd.get("SKUType"));
+                        arraydet.put(jsondet);
+                    }
+                    jsonDetails.put("Detail", arraydet);
+                }
+                sendJSon = jsonMaster + "~" + jsonDetails;
+                // To invoke json web service to create delivery
+                responseJSON = common.invokeJSONWS(sendJSon, "json",
+                        "CreateCentreStockConversion", common.url);
+
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                db.close();
+            }
+
+        }
+
+        // After execution of json web service to create delivery
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        //<editor-fold desc="Code to Delete Data from Temporary Table">
+                        db.open();
+                        db.DeleteTempConversion();
+                        db.DeleteMasterData("OutletInventory");
+                        db.close();
+                        //</editor-fold>
+                     /*   if (common.isConnected()) {
+                            AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+                            task.execute();
+                        }*/
+                        common.showToast(lang.equalsIgnoreCase("hi") ? "स्टॉक कनवर्ज़न सफलतापूर्वक सहेजा गया" : "Stock Conversion saved successfully.");
+                        Intent i = new Intent(ActivityCentreConversion.this, ActivityAdminHomeScreen.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(i);
+                        finish();
+                    }
+
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showToast("Error: " + result);
+                }
+
+            } catch (Exception e) {
+
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Stock Conversion...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
     }
     //</editor-fold>
 }
