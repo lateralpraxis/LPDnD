@@ -155,9 +155,9 @@ public class ActivityHomeScreen extends Activity {
             } else if (userRole.contains("Collection Officer")) {
                 views = Arrays.asList(R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
             } else if (userRole.contains("Accountant") && userRole.contains("Reconciliation User")) {
-                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync,R.layout.btn_expensebooking);
             } else if (userRole.contains("Accountant")) {
-                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync,R.layout.btn_expensebooking);
             } else if (userRole.contains("Reconciliation User")) {
                 views = Arrays.asList(R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
             }
@@ -473,9 +473,17 @@ public class ActivityHomeScreen extends Activity {
 
                     @Override
                     public void onClick(View v) {
-                        intent = new Intent(context, ActivityListBooking.class);
-                        startActivity(intent);
-                        finish();
+                        if (userRole.contains("Accountant") || (userRole.contains("Accountant") && userRole.contains("Reconciliation User"))) {
+                            intent = new Intent(context, ActivityListBookingAccountant.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else{
+                            intent = new Intent(context, ActivityListBooking.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
                     }
                 });
                 break;
