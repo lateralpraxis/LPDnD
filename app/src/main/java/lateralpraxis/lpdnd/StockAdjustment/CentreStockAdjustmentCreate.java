@@ -202,9 +202,19 @@ public class CentreStockAdjustmentCreate extends Activity {
                 tvAdjustedLabel.setText("");
                 tvAvailable.setText("");
                 db.open();
-                tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
-                tvAvailable.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
+                tvInventory.setText(db.getCentreSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
+                tvAvailable.setText(db.getCentreSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
                 db.close();
+                if (((CustomType) spSKU.getSelectedItem()).getId().split("-")[1].equalsIgnoreCase("0")) {
+                    etAdjustedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
+                    etAdjustedQty.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                } else {
+                    int maxLength = 5;
+                    InputFilter[] FilterArray = new InputFilter[1];
+                    FilterArray[0] = new InputFilter.LengthFilter(maxLength);
+                    etAdjustedQty.setFilters(FilterArray);
+                    etAdjustedQty.setInputType(InputType.TYPE_CLASS_NUMBER);
+                }
             }
 
             @Override

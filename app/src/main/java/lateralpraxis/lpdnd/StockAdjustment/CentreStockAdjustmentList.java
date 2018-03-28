@@ -684,11 +684,11 @@ public class CentreStockAdjustmentList extends Activity {
         protected String doInBackground(String... params) {
             try {
 
-                String[] name = {"action", "lang", "userId"};
-                String[] value = {"GetCentreLiveInventory", lang, userId};
+                String[] name = {"lang", "userId"};
+                String[] value = { lang, userId};
                 // Call method of web service to Read Live Inventory For Centre
                 responseJSON = "";
-                responseJSON = common.CallJsonWS(name, value, "ReadCentreLiveInventory", common.url);
+                responseJSON = common.CallJsonWS(name, value, "GetInventoryForStockAdjustment", common.url);
                 return "";
             } catch (SocketTimeoutException e) {
                 return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
@@ -708,8 +708,7 @@ public class CentreStockAdjustmentList extends Activity {
                     // To display message after response from server
                     JSONArray jsonSKU = new JSONArray(responseJSON.split("~")[0]);
                     JSONArray jsonCentre = new JSONArray(responseJSON.split("~")[1]);
-                    JSONArray jsonCentreSKU = new JSONArray(responseJSON.split("~")[1]);
-                    if (jsonSKU.length() > 0 || jsonCentre.length() > 0 || jsonCentreSKU.length() > 0) {
+                    if (jsonSKU.length() > 0 || jsonCentre.length() > 0) {
                         if (jsonSKU.length() > 0) {
                             db.open();
                             db.DeleteMasterData("CentreSKULiveInventory");
@@ -737,21 +736,6 @@ public class CentreStockAdjustmentList extends Activity {
                                 db.Insert_CentreUserCentres(jsonCentre.getJSONObject(i)
                                         .getString("A"), jsonCentre.getJSONObject(i)
                                         .getString("B"));
-                                db.close();
-                            }
-
-                        }
-                        if (jsonCentreSKU.length() > 0) {
-                            db.open();
-                            db.DeleteMasterData("CentreSKU");
-                            db.close();
-                            for (int i = 0; i < jsonCentre.length(); ++i) {
-                                db.open();
-                                db.Insert_CentreSKU(jsonCentreSKU.getJSONObject(i)
-                                        .getString("A"), jsonCentreSKU.getJSONObject(i)
-                                        .getString("B"), jsonCentreSKU.getJSONObject(i)
-                                        .getString("C"), jsonCentreSKU.getJSONObject(i)
-                                        .getString("D"));
                                 db.close();
                             }
 
