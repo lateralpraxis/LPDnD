@@ -3320,7 +3320,7 @@ public class ActivityHomeScreen extends Activity {
                     dba.close();
                     if (common.isConnected()) {
                         // call method of get route json web service
-                        if (userRole.contains("Accountant")) {
+                        if (userRole.contains("Accountant") || (userRole.contains("Accountant") && userRole.contains("Reconciliation User"))) {
                             AsyncCentreExpenseHeadWSCall task = new AsyncCentreExpenseHeadWSCall();
                             task.execute(result);
                         } else {
