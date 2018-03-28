@@ -77,8 +77,8 @@ public class ActivityAddExpenseAccountant extends Activity {
     private UserSessionManager session;
     private Intent intent;
     //<editor-fold desc="Code to Declare Controls">
-    private Spinner spExpenseHead;
-    private EditText etAmt,etRemarks;
+    private Spinner spAccExpenseHead;
+    private EditText etAccAmt,etAccRemarks;
     private TextView tvAttach;
     private Button btnSave, btnUpload;
     private String level1Dir, level2Dir, fullPath,
@@ -129,6 +129,17 @@ public class ActivityAddExpenseAccountant extends Activity {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code for Binding Data In Spinner">
+    private ArrayAdapter<CustomType> DataAdapter(String masterType, String filter) {
+        db.open();
+        List<CustomType> lables = db.GetCustomerMasterDetails(masterType, filter);
+        ArrayAdapter<CustomType> dataAdapter = new ArrayAdapter<CustomType>(this, android.R.layout.simple_spinner_item, lables);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        db.close();
+        return dataAdapter;
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Code to be executed on On Create Method">
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,21 +175,21 @@ public class ActivityAddExpenseAccountant extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to Find Controls">
-        spExpenseHead = (Spinner) findViewById(R.id.spExpenseHead);
-        etAmt = (EditText) findViewById(R.id.etAmt);
-        etRemarks = (EditText) findViewById(R.id.etRemarks);
+        spAccExpenseHead = (Spinner) findViewById(R.id.spAccExpenseHead);
+        etAccAmt = (EditText) findViewById(R.id.etAccAmt);
+        etAccRemarks = (EditText) findViewById(R.id.etAccRemarks);
         tvAttach = (TextView) findViewById(R.id.tvAttach);
         btnSave = (Button) findViewById(R.id.btnSave);
         btnUpload = (Button) findViewById(R.id.btnUpload);
         //</editor-fold>
 
         //<editor-fold desc="Code to set Input Filter">
-        etAmt.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
-        etAmt.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etAccAmt.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
+        etAccAmt.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
         //</editor-fold>
 
         //<editor-fold desc="Code to Bind Spinners">
-        spExpenseHead.setAdapter(DataAdapter("exphead", ""));
+        spAccExpenseHead.setAdapter(DataAdapter("exphead", ""));
         //</editor-fold>
 
         //<editor-fold desc="Code to be executed on click of Save Button">
@@ -186,13 +197,13 @@ public class ActivityAddExpenseAccountant extends Activity {
             //When go button click
             @Override
             public void onClick(View arg0) {
-                if(((CustomType)spExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
+                if(((CustomType)spAccExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
                     common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया व्यय हेड का चयन करें":"Please select Expense Head.");
-                else if(etAmt.getText().toString().trim().length()<=0)
+                else if(etAccAmt.getText().toString().trim().length()<=0)
                     common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया राशि दर्ज करें":"Please enter amount.");
-                else if (Double.valueOf(etAmt.getText().toString())<=0)
+                else if (Double.valueOf(etAccAmt.getText().toString())<=0)
                     common.showToast(lang.equalsIgnoreCase("hi") ?"राशि शून्य नहीं हो सकती":"Amount cannot be zero.");
-                else if(etRemarks.getText().toString().trim().length()<=0)
+                else if(etAccRemarks.getText().toString().trim().length()<=0)
                     common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया टिप्पणी दर्ज करें":"Please enter remarks.");
                 else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
@@ -233,7 +244,7 @@ public class ActivityAddExpenseAccountant extends Activity {
                                     HashMap<String, String> user = session.getLoginUserDetails();
                                     customerId = user.get(UserSessionManager.KEY_ID);
                                     db.open();
-                                    db.Insert_ExpenseBookingAccountant(customerId, ((CustomType) spExpenseHead.getSelectedItem()).getId(), Double.valueOf(etAmt.getText().toString()).toString(), etRemarks.getText().toString(), newuuidImg, imagePath, selectedPhotoPath);
+                                    db.Insert_ExpenseBookingAccountant(customerId, ((CustomType)spAccExpenseHead.getSelectedItem()).getId(), Double.valueOf(etAccAmt.getText().toString()).toString(), etAccRemarks.getText().toString(), newuuidImg, imagePath, selectedPhotoPath);
                                     db.close();
                                     common.showToast(lang.equalsIgnoreCase("hi") ? "व्यय विवरण सफलतापूर्वक सहेजा गया" : "Expense details saved successfully.");
                                     Intent intent = new Intent(ActivityAddExpenseAccountant.this, ActivityListBookingAccountant.class);
@@ -365,17 +376,6 @@ public class ActivityAddExpenseAccountant extends Activity {
             }
         });
         //</editor-fold>
-    }
-    //</editor-fold>
-
-    //<editor-fold desc="Code for Binding Data In Spinner">
-    private ArrayAdapter<CustomType> DataAdapter(String masterType, String filter) {
-        db.open();
-        List<CustomType> lables = db.GetCustomerMasterDetails(masterType, filter);
-        ArrayAdapter<CustomType> dataAdapter = new ArrayAdapter<CustomType>(this, android.R.layout.simple_spinner_item, lables);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        db.close();
-        return dataAdapter;
     }
     //</editor-fold>
 

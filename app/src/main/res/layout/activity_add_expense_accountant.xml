@@ -38,7 +38,7 @@
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/spExpenseHead"
+                android:id="@+id/spAccExpenseHead"
                 style="@style/spinner"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/etAmt"
+                android:id="@+id/etAccAmt"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"
@@ -89,7 +89,7 @@
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/etRemarks"
+                android:id="@+id/etAccRemarks"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="end"

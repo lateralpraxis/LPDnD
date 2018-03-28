@@ -89,7 +89,7 @@ public class ActivityExpenseDetailAccountant extends Activity {
 
         //<editor-fold desc="Code to bind and display data">
         db.openR();
-        expensedetails = db.getExpenseDetailById(id, lang);
+        expensedetails = db.getAccountantExpenseDetailById(id, lang);
         tvExpenseDate.setText(common.convertToDisplayDateFormat(expensedetails.get(0)));
         tvExpenseHead.setText(expensedetails.get(1));
         tvExpenseAmt.setText(common.convertToTwoDecimal(expensedetails.get(2)));

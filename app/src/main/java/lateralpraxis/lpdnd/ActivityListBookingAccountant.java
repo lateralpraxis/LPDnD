@@ -101,7 +101,7 @@ public class ActivityListBookingAccountant extends Activity {
 
         wordList = new ArrayList<HashMap<String, String>>();
         db.open();
-        wordList = db.getExpenseDetails();
+        wordList = db.getAccountantExpenseDetails();
         db.close();
         listSize = wordList.size();
         if (listSize != 0) {
