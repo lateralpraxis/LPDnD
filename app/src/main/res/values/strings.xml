@@ -332,6 +332,7 @@
     <string name="label_consumedqty">Consumed Quantity *</string>
     <string name="label_producedqty">Produced Quantity *</string>
     <string name="label_centre">Centre*</string>
+    <string name="label_CentreView">Centre</string>
     <!-- End of Stock Conversion Variables-->
 
     <!-- Outlet Sale  -->

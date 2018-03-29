@@ -1,4 +1,4 @@
-package lateralpraxis.lpdnd;
+package lateralpraxis.lpdnd.CentreExpense;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -121,7 +121,7 @@ public class ActivityListBookingAccountant extends Activity {
         //<editor-fold desc="Code to be executed on click of List View">
         listExpense.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> lv, View item, int position, long id) {
-                Intent intent = new Intent(ActivityListBookingAccountant.this, ActivityExpenseDetailAccountant.class);
+                Intent intent = new Intent(ActivityListBookingAccountant.this, ActivityExpenseView.class);
                 intent.putExtra("Id", String.valueOf(((TextView) item.findViewById(R.id.tvId)).getText().toString()));
                 startActivity(intent);
                 finish();
@@ -168,7 +168,7 @@ public class ActivityListBookingAccountant extends Activity {
 
     //<editor-fold desc="Code to be Bind Data in list view">
     public static class ViewHolder {
-        TextView tvDate, tvExpenseHead, tvAmount, tvId;
+        TextView tvDate, tvExpenseHead, tvAmount, tvId,tvCompany;
         TableRow tableRowDate;
     }
     //</editor-fold>
@@ -216,11 +216,12 @@ public class ActivityListBookingAccountant extends Activity {
 
             final ViewHolder holder;
             if (arg1 == null) {
-                arg1 = mInflater.inflate(R.layout.list_expense_details, null);
+                arg1 = mInflater.inflate(R.layout.list_centre_expense, null);
                 holder = new ViewHolder();
 
                 holder.tvExpenseHead = (TextView) arg1.findViewById(R.id.tvExpenseHead);
                 holder.tvDate = (TextView) arg1.findViewById(R.id.tvDate);
+                holder.tvCompany = (TextView) arg1.findViewById(R.id.tvCompany);
                 holder.tvAmount = (TextView) arg1.findViewById(R.id.tvAmount);
                 holder.tableRowDate = (TableRow) arg1.findViewById(R.id.tableRowDate);
                 holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
@@ -232,11 +233,9 @@ public class ActivityListBookingAccountant extends Activity {
             holder.tvExpenseHead.setText(list.get(arg0).get("Name"));
             holder.tvDate.setText(common.convertToDisplayDateFormat(list.get(arg0).get("Date")));
             holder.tvAmount.setText(common.convertToTwoDecimal(list.get(arg0).get("Amount")));
-            holder.tvId.setText(common.convertToTwoDecimal(list.get(arg0).get("Id")));
-            if(list.get(arg0).get("Flag").equalsIgnoreCase("0"))
-                holder.tableRowDate.setVisibility(View.GONE);
-            else
-                holder.tableRowDate.setVisibility(View.VISIBLE);
+            holder.tvId.setText(list.get(arg0).get("Id"));
+            holder.tvCompany.setText(list.get(arg0).get("Company"));
+
 
             arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return arg1;

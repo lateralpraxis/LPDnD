@@ -330,6 +330,7 @@
     <string name="label_consumedqty">खपत मात्रा *</string>
     <string name="label_producedqty">उत्पादित मात्रा *</string>
     <string name="label_centre">केंद्र*</string>
+    <string name="label_CentreView">केंद्र</string>
     <!-- End of Stock Conversion Variables-->
 
     <!-- Outlet Sale  -->
