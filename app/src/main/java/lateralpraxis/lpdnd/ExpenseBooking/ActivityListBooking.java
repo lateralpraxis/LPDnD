@@ -232,7 +232,7 @@ public class ActivityListBooking extends Activity {
             holder.tvExpenseHead.setText(list.get(arg0).get("Name"));
             holder.tvDate.setText(common.convertToDisplayDateFormat(list.get(arg0).get("Date")));
             holder.tvAmount.setText(common.convertToTwoDecimal(list.get(arg0).get("Amount")));
-            holder.tvId.setText(common.convertToTwoDecimal(list.get(arg0).get("Id")));
+            holder.tvId.setText(list.get(arg0).get("Id"));
             if(list.get(arg0).get("Flag").equalsIgnoreCase("0"))
                 holder.tableRowDate.setVisibility(View.GONE);
             else

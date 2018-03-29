@@ -114,7 +114,7 @@ public class DatabaseAdapter {
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
     OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
             ExpenseBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);",
-    ExpenseBookingAccountant_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBookingAccountant(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
+    ExpenseBookingAccountant_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBookingAccountant(Id INTEGER PRIMARY KEY AUTOINCREMENT,CentreId TEXT,CompanyId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
 
     // Context of the application using the database.
     private final Context context;
@@ -367,6 +367,12 @@ public class DatabaseAdapter {
                 else
                     selectQuery = "SELECT Id, NameLocal FROM ExpenseHead WHERE Id !='1' ORDER BY Name COLLATE NOCASE ASC";
                 break;
+            case "centre":
+                selectQuery = "SELECT Id, Name FROM Centre ORDER BY LOWER(Name)";
+                break;
+            case "company":
+                selectQuery = "SELECT Id, Name FROM Company ORDER BY LOWER(Name)";
+                break;
         }
         cursor = db.rawQuery(selectQuery, null);
         if (userlang.equalsIgnoreCase("en")) {
@@ -386,6 +392,10 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0", "...Select Expense Head"));
             else if (masterType.equalsIgnoreCase("centreusercentre"))
                 labels.add(new CustomType("0", "...Select Centre"));
+            else if (masterType.equalsIgnoreCase("centre"))
+                labels.add(new CustomType("0", "...Select Centre"));
+            else if (masterType.equalsIgnoreCase("company"))
+                labels.add(new CustomType("0", "...Select Company"));
             else
                 labels.add(new CustomType("0", "...Select"));
         } else {
@@ -405,6 +415,10 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0", "...व्यय हेड चयन करें"));
             else if (masterType.equalsIgnoreCase("centreusercentre"))
                 labels.add(new CustomType("0", "... केंद्र का चयन करें"));
+            else if (masterType.equalsIgnoreCase("centre"))
+                labels.add(new CustomType("0", "... केंद्र का चयन करें"));
+            else if (masterType.equalsIgnoreCase("company"))
+                labels.add(new CustomType("0", "... कंपनी का चयन करें"));
             else
                 labels.add(new CustomType("0", "...चयन करें"));
         }
@@ -3217,17 +3231,17 @@ public class DatabaseAdapter {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         String prevDate="";
         if (userlang.equalsIgnoreCase("en"))
-            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBookingAccountant eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+            selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.Name FROM ExpenseBookingAccountant eb, Company com, ExpenseHead eh WHERE eb.CompanyId = com.Id AND eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC ";
         else
-            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBookingAccountant eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+            selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.NameLocal FROM ExpenseBookingAccountant eb, Company com, ExpenseHead eh WHERE eb.CompanyId = com.Id AND eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC ";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
-            map.put("Date", cursor.getString(0));
-            map.put("Name", cursor.getString(1));
-            map.put("Amount", cursor.getString(2));
-            map.put("Remarks", cursor.getString(3));
-            map.put("Id", cursor.getString(4));
+            map.put("Id", cursor.getString(0));
+            map.put("Company", cursor.getString(1));
+            map.put("Date", cursor.getString(2));
+            map.put("Amount", cursor.getString(3));
+            map.put("Name", cursor.getString(4));
             if(prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
                 map.put("Flag", "0");
             else
@@ -3242,7 +3256,7 @@ public class DatabaseAdapter {
     //</editor-fold>
 
 
-    //<editor-fold desc="Code to get farmer details by unique id from Main table">
+    //<editor-fold desc="Code to get Expense Detail By Id">
     public ArrayList<String> getExpenseDetailById(String id, String lang) {
         ArrayList<String> expensedetails = new ArrayList<String>();
 
@@ -3266,14 +3280,15 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
-    //<editor-fold desc="Code to get farmer details by unique id from Main table">
+
+    //<editor-fold desc="Code to get Accountant Expense Detail By Id">
     public ArrayList<String> getAccountantExpenseDetailById(String id, String lang) {
         ArrayList<String> expensedetails = new ArrayList<String>();
 
         if (userlang.equalsIgnoreCase("en"))
-            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExpenseBookingAccountant eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExpenseBookingAccountant eb, ExpenseHead eh, Company com, Centre cen WHERE eb.ExpenseHeadId = eh.Id AND eb.Id ="+id+" AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
         else
-            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExpenseBookingAccountant eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExpenseBookingAccountant eb, ExpenseHead eh, Company com, Centre cen WHERE eb.ExpenseHeadId = eh.Id AND eb.Id ="+id+" AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             expensedetails.add(cursor.getString(0));
@@ -3282,6 +3297,8 @@ public class DatabaseAdapter {
             expensedetails.add(cursor.getString(3));
             expensedetails.add(cursor.getString(4));
             expensedetails.add(cursor.getString(5));
+            expensedetails.add(cursor.getString(6));
+            expensedetails.add(cursor.getString(7));
 
         }
         cursor.close();
@@ -3732,11 +3749,12 @@ public class DatabaseAdapter {
     //</editor-fold>
 
     //<editor-fold desc="Code to insert Accountant Expense Data in Expense Booking Table">
-    public String Insert_ExpenseBookingAccountant(String customerId, String expenseHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
+    public String Insert_ExpenseBookingAccountant(String centreId,String companyId, String expenseHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
         try {
             result = "fail";
             newValues = new ContentValues();
-            newValues.put("CustomerId", customerId);
+            newValues.put("CentreId", centreId);
+            newValues.put("CompanyId", companyId);
             newValues.put("ExpenseHeadId", expenseHeadId);
             newValues.put("Amount", amount);
             newValues.put("Remarks", remarks);

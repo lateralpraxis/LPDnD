@@ -1,4 +1,4 @@
-package lateralpraxis.lpdnd;
+package lateralpraxis.lpdnd.CentreExpense;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -77,8 +77,8 @@ public class ActivityAddExpenseAccountant extends Activity {
     private UserSessionManager session;
     private Intent intent;
     //<editor-fold desc="Code to Declare Controls">
-    private Spinner spExpenseHead;
-    private EditText etAmt,etRemarks;
+    private Spinner spExpenseHead, spCentre, spCompany;
+    private EditText etAmt, etRemarks;
     private TextView tvAttach;
     private Button btnSave, btnUpload;
     private String level1Dir, level2Dir, fullPath,
@@ -165,6 +165,8 @@ public class ActivityAddExpenseAccountant extends Activity {
 
         //<editor-fold desc="Code to Find Controls">
         spExpenseHead = (Spinner) findViewById(R.id.spExpenseHead);
+        spCentre = (Spinner) findViewById(R.id.spCentre);
+        spCompany = (Spinner) findViewById(R.id.spCompany);
         etAmt = (EditText) findViewById(R.id.etAmt);
         etRemarks = (EditText) findViewById(R.id.etRemarks);
         tvAttach = (TextView) findViewById(R.id.tvAttach);
@@ -179,6 +181,8 @@ public class ActivityAddExpenseAccountant extends Activity {
 
         //<editor-fold desc="Code to Bind Spinners">
         spExpenseHead.setAdapter(DataAdapter("exphead", ""));
+        spCentre.setAdapter(DataAdapter("centre", ""));
+        spCompany.setAdapter(DataAdapter("company", ""));
         //</editor-fold>
 
         //<editor-fold desc="Code to be executed on click of Save Button">
@@ -186,14 +190,18 @@ public class ActivityAddExpenseAccountant extends Activity {
             //When go button click
             @Override
             public void onClick(View arg0) {
-                if(((CustomType)spExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया व्यय हेड का चयन करें":"Please select Expense Head.");
-                else if(etAmt.getText().toString().trim().length()<=0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया राशि दर्ज करें":"Please enter amount.");
-                else if (Double.valueOf(etAmt.getText().toString())<=0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"राशि शून्य नहीं हो सकती":"Amount cannot be zero.");
-                else if(etRemarks.getText().toString().trim().length()<=0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया टिप्पणी दर्ज करें":"Please enter remarks.");
+                if (((CustomType) spCentre.getSelectedItem()).getId().equalsIgnoreCase("0"))
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया केंद्र का चयन करें" : "Please select Centre.");
+                else if (((CustomType) spCompany.getSelectedItem()).getId().equalsIgnoreCase("0"))
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया कंपनी का चयन करें" : "Please select Company.");
+                else if (((CustomType) spExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया व्यय हेड का चयन करें" : "Please select Expense Head.");
+                else if (etAmt.getText().toString().trim().length() <= 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया राशि दर्ज करें" : "Please enter amount.");
+                else if (Double.valueOf(etAmt.getText().toString()) <= 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "राशि शून्य नहीं हो सकती" : "Amount cannot be zero.");
+                else if (etRemarks.getText().toString().trim().length() <= 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया टिप्पणी दर्ज करें" : "Please enter remarks.");
                 else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                     builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
@@ -233,7 +241,7 @@ public class ActivityAddExpenseAccountant extends Activity {
                                     HashMap<String, String> user = session.getLoginUserDetails();
                                     customerId = user.get(UserSessionManager.KEY_ID);
                                     db.open();
-                                    db.Insert_ExpenseBookingAccountant(customerId, ((CustomType) spExpenseHead.getSelectedItem()).getId(), Double.valueOf(etAmt.getText().toString()).toString(), etRemarks.getText().toString(), newuuidImg, imagePath, selectedPhotoPath);
+                                    db.Insert_ExpenseBookingAccountant(((CustomType) spCentre.getSelectedItem()).getId(), ((CustomType) spCompany.getSelectedItem()).getId(), ((CustomType) spExpenseHead.getSelectedItem()).getId(), Double.valueOf(etAmt.getText().toString()).toString(), etRemarks.getText().toString(), newuuidImg, imagePath, selectedPhotoPath);
                                     db.close();
                                     common.showToast(lang.equalsIgnoreCase("hi") ? "व्यय विवरण सफलतापूर्वक सहेजा गया" : "Expense details saved successfully.");
                                     Intent intent = new Intent(ActivityAddExpenseAccountant.this, ActivityListBookingAccountant.class);

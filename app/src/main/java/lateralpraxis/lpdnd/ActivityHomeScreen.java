@@ -54,6 +54,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import lateralpraxis.lpdnd.CentreExpense.ActivityListBookingAccountant;
 import lateralpraxis.lpdnd.DeliveryConfirmation.ActivityDeliveryConfirmationCreateList;
 import lateralpraxis.lpdnd.ExpenseBooking.ActivityListBooking;
 import lateralpraxis.lpdnd.OutletPayment.ActivityListPayments;
@@ -155,9 +156,9 @@ public class ActivityHomeScreen extends Activity {
             } else if (userRole.contains("Collection Officer")) {
                 views = Arrays.asList(R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
             } else if (userRole.contains("Accountant") && userRole.contains("Reconciliation User")) {
-                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync,R.layout.btn_expensebooking);
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile,R.layout.btn_cashdeposit, R.layout.btn_expensebooking,R.layout.btn_sync);
             } else if (userRole.contains("Accountant")) {
-                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync,R.layout.btn_expensebooking);
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report,R.layout.btn_cashdeposit, R.layout.btn_expensebooking,R.layout.btn_sync);
             } else if (userRole.contains("Reconciliation User")) {
                 views = Arrays.asList(R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
             }
@@ -2438,7 +2439,7 @@ public class ActivityHomeScreen extends Activity {
                 String[] name = {"action", "userId", "role"};
                 String[] value = {"ReadExpenseHead", userId, userRole};
                 responseJSON = "";
-                // Call method of web service to download Reatil Outlet Inventory from
+                // Call method of web service to download Expense Head from
                 // server
                 responseJSON = common.CallJsonWS(name, value, "ReadMaster",
                         common.url);
@@ -2451,7 +2452,7 @@ public class ActivityHomeScreen extends Activity {
             }
         }
 
-        // After execution of web service to download Retail Outlet Inventory
+        // After execution of web service to download Expense Head
         @Override
         protected void onPostExecute(String result) {
             try {
@@ -2468,7 +2469,7 @@ public class ActivityHomeScreen extends Activity {
                     }
                     dba.close();
                     if (common.isConnected()) {
-                        AsyncCustomerRateWSCall task = new AsyncCustomerRateWSCall();
+                        AsyncCentreWSCall task = new AsyncCentreWSCall();
                         task.execute(result);
 
                     }
@@ -2490,6 +2491,75 @@ public class ActivityHomeScreen extends Activity {
         @Override
         protected void onPreExecute() {
             Dialog.setMessage("Downloading Expense Head..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to fetch Centre Data From Portal">
+    private class AsyncCentreWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String[] name = {"action", "userId", "role"};
+                String[] value = {"ReadCentre", userId, userRole};
+                responseJSON = "";
+                // Call method of web service to download Reatil Outlet Inventory from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        // After execution of web service to download Centre
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    dba.open();
+                    dba.DeleteMasterData("Centre");
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        dba.Insert_Centre(jsonArray.getJSONObject(i)
+                                .getString("A"), jsonArray.getJSONObject(i)
+                                .getString("B"));
+                    }
+                    dba.close();
+                    if (common.isConnected()) {
+                        AsyncCustomerRateWSCall task = new AsyncCustomerRateWSCall();
+                        task.execute(result);
+
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Centre Downloading failed: "
+                                + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Centre..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
