@@ -282,6 +282,7 @@
     <string name="label_Search">View</string>
     <string name="label_Demand">Demand Details</string>
     <string name="label_Centre">Centre:</string>
+    <string name="label_CentreHeader">Centre</string>
     <string name="label_CentreHead">Centre/Veh#</string>
     <string name="label_Company">Company:</string>
     <string name="label_Alloc">Alloc#</string>
