@@ -146,7 +146,8 @@ public class CentreStockAdjustmentCreate extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to find controls">
-
+        llCentre = (LinearLayout) findViewById(R.id.llCentre);
+        llMain = (LinearLayout) findViewById(R.id.llMain);
         llSKU = (LinearLayout) findViewById(R.id.llSKU);
         spCentre = (Spinner) findViewById(R.id.spCentre);
         spSKU = (Spinner) findViewById(R.id.spSKU);
@@ -447,7 +448,7 @@ public class CentreStockAdjustmentCreate extends Activity {
                 if (!result.contains("ERROR")) {
                     if (responseJSON.equalsIgnoreCase("success")) {
                         common.showToast(lang.equalsIgnoreCase("hi") ? "स्टॉक समायोजन सफलतापूर्वक सहेजा गया" : "Stock Adjustment saved successfully.");
-                        Intent i = new Intent(CentreStockAdjustmentCreate.this, StockAdjustmentList.class);
+                        Intent i = new Intent(CentreStockAdjustmentCreate.this, CentreStockAdjustmentList.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(i);
                         finish();

@@ -33,6 +33,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:text="@string/label_centre"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <Spinner
@@ -84,6 +85,8 @@
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
             android:weightSum="1">
 
             <TextView
@@ -91,11 +94,13 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.3"
                 android:text="@string/label_Centre"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvCentreName"
                 android:layout_width="0dp"
+                android:textSize="16sp"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7" />
         </LinearLayout>
@@ -124,7 +129,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:paddingBottom="2dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     android:weightSum="1">
 
                     <TextView

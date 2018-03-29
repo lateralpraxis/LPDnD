@@ -47,7 +47,7 @@ import java.util.Locale;
 import java.util.UUID;
 
 import lateralpraxis.lpdnd.ActivityChangePassword;
-import lateralpraxis.lpdnd.ActivityHomeScreen;
+import lateralpraxis.lpdnd.ActivityAdminHomeScreen;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
 import lateralpraxis.lpdnd.R;
@@ -238,7 +238,7 @@ public class CentreStockAdjustmentList extends Activity {
                 final HashMap<String, String> user = session.getLoginUserDetails();
                 userRole = user.get(UserSessionManager.KEY_ROLES);
                 Intent i;
-                i = new Intent(CentreStockAdjustmentList.this, ActivityHomeScreen.class);
+                i = new Intent(CentreStockAdjustmentList.this, ActivityAdminHomeScreen.class);
                 startActivity(i);
                 i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(i);
@@ -252,7 +252,7 @@ public class CentreStockAdjustmentList extends Activity {
     //Event Triggered on Clicking Back
     @Override
     public void onBackPressed() {
-        Intent i = new Intent(CentreStockAdjustmentList.this, ActivityHomeScreen.class);
+        Intent i = new Intent(CentreStockAdjustmentList.this, ActivityAdminHomeScreen.class);
         startActivity(i);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(i);
@@ -347,7 +347,7 @@ public class CentreStockAdjustmentList extends Activity {
 
     //<editor-fold desc="Code to be Bind Data in list view">
     public static class ViewHolder {
-        TextView tvAdjDate, tvItem, tvAdjQty, tvExistInv, tvNewInv, tvReason;
+        TextView tvAdjDate, tvItem, tvAdjQty, tvExistInv, tvNewInv, tvReason, tvCentre;
         TableRow tableHeader;
     }
 
@@ -397,6 +397,7 @@ public class CentreStockAdjustmentList extends Activity {
                 arg1 = mInflater.inflate(R.layout.activity_list_centre_stock_adjustment_data, null);
                 holder = new ViewHolder();
                 holder.tvAdjDate = (TextView) arg1.findViewById(R.id.tvAdjDate);
+                holder.tvCentre = (TextView) arg1.findViewById(R.id.tvCentre);
                 holder.tvItem = (TextView) arg1.findViewById(R.id.tvItem);
                 holder.tvAdjQty = (TextView) arg1.findViewById(R.id.tvAdjQty);
                 holder.tvExistInv = (TextView) arg1.findViewById(R.id.tvExistInv);
@@ -413,6 +414,7 @@ public class CentreStockAdjustmentList extends Activity {
             holder.tvItem.setText(list.get(arg0).get("Item"));
             holder.tvExistInv.setText(list.get(arg0).get("ExistingInventory"));
             holder.tvAdjQty.setText(list.get(arg0).get("Quantity"));
+            holder.tvCentre.setText(list.get(arg0).get("Centre"));
             holder.tvNewInv.setText(list.get(arg0).get("NewInventory"));
             holder.tvReason.setText(Html.fromHtml("<b>Remarks: </b>") + list.get(arg0).get("Reason"));
             if(list.get(arg0).get("Flag").equalsIgnoreCase("1"))
@@ -473,6 +475,8 @@ public class CentreStockAdjustmentList extends Activity {
                                     .getString("AdjustDate"));
                             map.put("Item", jsonArray.getJSONObject(i)
                                     .getString("Item"));
+                            map.put("Centre", jsonArray.getJSONObject(i)
+                                    .getString("CentreName"));
                             map.put("ExistingInventory", jsonArray.getJSONObject(i)
                                     .getString("ExistingInventory"));
                             map.put("Quantity", jsonArray.getJSONObject(i)
