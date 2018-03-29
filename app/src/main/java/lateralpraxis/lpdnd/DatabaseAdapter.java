@@ -112,8 +112,9 @@ public class DatabaseAdapter {
     CentreUserCentres_CREATE = "CREATE TABLE IF NOT EXISTS CentreUserCentres(Id TEXT, Name TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
-            OutletPaymentReceipt_CREATE = "CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
-            ExpenseBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
+    OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
+            ExpenseBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);",
+    ExpenseBookingAccountant_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBookingAccountant(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
 
     // Context of the application using the database.
     private final Context context;
@@ -1402,8 +1403,34 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to get Accountant Attachment For Sync">
+    public ArrayList<HashMap<String, String>> getAccountantAttachmentsForSync() {
+
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+
+        selectQuery = "SELECT UniqueId, ImageName, ImagePath FROM ExpenseBookingAccountant WHERE IsImageSync IS NULL AND ImagePath!='' ";
+
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("UploadFileName", cursor.getString(1));
+            map.put("ImagePath", cursor.getString(2));
+
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
     public void updateOutletAttachmentStatus(String uniqueId) {
         selectQuery = "UPDATE ExpenseBooking SET IsImageSync = 1 WHERE UniqueId ='" + uniqueId + "'";
+        db.execSQL(selectQuery);
+    }
+
+    public void updateAccountantAttachmentStatus(String uniqueId) {
+        selectQuery = "UPDATE ExpenseBookingAccountant SET IsImageSync = 1 WHERE UniqueId ='" + uniqueId + "'";
         db.execSQL(selectQuery);
     }
 
@@ -1740,6 +1767,20 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to Updated Accountant Expense IsSYnc Flag">
+    public String Update_AccountantExpenseIsSync() {
+        try {
+            String query = "UPDATE ExpenseBookingAccountant SET IsSync = '1'";
+            db.execSQL(query);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
 
     public void DeleteDemand(String orderId) {
         db.execSQL("DELETE FROM Demand WHERE Id = '" + orderId + "'");
@@ -1789,6 +1830,7 @@ public class DatabaseAdapter {
             db.execSQL("DELETE FROM OutletPrimaryReceipt;");
             db.execSQL("DELETE FROM OutletPaymentReceipt;");
             db.execSQL("DELETE FROM ExpenseBooking;");
+            db.execSQL("DELETE FROM ExpenseBookingAccountant;");
 
             db.execSQL("DELETE FROM OutletSale;");
             db.execSQL("DELETE FROM OutletSaleDetail;");
@@ -2192,6 +2234,10 @@ public class DatabaseAdapter {
         countoutletPayment = cursor.getCount();
 
         selectQuery = "SELECT Id FROM ExpenseBooking WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        countExpense = cursor.getCount();
+
+        selectQuery = "SELECT Id FROM ExpenseBookingAccountant WHERE IsSync IS NULL";
         cursor = db.rawQuery(selectQuery, null);
         countExpense = cursor.getCount();
 
@@ -3166,6 +3212,35 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Method to Fetch Accountant Expense Details">
+    public ArrayList<HashMap<String, String>> getAccountantExpenseDetails() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        String prevDate="";
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBookingAccountant eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        else
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBookingAccountant eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Date", cursor.getString(0));
+            map.put("Name", cursor.getString(1));
+            map.put("Amount", cursor.getString(2));
+            map.put("Remarks", cursor.getString(3));
+            map.put("Id", cursor.getString(4));
+            if(prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
+                map.put("Flag", "0");
+            else
+                map.put("Flag", "1");
+            prevDate =convertToDisplayDateFormat(cursor.getString(0));
+
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
 
     //<editor-fold desc="Code to get farmer details by unique id from Main table">
     public ArrayList<String> getExpenseDetailById(String id, String lang) {
@@ -3175,6 +3250,30 @@ public class DatabaseAdapter {
             selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
         else
             selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            expensedetails.add(cursor.getString(0));
+            expensedetails.add(cursor.getString(1));
+            expensedetails.add(cursor.getString(2));
+            expensedetails.add(cursor.getString(3));
+            expensedetails.add(cursor.getString(4));
+            expensedetails.add(cursor.getString(5));
+
+        }
+        cursor.close();
+
+        return expensedetails;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to get farmer details by unique id from Main table">
+    public ArrayList<String> getAccountantExpenseDetailById(String id, String lang) {
+        ArrayList<String> expensedetails = new ArrayList<String>();
+
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExpenseBookingAccountant eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        else
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExpenseBookingAccountant eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             expensedetails.add(cursor.getString(0));
@@ -3632,6 +3731,31 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to insert Accountant Expense Data in Expense Booking Table">
+    public String Insert_ExpenseBookingAccountant(String customerId, String expenseHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("CustomerId", customerId);
+            newValues.put("ExpenseHeadId", expenseHeadId);
+            newValues.put("Amount", amount);
+            newValues.put("Remarks", remarks);
+            newValues.put("AndroidDate", getDateTime());
+            newValues.put("UniqueId", uniqueId);
+            newValues.put("ImagePath", imagePath);
+            newValues.put("ImageName", imageName);
+
+            db.insert("ExpenseBookingAccountant", null, newValues);
+
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Method to Fetch Outlet Payment Receipts">
     public ArrayList<HashMap<String, String>> getOutletPayments() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
@@ -3673,6 +3797,28 @@ public class DatabaseAdapter {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
 
         selectQuery = "SELECT UniqueId, CustomerId,ExpenseHeadId,  Amount, AndroidDate, Remarks,ImageName FROM ExpenseBooking WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("CustomerId", cursor.getString(1));
+            map.put("ExpenseHeadId", cursor.getString(2));
+            map.put("Amount", cursor.getString(3));
+            map.put("TransactionDate", cursor.getString(4));
+            map.put("Remarks", cursor.getString(5));
+            map.put("ImageName", cursor.getString(6));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Method to fetch UnSync Accountant Expense">
+    public ArrayList<HashMap<String, String>> getUnSyncAccountantExpense() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+
+        selectQuery = "SELECT UniqueId, CustomerId,ExpenseHeadId,  Amount, AndroidDate, Remarks,ImageName FROM ExpenseBookingAccountant WHERE IsSync IS NULL";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();

@@ -401,6 +401,15 @@
     <string name="hint_amount">Enter Amount</string>
     <!-- End of Reconciliation Variables-->
 
+    <!-- Start of Account Expense Booking Variables-->
+    <string name="label_accExpense">Expense Booking Accounts</string>
+    <string name="label_accexpensehead">Expense Head *</string>
+    <string name="label_accexpenseheader">Expense Head</string>
+    <string name="label_accremarkshead">Remarks *</string>
+    <string name="label_accchoosefile">Choose File</string>
+    <string name="label_accviewfile">View Attachment</string>
+    <!-- End of Account Expense Booking Variables-->
+
     <!-- Start of Customer Settlement Variables-->
     <string name="customerSettlementDetails">Customer Settlement Details</string>
     <!-- End of Customer Settlement Variables-->

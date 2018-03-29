@@ -397,4 +397,13 @@
     <string name="hint_amount">राशि दर्ज करें</string>
     <string name="label_optremarkshead">टिप्पणी</string>
     <!-- End of Reconciliation Variables-->
+
+    <!-- Start of Account Expense Booking Variables -->
+    <string name="label_accExpense">व्यय बुकिंग</string>
+    <string name="label_accexpensehead">व्यय हेड *</string>
+    <string name="label_accexpenseheader">व्यय हेड</string>
+    <string name="label_accremarkshead">टिप्पणी *</string>
+    <string name="label_accchoosefile">फ़ाइल चुनें</string>
+    <string name="label_accviewfile">अनुलग्नक देखें</string>
+    <!-- End of Account Expense Booking Variables-->
 </resources>
