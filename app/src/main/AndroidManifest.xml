@@ -350,6 +350,17 @@
             android:configChanges="locale|orientation|keyboardHidden"
             android:label="@string/app_name"
             android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".ExpenseConfirmation.CentreExpenseConfirmationCreate"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ExpenseConfirmation.CentreExpenseConfirmationList"
+            android:configChanges="locale|orientation|keyboardHidden"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".OutletSale.ActivityOutletSaleCreate"
             android:configChanges="locale|orientation|keyboardHidden"

@@ -31,7 +31,7 @@
                 android:textColor="@color/black"
                 android:textIsSelectable="false"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                />
 
             <!-- 1/1 -->
 
@@ -43,7 +43,7 @@
                 android:textColor="@color/black"
                 android:textIsSelectable="false"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                 />
             <!-- 1/2 -->
 
             <TextView
@@ -55,7 +55,7 @@
                 android:textColor="@color/black"
                 android:textIsSelectable="false"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                />
         </TableRow>
 
         <TableRow

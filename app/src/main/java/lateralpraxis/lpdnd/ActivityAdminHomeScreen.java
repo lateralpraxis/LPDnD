@@ -264,7 +264,7 @@ public class ActivityAdminHomeScreen  extends Activity{
 												/*intent = new Intent(context, CentreExpenseConfirmationList.class);
 												startActivity(intent);
 												finish();*/
-												ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
+												ActivityCentreExpenseConirmationWSCall task = new ActivityCentreExpenseConirmationWSCall();
 												task.execute();
 											} else {
 												common.showToast("Please select Appropriate option.");
