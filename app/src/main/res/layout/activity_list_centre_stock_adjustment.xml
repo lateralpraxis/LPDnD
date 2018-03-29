@@ -109,15 +109,16 @@
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            android:weightSum="1">
+            android:gravity="end"
+            >
 
             <Button
                 android:id="@+id/btnGo"
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_weight="1"
+                android:layout_gravity="center_horizontal"
+
                 android:background="@drawable/button_design"
                 android:paddingBottom="5dp"
                 android:paddingEnd="10sp"
@@ -126,7 +127,7 @@
                 android:paddingStart="10sp"
                 android:text="@string/label_Search"
                 android:textColor="#FFFFFF"
-                android:textSize="16sp"/>
+                android:textSize="18sp"/>
         </LinearLayout>
 
         <LinearLayout
@@ -156,12 +157,24 @@
                         android:id="@+id/tvAdjDate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".5"
+                        android:layout_weight=".4"
                         android:text="@string/label_AdjDate"
                         android:textColor="@color/white"
                         android:textIsSelectable="false"
                         android:textSize="16sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvCentre"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:text="@string/label_CentreHeader"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
 
                     <!-- 1/1 -->
 
@@ -169,7 +182,7 @@
                         android:id="@+id/tvItem"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".5"
+                        android:layout_weight=".3"
                         android:text="@string/label_Item"
                         android:textColor="@color/white"
                         android:textIsSelectable="false"

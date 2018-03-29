@@ -282,6 +282,7 @@
     <string name="label_Demand">मांग विवरण</string>
     <string name="label_Centre">केंद्र:</string>
     <string name="label_CentreHead">केंद्र/वाहन#</string>
+    <string name="label_CentreHeader">केंद्र</string>
     <string name="label_Company">कंपनी:</string>
     <string name="label_Alloc">आवंटित#</string>
     <string name="label_Vehicle">वाहन#</string>
