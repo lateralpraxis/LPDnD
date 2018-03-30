@@ -85,6 +85,7 @@ public class DatabaseAdapter {
     OutletSale_CREATE = "CREATE TABLE IF NOT EXISTS OutletSale(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT, CustomerId TEXT, Customer TEXT, SaleType TEXT, CreateBy TEXT, CreateDate TEXT, Imei TEXT, IsSync TEXT);",
             OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
             ExpenseConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseConfirmationData(Id TEXT, ExpenseDate TEXT, CustomerName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT);",
+            CentreExpenseConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS CentreExpenseConfirmationData(Id TEXT, ExpenseDate TEXT, CentreName TEXT, CompanyName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT);",
     /********************* Tables used in Delete For System User ******************/
     CashDepositDeleteDataTABLE_CREATE = "CREATE TABLE IF NOT EXISTS CashDepositDeleteData (CashDepositId TEXT, CashDepositDetailId TEXT, DepositDate TEXT, PCDetailId TEXT, Mode TEXT, Amount TEXT, FullName TEXT)",
             RawMaterialMaster_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialMaster(Id TEXT, Name TEXT, UOM TEXT, NameLocal TEXT);",
@@ -3130,6 +3131,20 @@ public class DatabaseAdapter {
         return data;
     }
 
+    //Method to get Expense Confirmation Data
+    public String getCentreExpenseConfirmationHeaderData(String id) {
+        String data = "";
+        selectQuery = "SELECT DISTINCT ExpenseDate||'~'||CentreName||'~'||CompanyName||'~'||ExpenseHead||'~'||Amount||'~'||Remarks FROM CentreExpenseConfirmationData WHERE Id='" + id + "' ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                data = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+        return data;
+    }
+
     //To insert records in ExpenseConfirmationData Table
     public String Insert_ExpenseConfirmationData(String id, String expenseDate, String customerName, String expenseHead, String amount, String remarks) {
         try {
@@ -3143,6 +3158,29 @@ public class DatabaseAdapter {
             newValues.put("Remarks", remarks);
 
             db.insert("ExpenseConfirmationData", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    //To insert records in Centre ExpenseConfirmationData Table
+    public String Insert_CentreExpenseConfirmationData(String id, String expenseDate, String centreName, String companyName,
+                                                       String expenseHead, String amount, String remarks) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("ExpenseDate", expenseDate);
+            newValues.put("CentreName", centreName);
+            newValues.put("CompanyName", companyName);
+            newValues.put("ExpenseHead", expenseHead);
+            newValues.put("Amount", amount);
+            newValues.put("Remarks", remarks);
+
+            db.insert("CentreExpenseConfirmationData", null, newValues);
             result = "success";
             return result;
         } catch (Exception e) {
@@ -3165,6 +3203,35 @@ public class DatabaseAdapter {
             map.put("ExpenseHead", cursor.getString(3));
             map.put("Amount", cursor.getString(4));
             map.put("Remarks", cursor.getString(5));
+            if (date.equalsIgnoreCase(cursor.getString(1)))
+                map.put("Flag", "1");
+            else
+                map.put("Flag", "0");
+            date = cursor.getString(1);
+            wordList.add(map);
+        }
+
+        cursor.close();
+
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="To get Centre Expense Booking data For confirmation">
+    public ArrayList<HashMap<String, String>> getCentreExpenseConfirmationData() {
+        wordList = new ArrayList<HashMap<String, String>>();
+        String date = "";
+        selectQuery = "SELECT DISTINCT Id, ExpenseDate, CentreName, CompanyName, ExpenseHead, Amount, Remarks FROM CentreExpenseConfirmationData";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Id", cursor.getString(0));
+            map.put("ExpenseDate", cursor.getString(1));
+            map.put("CentreName", cursor.getString(2));
+            map.put("CompanyName", cursor.getString(3));
+            map.put("ExpenseHead", cursor.getString(4));
+            map.put("Amount", cursor.getString(5));
+            map.put("Remarks", cursor.getString(6));
             if (date.equalsIgnoreCase(cursor.getString(1)))
                 map.put("Flag", "1");
             else

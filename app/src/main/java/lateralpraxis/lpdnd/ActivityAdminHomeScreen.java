@@ -35,6 +35,7 @@ import java.util.Locale;
 
 import lateralpraxis.lpdnd.CentreStockConversion.ActivityListCentreConversion;
 import lateralpraxis.lpdnd.CustomerSettlement.CustomerSettlementList;
+import lateralpraxis.lpdnd.ExpenseConfirmation.CentreExpenseConfirmationList;
 import lateralpraxis.lpdnd.ExpenseConfirmation.ExpenseConfirmationList;
 import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
 import lateralpraxis.lpdnd.StockAdjustment.CentreStockAdjustmentList;
@@ -264,6 +265,52 @@ public class ActivityAdminHomeScreen extends Activity {
                 btn = (Button) btnLayout.findViewById(R.id.btnExpenseConfirmation);
                 btn.setOnClickListener(new View.OnClickListener() {
 
+					@Override
+					public void onClick(View v) {
+						if(common.isConnected())
+						{
+							AlertDialog.Builder builderSingle = new AlertDialog.Builder(ActivityAdminHomeScreen.this);
+							builderSingle.setTitle("Select Expense Confirmation For");
+							final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ActivityAdminHomeScreen.this, android.R.layout.select_dialog_singlechoice);
+							arrayAdapter.add("Retail Outlet");
+							arrayAdapter.add("Centre");
+							builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+								@Override
+								public void onClick(DialogInterface dialog, int which) {
+									dialog.dismiss();
+								}
+							});
+							builderSingle.setAdapter(
+									arrayAdapter,
+									new DialogInterface.OnClickListener() {
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											String strName = arrayAdapter.getItem(which);
+											if (strName.equals("Retail Outlet")) {
+												/*intent = new Intent(context, ExpenseConfirmationList.class);
+												startActivity(intent);
+												finish();*/
+												ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
+												task.execute();
+											} else if (strName.equals("Centre")) {
+												/*intent = new Intent(context, CentreExpenseConfirmationList.class);
+												startActivity(intent);
+												finish();*/
+												ActivityCentreExpenseConirmationWSCall task = new ActivityCentreExpenseConirmationWSCall();
+												task.execute();
+											} else {
+												common.showToast("Please select Appropriate option.");
+											}
+										}
+									});
+							builderSingle.show();
+						}
+					}
+				});
+				break;
+			case R.layout.btn_customersettlement:
+				btn = (Button) btnLayout.findViewById(R.id.btnCustomerSettlement);
+				btn.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (common.isConnected()) {
@@ -638,6 +685,102 @@ public class ActivityAdminHomeScreen extends Activity {
     }
 
 
+	// Web Service to Fetch Expense Data for Confirmation for Retail outlet
+	private class ActivityCentreExpenseConirmationWSCall extends
+			AsyncTask<String, Void, String> {
+		private ProgressDialog Dialog = new ProgressDialog(
+				ActivityAdminHomeScreen.this);
+
+		@Override
+		protected String doInBackground(String... params) {
+			try {
+
+				//<editor-fold desc="Code to set default language">
+				lang = session.getDefaultLang();
+				Locale myLocale = new Locale(lang);
+				Resources res = getResources();
+				DisplayMetrics dm = res.getDisplayMetrics();
+				Configuration conf = res.getConfiguration();
+				conf.locale = myLocale;
+				res.updateConfiguration(conf, dm);
+				//</editor-fold>
+
+				String[] name = { "lang"};
+				String[] value = { lang };
+				// Call method of web service to Read Expense Data For Confirmation
+				responseJSON = "";
+				responseJSON = common.CallJsonWS(name, value,"GetCentreExpensePendingConfirmation", common.url);
+				return "";
+			} catch (SocketTimeoutException e) {
+				return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+			} catch (final Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+				return "ERROR: " + e.getMessage();
+			}
+
+		}
+
+		// After execution of product web service
+		@Override
+		protected void onPostExecute(String result) {
+			try {
+				if (!result.contains("ERROR")) {
+					dba.open();
+					dba.DeleteMasterData("ExpenseConfirmationData");
+					// To display message after response from server
+					JSONArray jsonArray = new JSONArray(responseJSON);
+					if (jsonArray.length() > 0) {
+
+						// inserting data into CashDepositDeleteData
+						for (int i = 0; i < jsonArray.length(); ++i) {
+
+							dba.Insert_CentreExpenseConfirmationData(jsonArray.getJSONObject(i)
+									.getString("Id"),jsonArray.getJSONObject(i)
+									.getString("ExpenseDate"),jsonArray.getJSONObject(i)
+									.getString("CentreName"), jsonArray.getJSONObject(i)
+									.getString("CompanyName"), jsonArray.getJSONObject(i)
+									.getString("ExpenseHeadName"),jsonArray.getJSONObject(i)
+									.getString("Amount"),jsonArray.getJSONObject(i)
+									.getString("Remarks"));
+						}
+						dba.close();
+						intent = new Intent(context, CentreExpenseConfirmationList.class);
+						startActivity(intent);
+						finish();
+					} else {
+						common.showToast("There is no data available for confirming expense data!");
+					}
+
+				} else {
+					if (result.contains("null") || result == "")
+						result = "Server not responding. Please try again later.";
+					common.showAlert(ActivityAdminHomeScreen.this, result, false);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				common.showAlert(ActivityAdminHomeScreen.this,
+						"Expense Booking Confirmation Data Downloading failed: " + e.toString(),
+						false);
+			}
+			Dialog.dismiss();
+		}
+
+		// To display message on screen within process
+		@Override
+		protected void onPreExecute() {
+			Dialog.setMessage("Downloading Expense Booking Confirmation Data..");
+			Dialog.setCancelable(false);
+			Dialog.show();
+		}
+	}
+
+
+	// Web Service to Fetch Expense Data for Confirmation for retail outlet
+	private class ActivityExpenseConirmationWSCall extends
+			AsyncTask<String, Void, String> {
+		private ProgressDialog Dialog = new ProgressDialog(
+				ActivityAdminHomeScreen.this);
     // Web Service to Fetch Expense Data for Confirmation
     private class ActivityExpenseConirmationWSCall extends
             AsyncTask<String, Void, String> {
