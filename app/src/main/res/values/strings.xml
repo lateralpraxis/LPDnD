@@ -167,7 +167,7 @@
     <string name="menu_stockAdjustment">STOCK\nADJUSTMENT</string>
     <string name="menu_customersettlement">CUSTOMER\nSETTLEMENT</string>
     <string name="menu_expenseconfirmation">EXPENSE\nCONFIRMATION</string>
-    <string name="menu_deliveryConfirmation">DELIVERY\nCONFIRMATION</string>
+    <string name="menu_deliveryConfirmation">RECEIPT\nCONFIRMATION</string>
     <string name="menu_StockReturnView">Stock Return</string>
     <string name="menu_outlet_sale">Sale</string>
     <string name="menu_reconcile">Reconciliation</string>

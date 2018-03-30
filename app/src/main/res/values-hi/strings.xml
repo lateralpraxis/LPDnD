@@ -170,7 +170,7 @@
     <string name="menu_customersettlement">ग्राहक\nनिपटान</string>
     <string name="menu_expenseconfirmation">व्यय\nपुष्टि</string>
     <string name="menu_StockReturnView">स्टॉक वापसी</string>
-    <string name="menu_deliveryConfirmation">डिलिवरी\nपुष्टिकरण</string>
+    <string name="menu_deliveryConfirmation">प्राप्ति\nपुष्टिकरण</string>
     <string name="menu_outlet_sale">बिक्री</string>
     <string name="menu_reconcile">मिलान</string>
     <!--</editor-fold>-->
