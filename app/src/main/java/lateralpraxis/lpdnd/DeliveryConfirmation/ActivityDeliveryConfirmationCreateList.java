@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
@@ -27,6 +28,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -92,8 +94,6 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
         //Start of code to find Controls
         listViewConfirm = (ListView) findViewById(R.id.listViewConfirm);
         tvNoRecord = (TextView) findViewById(R.id.tvNoRecord);
-        tvDivider = findViewById(R.id.tvDivider);
-        tvDivider.setVisibility(View.GONE);
         if (common.isConnected()) {
             String[] myTaskParams = {"transactions"};
             AsyncCustomerValidatePasswordWSCall task = new AsyncCustomerValidatePasswordWSCall();
@@ -109,7 +109,7 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
                 Intent intent = new Intent(ActivityDeliveryConfirmationCreateList.this, ActivityDeliveryConfirmationCreateView.class);
                 intent.putExtra("DeliveryId", String.valueOf(((TextView) item.findViewById(R.id.tvId)).getText().toString()));
                 intent.putExtra("Name", String.valueOf(((TextView) item.findViewById(R.id.tvName)).getText().toString()));
-                intent.putExtra("Date", String.valueOf(((TextView) item.findViewById(R.id.tvDate)).getText().toString()));
+                intent.putExtra("Date", String.valueOf(((TextView) item.findViewById(R.id.tvDateDisplay)).getText().toString()));
                 intent.putExtra("Invoice", String.valueOf(((TextView) item.findViewById(R.id.tvInvoice)).getText().toString()));
                 intent.putExtra("Vehicle", String.valueOf(((TextView) item.findViewById(R.id.tvVehicle)).getText().toString()));
                 intent.putExtra("TransType", String.valueOf(((TextView) item.findViewById(R.id.tvTransType)).getText().toString()));
@@ -239,8 +239,8 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
 
     //<editor-fold desc="Code Binding Data In List">
     public static class viewHolder {
-        TextView tvId, tvDate, tvName, tvVehicle, tvInvoice, tvTransType;
-        LinearLayout llDate, llVehicle, llName;
+        TextView tvId, tvDate, tvName, tvVehicle, tvInvoice, tvTransType, tvDateDisplay;
+        TableRow tableHeader;
         int ref;
     }
 
@@ -296,18 +296,12 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
                                     .getString("InvoiceNo"));
                             map.put("CustomerName", jsonArray.getJSONObject(i)
                                     .getString("CustomerName"));
-
                             if (data.equalsIgnoreCase(jsonArray.getJSONObject(i)
-                                    .getString("FullName") + "~" + jsonArray.getJSONObject(i)
-                                    .getString("VehicleNo") + "~" + jsonArray.getJSONObject(i)
                                     .getString("DeliveryDate")))
                                 map.put("Flag", "1");
                             else
                                 map.put("Flag", "0");
-                            data = jsonArray.getJSONObject(i)
-                                    .getString("FullName") + "~" + jsonArray.getJSONObject(i)
-                                    .getString("VehicleNo") + "~" + jsonArray.getJSONObject(i)
-                                    .getString("DeliveryDate");
+                            data = jsonArray.getJSONObject(i).getString("DeliveryDate");
                             wordList.add(map);
                         }
                         listSize = wordList.size();
@@ -319,33 +313,25 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
                             listViewConfirm.setLayoutParams(params);
                             listViewConfirm.requestLayout();
                             tvNoRecord.setVisibility(View.GONE);
-                            tvDivider.setVisibility(View.VISIBLE);
                         } else {
                             listViewConfirm.setAdapter(null);
                             tvNoRecord.setVisibility(View.VISIBLE);
-                            tvDivider.setVisibility(View.GONE);
                         }
                     } else {
                         if (lang.equalsIgnoreCase("hi"))
-                            common.showToast("वितरण की पुष्टि के लिए कोई डेटा उपलब्ध नहीं है!");
+                            common.showToast("प्राप्ति की पुष्टि के लिए कोई डेटा उपलब्ध नहीं है!");
                         else
-                            common.showToast("There is no data available for delivery confirmation!");
+                            common.showToast("There is no data available for receipt confirmation!");
                     }
 
                 } else {
                     if (result.contains("null") || result == "")
                         result = "Server not responding. Please try again later.";
                     common.showToast(result);
-                    /*Intent intent = new Intent(mContext, ActivityAdminHomeScreen.class);
-                    startActivity(intent);
-					finish();*/
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-                common.showToast("Delivery Downloading failed: " + e.toString());
-                /*Intent intent = new Intent(mContext, ActivityAdminHomeScreen.class);
-                startActivity(intent);
-				finish();*/
+                common.showToast("Receipt Downloading failed: " + e.toString());
             }
             Dialog.dismiss();
         }
@@ -353,7 +339,7 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
         // To display message on screen within process
         @Override
         protected void onPreExecute() {
-            Dialog.setMessage("Downloading Delivery Data..");
+            Dialog.setMessage("Downloading Receipt Data..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
@@ -408,38 +394,34 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
                     .findViewById(R.id.tvId);
             holder.tvDate = (TextView) convertView
                     .findViewById(R.id.tvDate);
+            holder.tvDateDisplay = (TextView) convertView
+                    .findViewById(R.id.tvDateDisplay);
             holder.tvName = (TextView) convertView
                     .findViewById(R.id.tvName);
             holder.tvVehicle = (TextView) convertView
                     .findViewById(R.id.tvVehicle);
             holder.tvInvoice = (TextView) convertView
                     .findViewById(R.id.tvInvoice);
-
-            holder.llDate = (LinearLayout) convertView
-                    .findViewById(R.id.llDate);
-            holder.llVehicle = (LinearLayout) convertView
-                    .findViewById(R.id.llVehicle);
-            holder.llName = (LinearLayout) convertView
-                    .findViewById(R.id.llName);
-
+            holder.tableHeader = (TableRow) convertView.findViewById(R.id.tableHeader);
             final HashMap<String, String> itemData = _listData.get(position);
             holder.tvId.setText(itemData.get("DeliveryId"));
             holder.tvTransType.setText(itemData.get("TransType"));
-            holder.tvDate.setText(common.convertToDisplayDateFormat(itemData.get("DeliveryDate")));
+            //holder.tvDate.setText(common.convertToDisplayDateFormat(itemData.get("DeliveryDate")));
             holder.tvName.setText(itemData.get("FullName"));
             holder.tvVehicle.setText(itemData.get("VehicleNo"));
-            //holder.tvInvoice.setText(itemData.get("InvoiceNo")+" - "+itemData.get("CustomerName"));
             holder.tvInvoice.setText(itemData.get("InvoiceNo"));
-            if (itemData.get("Flag").equalsIgnoreCase("1")) {
-                holder.llDate.setVisibility(View.GONE);
-                holder.llVehicle.setVisibility(View.GONE);
-                holder.llName.setVisibility(View.GONE);
-            } else {
-                holder.llDate.setVisibility(View.VISIBLE);
-                holder.llVehicle.setVisibility(View.VISIBLE);
-                holder.llName.setVisibility(View.VISIBLE);
-            }
-            //convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
+            holder.tvDateDisplay.setText(common.convertToDisplayDateFormat(itemData.get("DeliveryDate")));
+            if(itemData.get("TransType").equalsIgnoreCase("Delivery"))
+                holder.tvInvoice.setTextColor(Color.BLACK);
+            else
+                holder.tvInvoice.setTextColor(Color.BLUE);
+
+            if(itemData.get("Flag").equalsIgnoreCase("1"))
+                holder.tvDate.setText("");
+            else
+                holder.tvDate.setText(common.convertToDisplayDateFormat(itemData.get("DeliveryDate")));
+
+            convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return convertView;
         }
 

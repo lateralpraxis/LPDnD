@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -57,6 +58,7 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
     HashMap<String, String> delmap = null;
     private TextView tvNoRecord;
     private TextView tvName, tvDate, tvInvoice, tvVehicle, tvTotalAmount;
+    private LinearLayout llName, llVehicle;
     private Button btnDelivery;
     private UserSessionManager session;
     private String lang, userId, responseJSON, deliveryId, name, date, invoice, vehicle, transType;
@@ -82,6 +84,8 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
         tvNoRecord = (TextView) findViewById(R.id.tvNoRecord);
         tvTotalAmount = (TextView) findViewById(R.id.tvTotalAmount);
         btnDelivery = (Button) findViewById(R.id.btnDelivery);
+        llName= (LinearLayout) findViewById(R.id.llName);
+        llVehicle= (LinearLayout) findViewById(R.id.llVehicle);
         tvDivider = findViewById(R.id.tvDivider);
         tvDivider.setVisibility(View.GONE);
         /*End of code to find Controls*/
@@ -114,6 +118,14 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
             tvDate.setText(date);
             tvInvoice.setText(invoice);
             tvVehicle.setText(vehicle);
+            if(transType.equalsIgnoreCase("Delivery")) {
+                llName.setVisibility(View.VISIBLE);
+                llVehicle.setVisibility(View.VISIBLE);
+            }
+            else {
+                llName.setVisibility(View.GONE);
+                llVehicle.setVisibility(View.GONE);
+            }
         }
         if (common.isConnected()) {
             String[] params = {deliveryId};

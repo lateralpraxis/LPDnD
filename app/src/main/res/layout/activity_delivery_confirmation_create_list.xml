@@ -1,49 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="@color/white"
-    android:orientation="vertical">
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:background="@color/white"
+              android:orientation="vertical">
 
     <TextView
         style="@style/style_topbar"
-        android:text="@string/DeleteDeliveryHead" />
+        android:layout_height="35dp"
+        android:layout_width="match_parent"
+        android:text="@string/pendingDeliveryConfirmation" />
 
-    <ScrollView
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
-
+        android:orientation="vertical"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp" >
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginTop="3dp"
+            android:orientation="vertical" >
 
-            <lateralpraxis.lpdnd.NonScrollableListView
-                android:id="@+id/listViewConfirm"
+            <TableLayout
+                android:id="@+id/tableGridHead"
+                style="@style/style_gridheader"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:descendantFocusability="afterDescendants"
-                android:divider="@color/black"
-                android:dividerHeight="1dp"
-                android:focusable="true"
-                android:minHeight="64sp" />
+                android:visibility="visible" >
 
-            <View
-                android:id="@+id/tvDivider"
+                <TableRow
+                    android:id="@+id/tableHeader"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    tools:ignore="UselessParent" >
+
+                    <TextView
+                        android:id="@+id/tvDate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".4"
+                        android:text="@string/paydate"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+
+                    <TextView
+                        android:id="@+id/tvInvoice"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".6"
+                        android:text="@string/invoice"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+                </TableRow>
+            </TableLayout>
+
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/black" />
+                android:layout_height="match_parent"
+                android:fillViewport="true">
 
-            <TextView
-                android:id="@+id/tvNoRecord"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20sp"
-                android:gravity="center"
-                android:text="@string/norecord"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <lateralpraxis.lpdnd.NonScrollableListView
+                        android:id="@+id/listViewConfirm"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:descendantFocusability="afterDescendants"
+                        android:divider="@color/black"
+                        android:dividerHeight="1dp"
+                        android:focusable="true"
+                        android:minHeight="64sp" />
+
+                    <TextView
+                        android:id="@+id/tvNoRecord"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20sp"
+                        android:gravity="center"
+                        android:text="@string/norecord"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </ScrollView>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+
 </LinearLayout>

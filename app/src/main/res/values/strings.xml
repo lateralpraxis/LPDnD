@@ -344,8 +344,9 @@
     <!-- End of Outlet Sale  -->
 
     <!-- Delivery Confirmation -->
-    <string name="deliveryConfirmation">Delivery Confirmation</string>
-    <string name="deliveryConfirmationDetails">Delivery Confirmation Details</string>
+    <string name="deliveryConfirmation">Receipt Confirmation</string>
+    <string name="pendingDeliveryConfirmation">Pending Receipt Confirmation</string>
+    <string name="deliveryConfirmationDetails">Receipt Confirmation Details</string>
     <string name="delivery">Delivery</string>
     <string name="confirmation">Confirm Qty</string>
     <string name="dateHead">Date</string>

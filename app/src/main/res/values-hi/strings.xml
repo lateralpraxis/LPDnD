@@ -343,9 +343,10 @@
 
     <!-- Delivery Confirmation -->
 
-    <string name="deliveryConfirmation">डिलिवरी निश्चित करना</string>
-    <string name="deliveryConfirmationDetails">डिलिवरी पुष्टिकरण विवरण</string>
-    <string name="delivery">डिलिवरी</string>
+    <string name="deliveryConfirmation">प्राप्ति निश्चित करना</string>
+    <string name="pendingDeliveryConfirmation">अपूर्ण प्राप्ति पुष्टिकरण</string>
+    <string name="deliveryConfirmationDetails">प्राप्ति पुष्टिकरण विवरण</string>
+    <string name="delivery">प्राप्ति</string>
     <string name="confirmation">पुष्टिकरण</string>
     <string name="dateHead">दिनांक</string>
     <string name="routeOfficer">रूट ऑफिसर</string>
