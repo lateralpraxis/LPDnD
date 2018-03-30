@@ -1,18 +1,5 @@
 package lateralpraxis.lpdnd;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Locale;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -26,13 +13,25 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class ActivityLogin extends Activity {
 	//private static final String LOG = "LPDnD";
@@ -83,7 +82,7 @@ public class ActivityLogin extends Activity {
 			String userRole="";
 			final HashMap<String, String> user = session.getLoginUserDetails();
 			userRole = user.get(UserSessionManager.KEY_ROLES);
-			if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant")))
+			if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") || userRole.contains("Reconciliation User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant")))
 			{
 				//Open Administrator home page screen
 				Intent	intent = new Intent(context, ActivityAdminHomeScreen.class);
@@ -237,7 +236,7 @@ public class ActivityLogin extends Activity {
 				if(!isChecked){
 					start=etPassword.getSelectionStart();
 					end=etPassword.getSelectionEnd();
-					etPassword.setTransformationMethod(new PasswordTransformationMethod());;
+					etPassword.setTransformationMethod(new PasswordTransformationMethod());
 					etPassword.setSelection(start,end);
 				}else{
 					start=etPassword.getSelectionStart();

@@ -3867,8 +3867,8 @@ public class ActivityHomeScreen extends Activity {
                         alertDialog.show();
                     } else {
                         if (common.isConnected()) {
-                            // call method of attachment json web service
-                            Async_AllAttachments_WSCall task = new Async_AllAttachments_WSCall();
+                            // call method of Centre Expense
+                            AsyncCentreExpenseWSCall task = new AsyncCentreExpenseWSCall();
                             task.execute();
                         }
                     }
@@ -4847,6 +4847,105 @@ public class ActivityHomeScreen extends Activity {
         @Override
         protected void onPreExecute() {
             Dialog.setMessage("Uploading Attachments ..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async method for Posting Centre Expense for Retail Outlet">
+    private class AsyncCentreExpenseWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Will contain the raw JSON response as a string.
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonExpense = new JSONObject();
+                dba.open();
+                // to get Un Sync Centre Expense from database
+                ArrayList<HashMap<String, String>> insmast = dba
+                        .getUnSyncAccountantExpense();
+                dba.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to Centre Expense
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("CentreId", insp.get("CentreId"));
+                        jsonins.put("CompanyId", insp.get("CompanyId"));
+                        jsonins.put("ExpenseHeadId", insp.get("ExpenseHeadId"));
+                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("Remarks", insp.get("Remarks"));
+                        jsonins.put("TransactionDate", insp.get("TransactionDate"));
+                        jsonins.put("UploadFileName", insp.get("ImageName"));
+                        jsonins.put("CreateBy", userId);
+                        jsonins.put("ipAddress",
+                                common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", common.getIMEI());
+                        array.put(jsonins);
+                    }
+                    jsonExpense.put("Master", array);
+
+                    sendJSon = jsonExpense.toString();
+
+                    // To invoke json web service to create payment
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "CreateCentreExpense", common.url);
+                } else {
+                    return "No centre expense pending to be send.";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                dba.close();
+            }
+        }
+
+        // After execution of json web service to create payment
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        dba.open();
+                        dba.Update_OutletExpenseIsSync();
+                        dba.close();
+                    }
+                    if (common.isConnected()) {
+                        // call method of attachment json web service
+                        Async_AllAttachments_WSCall task = new Async_AllAttachments_WSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                    common.showToast("Error: " + result);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Unable to fetch response from server.", false);
+            }
+
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Centre Expense...");
             Dialog.setCancelable(false);
             Dialog.show();
         }

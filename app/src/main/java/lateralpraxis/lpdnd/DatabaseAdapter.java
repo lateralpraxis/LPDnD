@@ -3836,17 +3836,18 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> getUnSyncAccountantExpense() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
 
-        selectQuery = "SELECT UniqueId, CustomerId,ExpenseHeadId,  Amount, AndroidDate, Remarks,ImageName FROM ExpenseBookingAccountant WHERE IsSync IS NULL";
+        selectQuery = "SELECT UniqueId, CentreId,CompanyId,ExpenseHeadId,  Amount, AndroidDate, Remarks,ImageName FROM ExpenseBookingAccountant WHERE IsSync IS NULL";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
             map.put("UniqueId", cursor.getString(0));
-            map.put("CustomerId", cursor.getString(1));
-            map.put("ExpenseHeadId", cursor.getString(2));
-            map.put("Amount", cursor.getString(3));
-            map.put("TransactionDate", cursor.getString(4));
-            map.put("Remarks", cursor.getString(5));
-            map.put("ImageName", cursor.getString(6));
+            map.put("CentreId", cursor.getString(1));
+            map.put("CompanyId", cursor.getString(2));
+            map.put("ExpenseHeadId", cursor.getString(3));
+            map.put("Amount", cursor.getString(4));
+            map.put("TransactionDate", cursor.getString(5));
+            map.put("Remarks", cursor.getString(6));
+            map.put("ImageName", cursor.getString(7));
             wordList.add(map);
         }
         cursor.close();
