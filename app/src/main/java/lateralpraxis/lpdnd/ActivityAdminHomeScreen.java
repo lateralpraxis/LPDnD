@@ -308,18 +308,6 @@ public class ActivityAdminHomeScreen extends Activity {
 					}
 				});
 				break;
-			case R.layout.btn_customersettlement:
-				btn = (Button) btnLayout.findViewById(R.id.btnCustomerSettlement);
-				btn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (common.isConnected()) {
-                            ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
-                            task.execute();
-                        }
-                    }
-                });
-                break;
             case R.layout.btn_customersettlement:
                 btn = (Button) btnLayout.findViewById(R.id.btnCustomerSettlement);
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -776,11 +764,7 @@ public class ActivityAdminHomeScreen extends Activity {
 	}
 
 
-	// Web Service to Fetch Expense Data for Confirmation for retail outlet
-	private class ActivityExpenseConirmationWSCall extends
-			AsyncTask<String, Void, String> {
-		private ProgressDialog Dialog = new ProgressDialog(
-				ActivityAdminHomeScreen.this);
+
     // Web Service to Fetch Expense Data for Confirmation
     private class ActivityExpenseConirmationWSCall extends
             AsyncTask<String, Void, String> {
