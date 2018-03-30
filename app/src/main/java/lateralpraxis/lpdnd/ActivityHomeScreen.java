@@ -4924,7 +4924,7 @@ public class ActivityHomeScreen extends Activity {
                     }
                     if (common.isConnected()) {
                         // call method of attachment json web service
-                        Async_AllAttachments_WSCall task = new Async_AllAttachments_WSCall();
+                        Async_ExpenseAttachments_WSCall task = new Async_ExpenseAttachments_WSCall();
                         task.execute();
                     }
                 } else {
@@ -4946,6 +4946,141 @@ public class ActivityHomeScreen extends Activity {
         protected void onPreExecute() {
 
             Dialog.setMessage("Posting Centre Expense...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to send Expense attachments on the Portal ">
+    private class Async_ExpenseAttachments_WSCall extends
+            AsyncTask<String, String, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                responseJSON = "";
+
+                JSONObject jsonDocs = new JSONObject();
+
+                dba.open();
+                // Code to fetch data from database and store in hash map
+                ArrayList<HashMap<String, String>> docDet = dba
+                        .getAccountantAttachmentsForSync();
+
+                if (docDet != null && docDet.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    try {
+                        int totalFilesCount = docDet.size();
+                        int currentCount = 0;
+                        // Code to loop through hash map and create JSON
+                        for (HashMap<String, String> mast : docDet) {
+                            JSONObject jsonDoc = new JSONObject();
+
+                            currentCount++;
+
+                            jsonDoc.put("UniqueId", mast.get("UniqueId"));
+                            jsonDoc.put("UploadFileName",
+                                    mast.get("UploadFileName"));
+                            File fle = new File(mast.get("ImagePath"));
+                            String flArray = "";
+                            // Code to check if file exists and create byte
+                            // array to be passed to json
+                            if (fle.exists()
+                                    && (fle.getAbsolutePath().contains(".jpg")
+                                    || fle.getAbsolutePath().contains(
+                                    ".png")
+                                    || fle.getAbsolutePath().contains(
+                                    ".gif")
+                                    || fle.getAbsolutePath().contains(
+                                    ".jpeg") || fle
+                                    .getAbsolutePath().contains(".bmp"))) {
+                                BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inPreferredConfig = Bitmap.Config.ALPHA_8;
+                                Bitmap bitmap = BitmapFactory.decodeFile(
+                                        fle.getAbsolutePath(), options);
+                                flArray = getByteArrayFromImage(bitmap);
+
+                                jsonDoc.put("FileArray", flArray);
+
+                                array.put(jsonDoc);
+                                jsonDocs.put("Attachment", array);
+                                String sendJSon = jsonDocs.toString();
+
+                                // Code to send json to portal and store
+                                // response stored in responseJSON
+                                responseJSON = common
+                                        .invokeJSONWS(sendJSon, "json",
+                                                "InsertExpenseAttachments", common.url);
+                                // Check responseJSON and update attachment
+                                // status
+                                if (responseJSON.equals("SUCCESS")) {
+                                    dba.open();
+                                    dba.updateAccountantAttachmentStatus(mast
+                                            .get("UniqueId"));
+                                    publishProgress("Attachment(s) Uploaded: "
+                                            + currentCount + "/"
+                                            + totalFilesCount);
+                                }
+                            }
+                        }
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+
+                        return "ERROR: Unable to fetch response from server.";
+                    }
+
+                }
+
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Internet is slow";
+            } catch (Exception e) {
+                // TODO: handle exception
+
+                return "ERROR: Unable to fetch response from server.";
+            }
+
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            Dialog.setMessage(values[0]);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            Dialog.dismiss();
+            try {
+                if (!result.contains("ERROR")) {
+                    // call method of  json web service
+                    Async_AllAttachments_WSCall task = new Async_AllAttachments_WSCall();
+                    task.execute();
+
+                } else {
+                    if (result == null || result == "null"
+                            || result.equals("ERROR: null"))
+                        common.showAlert(ActivityHomeScreen.this,
+                                "Unable to get response from server.", false);
+                    else
+                        common.showAlert(ActivityHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+
+                common.showAlert(
+                        ActivityHomeScreen.this,
+                        "Synchronizing failed - Upload Attachments: "
+                                + e.getMessage(), false);
+            }
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Uploading Expense Attachments ..");
             Dialog.setCancelable(false);
             Dialog.show();
         }

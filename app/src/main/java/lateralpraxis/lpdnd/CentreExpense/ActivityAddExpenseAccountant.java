@@ -77,8 +77,8 @@ public class ActivityAddExpenseAccountant extends Activity {
     private UserSessionManager session;
     private Intent intent;
     //<editor-fold desc="Code to Declare Controls">
-    private Spinner spExpenseHead, spCentre, spCompany;
-    private EditText etAmt, etRemarks;
+    private Spinner spAccExpenseHead, spCentre, spCompany;
+    private EditText etAccAmt, etAccRemarks;
     private TextView tvAttach;
     private Button btnSave, btnUpload;
     private String level1Dir, level2Dir, fullPath,
@@ -164,23 +164,23 @@ public class ActivityAddExpenseAccountant extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to Find Controls">
-        spExpenseHead = (Spinner) findViewById(R.id.spExpenseHead);
+        spAccExpenseHead = (Spinner) findViewById(R.id.spAccExpenseHead);
         spCentre = (Spinner) findViewById(R.id.spCentre);
         spCompany = (Spinner) findViewById(R.id.spCompany);
-        etAmt = (EditText) findViewById(R.id.etAmt);
-        etRemarks = (EditText) findViewById(R.id.etRemarks);
+        etAccAmt = (EditText) findViewById(R.id.etAccAmt);
+        etAccRemarks = (EditText) findViewById(R.id.etAccRemarks);
         tvAttach = (TextView) findViewById(R.id.tvAttach);
         btnSave = (Button) findViewById(R.id.btnSave);
         btnUpload = (Button) findViewById(R.id.btnUpload);
         //</editor-fold>
 
         //<editor-fold desc="Code to set Input Filter">
-        etAmt.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
-        etAmt.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etAccAmt.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
+        etAccAmt.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
         //</editor-fold>
 
         //<editor-fold desc="Code to Bind Spinners">
-        spExpenseHead.setAdapter(DataAdapter("exphead", ""));
+        spAccExpenseHead.setAdapter(DataAdapter("exphead", ""));
         spCentre.setAdapter(DataAdapter("centre", ""));
         spCompany.setAdapter(DataAdapter("company", ""));
         //</editor-fold>
@@ -194,13 +194,13 @@ public class ActivityAddExpenseAccountant extends Activity {
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया केंद्र का चयन करें" : "Please select Centre.");
                 else if (((CustomType) spCompany.getSelectedItem()).getId().equalsIgnoreCase("0"))
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया कंपनी का चयन करें" : "Please select Company.");
-                else if (((CustomType) spExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
+                else if (((CustomType) spAccExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया व्यय हेड का चयन करें" : "Please select Expense Head.");
-                else if (etAmt.getText().toString().trim().length() <= 0)
+                else if (etAccAmt.getText().toString().trim().length() <= 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया राशि दर्ज करें" : "Please enter amount.");
-                else if (Double.valueOf(etAmt.getText().toString()) <= 0)
+                else if (Double.valueOf(etAccAmt.getText().toString()) <= 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "राशि शून्य नहीं हो सकती" : "Amount cannot be zero.");
-                else if (etRemarks.getText().toString().trim().length() <= 0)
+                else if (etAccRemarks.getText().toString().trim().length() <= 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया टिप्पणी दर्ज करें" : "Please enter remarks.");
                 else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
@@ -241,7 +241,7 @@ public class ActivityAddExpenseAccountant extends Activity {
                                     HashMap<String, String> user = session.getLoginUserDetails();
                                     customerId = user.get(UserSessionManager.KEY_ID);
                                     db.open();
-                                    db.Insert_ExpenseBookingAccountant(((CustomType) spCentre.getSelectedItem()).getId(), ((CustomType) spCompany.getSelectedItem()).getId(), ((CustomType) spExpenseHead.getSelectedItem()).getId(), Double.valueOf(etAmt.getText().toString()).toString(), etRemarks.getText().toString(), newuuidImg, imagePath, selectedPhotoPath);
+                                    db.Insert_ExpenseBookingAccountant(((CustomType) spCentre.getSelectedItem()).getId(), ((CustomType) spCompany.getSelectedItem()).getId(), ((CustomType) spAccExpenseHead.getSelectedItem()).getId(), Double.valueOf(etAccAmt.getText().toString()).toString(), etAccRemarks.getText().toString(), newuuidImg, imagePath, selectedPhotoPath);
                                     db.close();
                                     common.showToast(lang.equalsIgnoreCase("hi") ? "व्यय विवरण सफलतापूर्वक सहेजा गया" : "Expense details saved successfully.");
                                     Intent intent = new Intent(ActivityAddExpenseAccountant.this, ActivityListBookingAccountant.class);
