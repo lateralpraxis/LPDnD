@@ -50,6 +50,12 @@
                 android:visibility="gone"/>
 
             <TextView
+                android:id="@+id/tvTransType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"/>
+
+            <TextView
                 android:id="@+id/tvNameHead"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

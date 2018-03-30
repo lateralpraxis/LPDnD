@@ -112,6 +112,7 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
                 intent.putExtra("Date", String.valueOf(((TextView) item.findViewById(R.id.tvDate)).getText().toString()));
                 intent.putExtra("Invoice", String.valueOf(((TextView) item.findViewById(R.id.tvInvoice)).getText().toString()));
                 intent.putExtra("Vehicle", String.valueOf(((TextView) item.findViewById(R.id.tvVehicle)).getText().toString()));
+                intent.putExtra("TransType", String.valueOf(((TextView) item.findViewById(R.id.tvTransType)).getText().toString()));
                 startActivity(intent);
                 finish();
             }
@@ -238,7 +239,7 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
 
     //<editor-fold desc="Code Binding Data In List">
     public static class viewHolder {
-        TextView tvId, tvDate, tvName, tvVehicle, tvInvoice;
+        TextView tvId, tvDate, tvName, tvVehicle, tvInvoice, tvTransType;
         LinearLayout llDate, llVehicle, llName;
         int ref;
     }
@@ -253,8 +254,8 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String[] name = {"action", "id"};
-                String[] value = {"ReadDeliveryList", params[0]};
+                String[] name = {"action", "id", "transType"};
+                String[] value = {"ReadDeliveryList", params[0], ""};
                 // Call method of web service to Read Data
                 responseJSON = "";
                 responseJSON = common.CallJsonWS(name, value, "ReadDeliveryData", common.url);
@@ -281,6 +282,8 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
                     if (jsonArray.length() > 0) {
                         for (int i = 0; i < jsonArray.length(); ++i) {
                             map = new HashMap<String, String>();
+                            map.put("TransType", jsonArray.getJSONObject(i)
+                                    .getString("TransType"));
                             map.put("DeliveryId", jsonArray.getJSONObject(i)
                                     .getString("DeliveryId"));
                             map.put("FullName", jsonArray.getJSONObject(i)
@@ -399,6 +402,8 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
                 holder = (viewHolder) convertView.getTag();
             }
             holder.ref = position;
+            holder.tvTransType = (TextView) convertView
+                    .findViewById(R.id.tvTransType);
             holder.tvId = (TextView) convertView
                     .findViewById(R.id.tvId);
             holder.tvDate = (TextView) convertView
@@ -419,6 +424,7 @@ public class ActivityDeliveryConfirmationCreateList extends Activity {
 
             final HashMap<String, String> itemData = _listData.get(position);
             holder.tvId.setText(itemData.get("DeliveryId"));
+            holder.tvTransType.setText(itemData.get("TransType"));
             holder.tvDate.setText(common.convertToDisplayDateFormat(itemData.get("DeliveryDate")));
             holder.tvName.setText(itemData.get("FullName"));
             holder.tvVehicle.setText(itemData.get("VehicleNo"));

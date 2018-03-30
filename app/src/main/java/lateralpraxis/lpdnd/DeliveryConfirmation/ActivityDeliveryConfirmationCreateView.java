@@ -59,7 +59,7 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
     private TextView tvName, tvDate, tvInvoice, tvVehicle, tvTotalAmount;
     private Button btnDelivery;
     private UserSessionManager session;
-    private String lang, userId, responseJSON, deliveryId, name, date, invoice, vehicle;
+    private String lang, userId, responseJSON, deliveryId, name, date, invoice, vehicle, transType;
     private int listDelSize = 0;
     private ArrayList<HashMap<String, String>> wordDelList = null;
     private View tvDivider;
@@ -109,6 +109,7 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
             date = extras.getString("Date");
             invoice = extras.getString("Invoice");
             vehicle = extras.getString("Vehicle");
+            transType = extras.getString("TransType");
             tvName.setText(name);
             tvDate.setText(date);
             tvInvoice.setText(invoice);
@@ -268,8 +269,8 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String[] name = {"action", "id"};
-                String[] value = {"ReadDeliveryDetailById", params[0].replace(".0", "")};
+                String[] name = {"action", "id", "transType"};
+                String[] value = {"ReadDeliveryDetailById", params[0].replace(".0", ""), transType};
                 // Call method of web service to Read Data
                 responseJSON = "";
                 responseJSON = common.CallJsonWS(name, value, "ReadDeliveryData", common.url);
