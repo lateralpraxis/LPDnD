@@ -4919,7 +4919,7 @@ public class ActivityHomeScreen extends Activity {
                 if (!result.contains("ERROR")) {
                     if (responseJSON.equalsIgnoreCase("success")) {
                         dba.open();
-                        dba.Update_OutletExpenseIsSync();
+                        dba.Update_AccountantExpenseIsSync();
                         dba.close();
                     }
                     if (common.isConnected()) {

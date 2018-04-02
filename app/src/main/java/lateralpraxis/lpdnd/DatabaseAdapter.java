@@ -2214,7 +2214,7 @@ public class DatabaseAdapter {
     public boolean IslogoutAllowed() {
         boolean isRequired = true;
 
-        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense;
+        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense, countExpenseAcc;
 
         selectQuery = "SELECT Id FROM Delivery WHERE IsSync = '0'";
         cursor = db.rawQuery(selectQuery, null);
@@ -2254,11 +2254,11 @@ public class DatabaseAdapter {
 
         selectQuery = "SELECT Id FROM ExpenseBookingAccountant WHERE IsSync IS NULL";
         cursor = db.rawQuery(selectQuery, null);
-        countExpense = cursor.getCount();
+        countExpenseAcc = cursor.getCount();
 
 
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0 || countExpenseAcc>0)
             isRequired = false;
 
         return isRequired;
