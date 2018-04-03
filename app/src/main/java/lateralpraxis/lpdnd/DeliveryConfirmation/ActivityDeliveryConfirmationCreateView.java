@@ -171,7 +171,7 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
                     Builder alertDialogBuilder = new Builder(mContext);
                     alertDialogBuilder.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
                     alertDialogBuilder
-                            .setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित इस डिलीवरी की पुष्टि करना चाहते हैं?" : "Are you sure, you want to confirm this delivery?").setCancelable(false).setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
+                            .setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित इस प्राप्ति की पुष्टि करना चाहते हैं?" : "Are you sure, you want to confirm this receipt?").setCancelable(false).setPositiveButton(lang.equalsIgnoreCase("hi") ? "हाँ" : "Yes",
                             new DialogInterface.OnClickListener() {
                                 public void onClick(
                                         DialogInterface dialog,
