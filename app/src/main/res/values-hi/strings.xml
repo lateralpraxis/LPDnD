@@ -408,4 +408,8 @@
     <string name="label_accchoosefile">फ़ाइल चुनें</string>
     <string name="label_accviewfile">अनुलग्नक देखें</string>
     <!-- End of Account Expense Booking Variables-->
+
+    <!-- Start of Customer Settlement Variables-->
+    <string name="customerSettlementDetails">ग्राहक निपटारा विवरण</string>
+    <!-- End of Customer Settlement Variables-->
 </resources>
