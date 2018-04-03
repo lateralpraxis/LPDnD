@@ -2276,11 +2276,11 @@ public class DatabaseAdapter {
         countExpenseAcc = cursor.getCount();
 
 
-        selectQuery = "SELECT Id FROM ExpenseBooking WHERE IsImageSync IS NULL";
+        selectQuery = "SELECT Id FROM ExpenseBooking WHERE IsImageSync IS NULL AND ImageName!='' ";
         cursor = db.rawQuery(selectQuery, null);
         countImgExpense = cursor.getCount();
 
-        selectQuery = "SELECT Id FROM ExpenseBookingAccountant WHERE IsImageSync IS NULL";
+        selectQuery = "SELECT Id FROM ExpenseBookingAccountant WHERE IsImageSync IS NULL AND ImageName!='' ";
         cursor = db.rawQuery(selectQuery, null);
         countImgExpenseAcc = cursor.getCount();
 
