@@ -139,7 +139,6 @@ public class ActivityAdminHomeScreen extends Activity {
                     R.layout.btn_expenseconfirmation,
                     R.layout.btn_reconcile,
                     R.layout.btn_customersettlement,
-                    R.layout.btn_stockadjustment,
                     R.layout.btn_reconcile,
                     R.layout.btn_report);
         else if (userRole.contains("Centre User")  && userRole.contains("Reconciliation User"))
@@ -150,7 +149,6 @@ public class ActivityAdminHomeScreen extends Activity {
                     R.layout.btn_payment,
                     R.layout.btn_cashdeposit,
                     R.layout.btn_expenseconfirmation,
-                    R.layout.btn_stockadjustment,
                     R.layout.btn_reconcile,
                     R.layout.btn_customersettlement,
                     R.layout.btn_report);

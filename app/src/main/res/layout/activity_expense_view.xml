@@ -92,24 +92,6 @@
                  />
 
         </LinearLayout>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -131,7 +113,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                 />
 
         </LinearLayout>
 
@@ -156,7 +138,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                 />
 
         </LinearLayout>
 
@@ -181,7 +163,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                 />
 
         </LinearLayout>
 
@@ -208,7 +190,7 @@
                 android:layout_weight="0.7"
                 android:textColor="@color/lpblue"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                 />
 
         </LinearLayout>
     </LinearLayout>
