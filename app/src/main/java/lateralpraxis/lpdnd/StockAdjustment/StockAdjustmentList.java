@@ -1124,17 +1124,17 @@ public class StockAdjustmentList extends Activity {
                         status=jsonArray.getJSONObject(i).getString("A");
                     }
                     db.close();
-                    if(status.equalsIgnoreCase("0"))
-                    {
+                    /*if(status.equalsIgnoreCase("0"))
+                    {*/
                         if(common.isConnected()) {
                             AsyncLiveInventoryDetailWSCall task = new AsyncLiveInventoryDetailWSCall();
                             task.execute();
                         }
-                    }
+                   /* }
                     else
                     {
                         common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए स्टॉक रूपांतरण की अनुमति नहीं है।":"Deliveries are pending for confirmation hence stock adjustment is not allowed.");
-                    }
+                    }*/
 
                 } else {
                     if (result.contains("null") || result == "")
