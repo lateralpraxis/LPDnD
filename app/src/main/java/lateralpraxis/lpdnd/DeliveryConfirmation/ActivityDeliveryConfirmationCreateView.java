@@ -383,8 +383,8 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
         @Override
         protected String doInBackground(String... params) {
             try {
-                String[] name = {"deliveryId", "json", "userId", "ip", "machine"};
-                String[] value = {params[1].replace(".0", ""), params[0], userId, common.getDeviceIPAddress(true), common.getIMEI()};
+                String[] name = {"deliveryId", "json", "userId", "ip", "machine", "transType"};
+                String[] value = {params[1].replace(".0", ""), params[0], userId, common.getDeviceIPAddress(true), common.getIMEI(), transType};
                 responseJSON = "";
                 // Call method of web service to sync delivery confirmation to server
                 responseJSON = common.CallJsonWS(name, value, "CreateDeliveryConfirmation",

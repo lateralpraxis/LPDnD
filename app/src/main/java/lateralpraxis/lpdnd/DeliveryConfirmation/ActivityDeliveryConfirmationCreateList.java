@@ -1,6 +1,7 @@
 package lateralpraxis.lpdnd.DeliveryConfirmation;
 
 //<editor-fold desc="Import">
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -26,7 +27,6 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -47,7 +47,7 @@ import lateralpraxis.lpdnd.R;
 import lateralpraxis.lpdnd.UserSessionManager;
 //</editor-fold>
 
-public class ActivityDeliveryConfirmationCreateList extends Activity {
+public class  ActivityDeliveryConfirmationCreateList extends Activity {
 
     //<editor-fold desc="Code for Variable Declaration">
     /*Code for Variable Declaration*/
