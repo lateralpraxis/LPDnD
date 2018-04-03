@@ -168,8 +168,9 @@ public class ActivityOutletSaleCreate extends ListActivity {
             public void onClick(View arg0) {
                 // To validate required field and please enter at least one
                 // quantity!
+                getListView().clearFocus();
                 int zeroCount = 0, zeroCountRate = 0, totalRow = 0;
-                int invalidCount = 0, invalidCountRate = 0;
+                int invalidCount = 0, invalidCountRate = 0,noRateCount = 0;
                 for (int i = 0; i < getListView().getChildCount(); i++) {
                     totalRow++;
                     View v = getListView().getChildAt(i);
@@ -186,6 +187,8 @@ public class ActivityOutletSaleCreate extends ListActivity {
                     EditText etSaleRate = (EditText) v.findViewById(R.id.etSaleRate);
                     if (etSaleRate.getText().toString().equalsIgnoreCase("."))
                         invalidCountRate = invalidCountRate + 1;
+                    if (etSaleRate.getText().toString().trim().equalsIgnoreCase("") && etSaleQty.getText().toString().trim().length() > 0 )
+                        noRateCount = noRateCount + 1;
                     if (!etSaleRate.getText().toString().equalsIgnoreCase(".")) {
                         String rate = etSaleRate.length() == 0 ? "0" : etSaleRate
                                 .getText().toString().trim();
@@ -197,13 +200,17 @@ public class ActivityOutletSaleCreate extends ListActivity {
                     common.showAlert(ActivityOutletSaleCreate.this, "Please enter valid rate!", false);
                 else if (invalidCountRate > 0 && lang.equalsIgnoreCase("hi"))
                     common.showAlert(ActivityOutletSaleCreate.this, "कृपया मूल्यांकन दर्ज करें!", false);
+                else if (noRateCount > 0 && lang.equalsIgnoreCase("en"))
+                    common.showAlert(ActivityOutletSaleCreate.this, "Please enter rate for quantity entered!", false);
+                else if (noRateCount > 0 && lang.equalsIgnoreCase("hi"))
+                    common.showAlert(ActivityOutletSaleCreate.this, "कृपया दर्ज किए गए मात्रा के लिए मूल्यांकन दर्ज करें!", false);
 
                 else if (totalRow == zeroCountRate && lang.equalsIgnoreCase("en"))
                     common.showAlert(ActivityOutletSaleCreate.this, "Please enter atleast one rate!", false);
                 else if (totalRow == zeroCountRate && lang.equalsIgnoreCase("hi"))
                     common.showAlert(ActivityOutletSaleCreate.this, "कृपया कम से कम एक मूल्यांकन दर्ज करें!", false);
 
-                if (invalidCount > 0 && lang.equalsIgnoreCase("en"))
+                else if (invalidCount > 0 && lang.equalsIgnoreCase("en"))
                     common.showAlert(ActivityOutletSaleCreate.this, "Please enter valid quantity!", false);
                 else if (invalidCount > 0 && lang.equalsIgnoreCase("hi"))
                     common.showAlert(ActivityOutletSaleCreate.this, "कृपया वैध मात्रा दर्ज करें!", false);
@@ -460,7 +467,7 @@ public class ActivityOutletSaleCreate extends ListActivity {
             // Instantiates a TextWatcher, to observe value changes and trigger the result calculation
             TextWatcher textWatcher = new TextWatcher() {
                 public void afterTextChanged(Editable s) {
-                    if (!holder.etSaleQty.getText().toString().equalsIgnoreCase(".")) {
+                    if (!holder.etSaleQty.getText().toString().equalsIgnoreCase(".") &&  !holder.etSaleQty.getText().toString().trim().equalsIgnoreCase("") && !holder.etSaleRate.getText().toString().equalsIgnoreCase(".") &&  !holder.etSaleRate.getText().toString().trim().equalsIgnoreCase("")) {
                         if (holder.etSaleQty.getText().toString().equalsIgnoreCase("."))
                             holder.etSaleQty.setText("");
                         if (holder.etSaleQty.getText().toString().trim().length() > 0) {
@@ -504,7 +511,11 @@ public class ActivityOutletSaleCreate extends ListActivity {
             holder.etSaleQty.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view2, boolean hasFocus) {
-                    view2.dispatchWindowFocusChanged(hasFocus);
+
+                    if (!hasFocus) {
+                    if(holder.etSaleQty.getText().toString().equalsIgnoreCase(".") ||  holder.etSaleQty.getText().toString().trim().equalsIgnoreCase("0"))
+                        holder.etSaleQty.setText("");
+                    }
                 }
             });
             // Adds the TextWatcher as TextChangedListener to both EditTexts
@@ -514,7 +525,10 @@ public class ActivityOutletSaleCreate extends ListActivity {
             holder.etSaleRate.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view2, boolean hasFocus) {
-                    view2.dispatchWindowFocusChanged(hasFocus);
+                    if (!hasFocus) {
+                        if(holder.etSaleRate.getText().toString().equalsIgnoreCase(".") ||  holder.etSaleRate.getText().toString().trim().equalsIgnoreCase("0"))
+                            holder.etSaleRate.setText("");
+                    }
                 }
             });
             return arg1;
