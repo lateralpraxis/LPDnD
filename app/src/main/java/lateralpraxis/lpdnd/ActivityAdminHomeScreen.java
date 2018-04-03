@@ -82,6 +82,9 @@ public class ActivityAdminHomeScreen extends Activity {
             dba.close();
             // e.printStackTrace();
         }
+        dba.open();
+        dba.deleteExpenseData();
+        dba.close();
          /*--------Start of Code to find controls -----------------------------*/
         tvHeader = (TextView) findViewById(R.id.tvHeader);
         go = (Button) findViewById(R.id.btnGo);

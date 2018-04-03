@@ -113,9 +113,9 @@ public class DatabaseAdapter {
     CentreUserCentres_CREATE = "CREATE TABLE IF NOT EXISTS CentreUserCentres(Id TEXT, Name TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
-    OutletPaymentReceipt_CREATE ="CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
+            OutletPaymentReceipt_CREATE = "CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
             ExpenseBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);",
-    ExpenseBookingAccountant_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBookingAccountant(Id INTEGER PRIMARY KEY AUTOINCREMENT,CentreId TEXT,CompanyId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
+            ExpenseBookingAccountant_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBookingAccountant(Id INTEGER PRIMARY KEY AUTOINCREMENT,CentreId TEXT,CompanyId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
 
     // Context of the application using the database.
     private final Context context;
@@ -1857,6 +1857,25 @@ public class DatabaseAdapter {
         return result;
     }
 
+    //Code to delete Expense Data
+    public String deleteExpenseData() {
+        try {
+            result = "fail";
+            selectQuery = "DELETE FROM ExpenseBooking WHERE IsSync IS NOT NULL AND IsImageSync IS NOT NULL AND strftime( '%d-%m-%Y', DATE()) -strftime( '%d-%m-%Y',AndroidDate)>0";
+            db.execSQL(selectQuery);
+
+            selectQuery = "DELETE FROM ExpenseBookingAccountant WHERE IsSync IS NOT NULL AND IsImageSync IS NOT NULL AND strftime( '%d-%m-%Y', DATE()) -strftime( '%d-%m-%Y',AndroidDate)>0";
+            db.execSQL(selectQuery);
+
+            result = "success";
+            return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // Deleting master data from masters tables
     public String DeleteMasterData(String table) {
         result = "fail";
@@ -2176,7 +2195,7 @@ public class DatabaseAdapter {
         cursor.close();
 
 		/*int DeliveryInputCount;
-		// In demand --item online created
+        // In demand --item online created
 		selectQuery = "SELECT * FROM DeliveryInput";// only in Route Officer
 		cursor = db.rawQuery(selectQuery, null);
 		DeliveryInputCount = cursor.getCount();
@@ -2214,7 +2233,7 @@ public class DatabaseAdapter {
     public boolean IslogoutAllowed() {
         boolean isRequired = true;
 
-        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense, countExpenseAcc;
+        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense, countExpenseAcc, countImgExpense, countImgExpenseAcc;
 
         selectQuery = "SELECT Id FROM Delivery WHERE IsSync = '0'";
         cursor = db.rawQuery(selectQuery, null);
@@ -2257,8 +2276,16 @@ public class DatabaseAdapter {
         countExpenseAcc = cursor.getCount();
 
 
+        selectQuery = "SELECT Id FROM ExpenseBooking WHERE IsImageSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        countImgExpense = cursor.getCount();
+
+        selectQuery = "SELECT Id FROM ExpenseBookingAccountant WHERE IsImageSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        countImgExpenseAcc = cursor.getCount();
+
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0 || countExpenseAcc>0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0 || countExpenseAcc > 0 || countImgExpense>0 || countImgExpenseAcc>0)
             isRequired = false;
 
         return isRequired;
@@ -3296,7 +3323,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="Method to Fetch Accountant Expense Details">
     public ArrayList<HashMap<String, String>> getAccountantExpenseDetails() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
-        String prevDate="";
+        String prevDate = "";
         if (userlang.equalsIgnoreCase("en"))
             selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.Name FROM ExpenseBookingAccountant eb, Company com, ExpenseHead eh WHERE eb.CompanyId = com.Id AND eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC ";
         else
@@ -3309,11 +3336,11 @@ public class DatabaseAdapter {
             map.put("Date", cursor.getString(2));
             map.put("Amount", cursor.getString(3));
             map.put("Name", cursor.getString(4));
-            if(prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
+            if (prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
                 map.put("Flag", "0");
             else
                 map.put("Flag", "1");
-            prevDate =convertToDisplayDateFormat(cursor.getString(0));
+            prevDate = convertToDisplayDateFormat(cursor.getString(0));
 
             wordList.add(map);
         }
@@ -3353,9 +3380,9 @@ public class DatabaseAdapter {
         ArrayList<String> expensedetails = new ArrayList<String>();
 
         if (userlang.equalsIgnoreCase("en"))
-            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExpenseBookingAccountant eb, ExpenseHead eh, Company com, Centre cen WHERE eb.ExpenseHeadId = eh.Id AND eb.Id ="+id+" AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExpenseBookingAccountant eb, ExpenseHead eh, Company com, Centre cen WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
         else
-            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExpenseBookingAccountant eb, ExpenseHead eh, Company com, Centre cen WHERE eb.ExpenseHeadId = eh.Id AND eb.Id ="+id+" AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExpenseBookingAccountant eb, ExpenseHead eh, Company com, Centre cen WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             expensedetails.add(cursor.getString(0));
@@ -3816,7 +3843,7 @@ public class DatabaseAdapter {
     //</editor-fold>
 
     //<editor-fold desc="Code to insert Accountant Expense Data in Expense Booking Table">
-    public String Insert_ExpenseBookingAccountant(String centreId,String companyId, String expenseHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
+    public String Insert_ExpenseBookingAccountant(String centreId, String companyId, String expenseHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
         try {
             result = "fail";
             newValues = new ContentValues();

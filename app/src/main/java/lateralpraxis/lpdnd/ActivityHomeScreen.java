@@ -118,7 +118,9 @@ public class ActivityHomeScreen extends Activity {
             dba.close();
             // e.printStackTrace();
         }
-
+        dba.open();
+        dba.deleteExpenseData();
+        dba.close();
         // To check user login session is exist or not
         if (session.checkLogin())
             finish();
