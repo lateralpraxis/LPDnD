@@ -4161,7 +4161,7 @@ public class ActivityHomeScreen extends Activity {
                         jsonins.put("MaterialId", insp.get("MaterialId"));
                         jsonins.put("SkuId", insp.get("SKUId"));
                         jsonins.put("Quantity", insp.get("Quantity"));
-                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("Amount",common.prevent_E_Notation(insp.get("Amount")));
                         jsonins.put("TransactionDate", insp.get("CreateDate"));
                         jsonins.put("CreateBy", userId);
                         jsonins.put("ipAddress",
@@ -4352,7 +4352,7 @@ public class ActivityHomeScreen extends Activity {
                         jsonins.put("UniqueId", insp.get("UniqueId"));
                         jsonins.put("CustomerId", insp.get("CustomerId"));
                         jsonins.put("ExpenseHeadId", insp.get("ExpenseHeadId"));
-                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("Amount",common.prevent_E_Notation(insp.get("Amount")));
                         jsonins.put("Remarks", insp.get("Remarks"));
                         jsonins.put("TransactionDate", insp.get("TransactionDate"));
                         jsonins.put("UploadFileName", insp.get("ImageName"));
@@ -4883,7 +4883,7 @@ public class ActivityHomeScreen extends Activity {
                         jsonins.put("CentreId", insp.get("CentreId"));
                         jsonins.put("CompanyId", insp.get("CompanyId"));
                         jsonins.put("ExpenseHeadId", insp.get("ExpenseHeadId"));
-                        jsonins.put("Amount", insp.get("Amount"));
+                        jsonins.put("Amount",common.prevent_E_Notation(insp.get("Amount")));
                         jsonins.put("Remarks", insp.get("Remarks"));
                         jsonins.put("TransactionDate", insp.get("TransactionDate"));
                         jsonins.put("UploadFileName", insp.get("ImageName"));
@@ -5088,4 +5088,7 @@ public class ActivityHomeScreen extends Activity {
         }
     }
     //</editor-fold>
+
+
+
 }
