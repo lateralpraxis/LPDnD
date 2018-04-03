@@ -123,7 +123,7 @@
                 android:id="@+id/RadioType"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.77"
+                android:layout_weight="0.80"
                 android:orientation="horizontal"
                 android:paddingLeft="4dp"
                 android:textColor="@color/black">
@@ -141,6 +141,16 @@
                     android:layout_height="wrap_content"
                     android:text="@string/product" />
             </RadioGroup>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal"
+            android:gravity="end"
+            >
 
             <Button
                 android:id="@+id/btnGo"
@@ -148,7 +158,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_weight="0.03"
                 android:background="@drawable/button_design"
                 android:paddingBottom="5dp"
                 android:paddingEnd="10sp"
@@ -158,6 +167,7 @@
                 android:text="@string/label_Search"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"/>
+
         </LinearLayout>
 
         <LinearLayout

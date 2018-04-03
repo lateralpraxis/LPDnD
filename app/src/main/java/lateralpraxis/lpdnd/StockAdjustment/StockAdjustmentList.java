@@ -429,7 +429,8 @@ public class StockAdjustmentList extends Activity {
             holder.tvExistInv.setText(list.get(arg0).get("ExistingInventory"));
             holder.tvAdjQty.setText(list.get(arg0).get("Quantity"));
             holder.tvNewInv.setText(list.get(arg0).get("NewInventory"));
-            holder.tvReason.setText(Html.fromHtml("<b>Remarks: </b>") + list.get(arg0).get("Reason"));
+           // holder.tvReason.setText(Html.fromHtml("<b>Remarks: </b>") + list.get(arg0).get("Reason"));
+            holder.tvReason.setText(list.get(arg0).get("Reason"));
             if(list.get(arg0).get("Flag").equalsIgnoreCase("1"))
                 holder.tableHeader.setVisibility(View.GONE);
             else

@@ -45,34 +45,13 @@
                         android:id="@+id/tvDate"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".3"
+                        android:layout_weight="1"
                         android:text="@string/paydate"
                         android:textColor="@color/white"
                         android:textIsSelectable="false"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-                    <!-- 1/1 -->
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:textColor="@color/white"
-                        android:textIsSelectable="false"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                    <!-- 1/2 -->
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".4"
-                        android:gravity="end"
-                        android:textColor="@color/white"
-                        android:textIsSelectable="false"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow

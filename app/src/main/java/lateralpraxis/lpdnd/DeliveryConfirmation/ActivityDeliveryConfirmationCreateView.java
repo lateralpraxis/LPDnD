@@ -343,9 +343,9 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
                         }
                     } else {
                         if (lang.equalsIgnoreCase("hi"))
-                            common.showToast("वितरण की पुष्टि के लिए कोई डेटा उपलब्ध नहीं है!");
+                            common.showToast("प्राप्ति की पुष्टि के लिए कोई डेटा उपलब्ध नहीं है!");
                         else
-                            common.showToast("There is no data available for delivery confirmation!");
+                            common.showToast("There is no data available for receipt confirmation!");
                     }
                 } else {
                     if (result.contains("null") || result == "")
@@ -404,9 +404,9 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
             try {
                 if (!result.contains("ERROR")) {
                     if (lang.equalsIgnoreCase("hi"))
-                        common.showToast("डिलिवरी पुष्टिकरण सफलतापूर्वक सहेजा गया|");
+                        common.showToast("प्राप्ति पुष्टिकरण सफलतापूर्वक सहेजा गया|");
                     else
-                        common.showToast("Delivery confirmation saved successfully.");
+                        common.showToast("Receipt confirmation saved successfully.");
 
                     Intent intent = new Intent(ActivityDeliveryConfirmationCreateView.this, ActivityDeliveryConfirmationCreateList.class);
                     startActivity(intent);
@@ -425,7 +425,7 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
         // To display Delivery Confirmation Message
         @Override
         protected void onPreExecute() {
-            Dialog.setMessage("Sending Delivery Confirmation Details...");
+            Dialog.setMessage("Sending Receipt Confirmation Details...");
             Dialog.setCancelable(false);
             Dialog.show();
         }
@@ -530,9 +530,9 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
 //                            } else
                             if (Double.parseDouble(holder.etQty.getText().toString().trim()) > Double.parseDouble(holder.tvDelivery.getText().toString().trim())) {
                                 if (lang.equalsIgnoreCase("hi"))
-                                    common.showToast("पुष्टिकरण मात्रा वितरण मात्रा से अधिक नहीं होनी चाहिए!");
+                                    common.showToast("पुष्टिकरण मात्रा प्राप्ति मात्रा से अधिक नहीं होनी चाहिए!");
                                 else
-                                    common.showToast("Confirmation quantity should not be exceeded from delivery quantity!");
+                                    common.showToast("Confirmation quantity should not be exceeded from receipt quantity!");
                                 holder.etQty.setText("");
                             } else {
                                 holder.tvAmount.setText(common.stringToTwoDecimal(String.valueOf(Double.parseDouble(holder.etQty.getText().toString()) * Double.parseDouble(holder.tvRate.getText().toString().replace(",", "")))));
