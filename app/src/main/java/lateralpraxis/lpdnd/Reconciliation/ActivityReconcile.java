@@ -142,7 +142,7 @@ public class ActivityReconcile extends Activity {
         etRemarks = (EditText) findViewById(R.id.etRemarks);
         btnSave = (Button) findViewById(R.id.btnSave);
         etReconcileAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
-        etReconcileAmount.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        etReconcileAmount.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_SIGNED);
         //</editor-fold>
 
         //<editor-fold desc="Code to executed on On Focus Changed">
@@ -216,8 +216,8 @@ public class ActivityReconcile extends Activity {
             public void onClick(View arg0) {
                 if (etReconcileAmount.getText().toString().trim().length() <= 0)
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया राशि दर्ज करें" : "Please enter amount.");
-                else if (Double.valueOf(etReconcileAmount.getText().toString()) <= 0)
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "राशि शून्य नहीं हो सकती" : "Amount cannot be zero.");
+                /*else if (Double.valueOf(etReconcileAmount.getText().toString()) <= 0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "राशि शून्य नहीं हो सकती" : "Amount cannot be zero.");*/
                 else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                     builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
@@ -308,7 +308,7 @@ public class ActivityReconcile extends Activity {
             try {
 
                 String[] name = {"customerId", "existingAmount", "newAmount", "remarks", "uniqueId", "userId", "ip", "machine"};
-                String[] value = {custId, cashAmt, Double.valueOf(etReconcileAmount.getText().toString()).toString(), etRemarks.getText().toString(), UUID.randomUUID().toString(), userId, common.getDeviceIPAddress(true), common.getIMEI()};
+                String[] value = {custId,common.prevent_E_Notation(cashAmt), common.prevent_E_Notation(Double.valueOf(etReconcileAmount.getText().toString()).toString()), etRemarks.getText().toString(), UUID.randomUUID().toString(), userId, common.getDeviceIPAddress(true), common.getIMEI()};
                 // Call method of web service to Read Customers For Reconciliation
                 responseJSON = "";
                 responseJSON = common.CallJsonWS(name, value, "CreateReconciliation", common.url);
