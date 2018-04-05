@@ -51,7 +51,9 @@ public class Common {
 	static Context c;
 	static HashMap<String, String> user;
 	private static String responseJSON;
-    public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
+	//New Server
+	public final String domain = "http://18.188.117.180"; // 81 Port for QA
+    //public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
     //public final String domain = "http://122.180.148.98:82"; // 82 Port for Development
     //public final String domain = "http://122.180.148.98:82";
 	//For Demo Server
@@ -285,7 +287,7 @@ public class Common {
 	}
 
 	//Method to copy db to sd card
-	public String copyDBToSDCard(String DBName) throws Exception {
+	public String copyDBToSDCard(String DBName) {
 		try {
 			InputStream myInput = new FileInputStream(c.getDatabasePath(DBName));
 

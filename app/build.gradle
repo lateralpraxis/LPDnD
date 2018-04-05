@@ -22,6 +22,12 @@ android {
     buildToolsVersion '27.0.3'
     productFlavors {
     }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
 }
 configurations.all {
     resolutionStrategy.force 'com.android.support:support-annotations:23.1.0'
