@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="lpblue">#086dad</color>
+    <color name="lplightblue">#33E3FF</color>
     <color name="lpred">#ff4500</color>
     <color name="lpgreen">#20b14a</color>
     <color name="lpgrey">#454545</color>
