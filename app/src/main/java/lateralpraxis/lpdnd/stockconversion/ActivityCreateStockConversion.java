@@ -403,6 +403,8 @@ public class ActivityCreateStockConversion extends Activity {
                     common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पाद अनिवार्य है।" : "SKU is mandatory.");
                 else if (String.valueOf(etConsumedQty.getText()).trim().equals(""))
                     common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा अनिवार्य है।" : "Consumed quantity is mandatory.");
+                else if (Double.valueOf(etConsumedQty.getText().toString())<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा शून्य नहीं हो सकती।" : "Consumed quantity cannot be zero.");
                 else if (Double.valueOf(etConsumedQty.getText().toString()) > Double.valueOf(tvInventory.getText().toString()))
                     common.showToast(lang.equalsIgnoreCase("hi") ? "खपत मात्रा उपलब्ध मात्रा से अधिक नहीं हो सकती।" : "Consumed quantity cannot exceed available quantity.");
                 else {
@@ -455,6 +457,8 @@ public class ActivityCreateStockConversion extends Activity {
                     common.showToast(lang.equalsIgnoreCase("hi") ? "एसकेयू अनिवार्य है।" : "SKU is mandatory.");
                 else if (String.valueOf(etProducedQty.getText()).trim().equals(""))
                     common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित मात्रा अनिवार्य है।" : "Produced quantity is mandatory.");
+                else if (Double.valueOf(etProducedQty.getText().toString())<=0)
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "उत्पादित मात्रा शून्य नहीं हो सकती।" : "Produced quantity cannot be zero.");
                 else {
                     db.openR();
                     Boolean alreadyAdded = db.isProducedAlreadyAdded(((CustomType) spProdSKU.getSelectedItem()).getId().split("~")[0]);

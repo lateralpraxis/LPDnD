@@ -282,7 +282,11 @@ public class ActivityCreatePayments extends Activity {
 
                 if (etCashAmount.getText().toString().trim().equals("")) {
                     common.showToast(lang.equalsIgnoreCase("hi") ? "कृपया नकद राशि दर्ज करें।" : "Please enter cash amount.");
-                } else {
+                }
+                else if (Double.valueOf(etCashAmount.getText().toString())<=0) {
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "नकद राशि शून्य नहीं हो सकती।" : "Cash amount cannot be zero.");
+                }
+                else {
                     AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                     builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
                     builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप इस भुगतान को जमा करना चाहते हैं??" : "Are you sure, you want to submit this payment?");
