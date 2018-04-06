@@ -45,6 +45,7 @@
     <string name="refresh">Sync Data</string>
     <string name="logout">Logout</string>
     <string name="welcome">Welcome, </string>
+    <string name="label_ViewReports">Veiw Reports</string>
     <string name="continue_">Continue</string>
     <string name="upcontinue_">Update &amp; Continue</string>
     <string name="add">+</string>

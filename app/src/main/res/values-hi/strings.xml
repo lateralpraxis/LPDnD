@@ -46,6 +46,7 @@
     <string name="refresh">Sync Data</string>
     <string name="logout">लॉग आउट</string>
     <string name="welcome">स्वागत हे, </string>
+    <string name="label_ViewReports">रिपोर्ट देखें</string>
     <string name="continue_">जारी रखें</string>
     <string name="upcontinue_">अपडेट करें और जारी रखें</string>
     <string name="add">+</string>

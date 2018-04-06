@@ -1,17 +1,5 @@
 package lateralpraxis.lpdnd;
 
-import java.net.SocketTimeoutException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import org.json.JSONArray;
-import lateralpraxis.lpdnd.types.CustomType;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -23,7 +11,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -40,6 +27,19 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+
+import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import lateralpraxis.lpdnd.types.CustomType;
 
 public class AllocationReport extends Activity {
 	/*Start of code for Variable Declaration*/
@@ -113,9 +113,6 @@ public class AllocationReport extends Activity {
 			if (common.isConnected()) {
 			AsyncCentreWSCall task = new AsyncCentreWSCall();
 			task.execute();
-
-			AsyncCompanyWSCall taskComp = new AsyncCompanyWSCall();
-			taskComp.execute();
 			}
 
 			btnGo.setOnClickListener(new View.OnClickListener() {
@@ -216,6 +213,11 @@ public class AllocationReport extends Activity {
 
 						//Code to bind Centres in spinner
 						spCentre.setAdapter(DataAdapter("centre",""));
+						if(common.isConnected())
+						{
+							AsyncCompanyWSCall taskComp = new AsyncCompanyWSCall();
+							taskComp.execute();
+						}
 					} else {
 						common.showAlert(AllocationReport.this, result, false);
 					}

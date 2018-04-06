@@ -1,17 +1,10 @@
 package lateralpraxis.lpdnd;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,6 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 public class ActivityReport extends Activity {
 	//---------------Start of Code for Control Declaration------------//
@@ -69,9 +66,9 @@ public class ActivityReport extends Activity {
 		tl.setColumnStretchable(1, true);
 		userRole = user.get(UserSessionManager.KEY_ROLES);
 		//---------------Code to set Header------------//
-		tvHeader.setText("Welcome, "
+		/*tvHeader.setText("Welcome, "
 				+ user.get(UserSessionManager.KEY_USERNAME) + " [ "
-				+ Html.fromHtml(userRole.replace(",", ", ")) + " ]");
+				+ Html.fromHtml(userRole.replace(",", ", ")) + " ]");*/
 
 		if (userRole.contains("Route Officer")) {
 			views = Arrays.asList(R.layout.btn_demandreport,R.layout.btn_allocationreport,R.layout.btn_deliveryreport,R.layout.btn_stockconvert,R.layout.btn_stockadjust,R.layout.btn_inventory,R.layout.btn_cashoutstanding,R.layout.btn_custdelrec,R.layout.btn_vehdelrec);
