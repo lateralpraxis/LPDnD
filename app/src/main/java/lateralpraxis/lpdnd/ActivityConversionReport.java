@@ -1,17 +1,5 @@
 package lateralpraxis.lpdnd;
-import java.net.SocketTimeoutException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import org.json.JSONArray;
 
-import lateralpraxis.lpdnd.types.CustomType;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -23,7 +11,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -38,8 +25,22 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+
+import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import lateralpraxis.lpdnd.types.CustomType;
 
 public class ActivityConversionReport  extends Activity {
 	/*Start of code for Variable Declaration*/
@@ -64,6 +65,7 @@ public class ActivityConversionReport  extends Activity {
 	/*Start of code to declare Controls*/
 	private TextView tvDate,tvEmpty;
 	private ListView listAllocation;
+	private TableLayout tableGridHead;
 	private Button btnGo;
 	private Spinner spCentre;
 	/*End of code to declare Controls*/
@@ -101,9 +103,11 @@ public class ActivityConversionReport  extends Activity {
 			tvEmpty = (TextView) findViewById(R.id.tvEmpty);
 			btnGo= (Button) findViewById(R.id.btnGo);
 			spCentre= (Spinner) findViewById(R.id.spCentre);
+			tableGridHead= (TableLayout) findViewById(R.id.tableGridHead);
 			dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 			dateFormatter_database = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
+			tableGridHead.setVisibility(View.GONE);
+			tvEmpty.setVisibility(View.GONE);
 			calendar = Calendar.getInstance();
 			year = calendar.get(Calendar.YEAR);
 			month = calendar.get(Calendar.MONTH);
@@ -411,6 +415,7 @@ public class ActivityConversionReport  extends Activity {
 							listAllocation.setLayoutParams(params);
 							listAllocation.requestLayout();
 							tvEmpty.setVisibility(View.GONE);
+							tableGridHead.setVisibility(View.VISIBLE);
 						} else {
 							listAllocation.setAdapter(null);
 							tvEmpty.setVisibility(View.VISIBLE);

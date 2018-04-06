@@ -1,14 +1,5 @@
 package lateralpraxis.lpdnd;
 
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,7 +9,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -34,8 +24,17 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
-import android.widget.TableRow;
+import android.widget.TableLayout;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
 import lateralpraxis.lpdnd.types.CustomType;
 
 public class ActivityOutstanding  extends Activity {
@@ -64,6 +63,7 @@ public class ActivityOutstanding  extends Activity {
 	private Spinner spCompany;
 	private RadioButton RadioCustomer, RadioRouteOfficer;
 	private RadioGroup RadioType;
+	private TableLayout tableGridHead;
 	/*End of code to declare Controls*/
 
 	//On create method similar to page load
@@ -101,6 +101,9 @@ public class ActivityOutstanding  extends Activity {
 		RadioCustomer = (RadioButton) findViewById(R.id.RadioCustomer);
 		RadioRouteOfficer = (RadioButton) findViewById(R.id.RadioRouteOfficer);
 		RadioType = (RadioGroup) findViewById(R.id.RadioType);
+		tableGridHead = (TableLayout)findViewById(R.id.tableGridHead);
+		tableGridHead.setVisibility(View.GONE);
+		tvEmpty.setVisibility(View.GONE);
 		strType = "ReadCustomerOutStanding";
 		if (userRole.contains("Centre User") || userRole.contains("Route Officer") || userRole.contains("Collection Officer")){
 
@@ -340,6 +343,7 @@ public class ActivityOutstanding  extends Activity {
 						listAllocation.setLayoutParams(params);
 						listAllocation.requestLayout();
 						tvEmpty.setVisibility(View.GONE);
+						tableGridHead.setVisibility(View.VISIBLE);
 					} else {
 						listAllocation.setAdapter(null);
 						tvEmpty.setVisibility(View.VISIBLE);

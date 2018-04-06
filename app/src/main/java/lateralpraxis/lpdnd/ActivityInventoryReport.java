@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
@@ -66,6 +67,7 @@ public class ActivityInventoryReport  extends Activity {
 	private ListView listInventory;
 	private Button btnGo;
 	private Spinner spCentre, spCompany;
+	private TableLayout tableGridHead;
 	/*End of code to declare Controls*/
 	
 	//On create method similar to page load
@@ -102,6 +104,9 @@ public class ActivityInventoryReport  extends Activity {
 			btnGo= (Button) findViewById(R.id.btnGo);
 			spCentre= (Spinner) findViewById(R.id.spCentre);
 			spCompany= (Spinner) findViewById(R.id.spCompany);
+			tableGridHead = (TableLayout)findViewById(R.id.tableGridHead);
+			tableGridHead.setVisibility(View.GONE);
+			tvEmpty.setVisibility(View.GONE);
 			dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 			dateFormatter_database = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
 
@@ -400,6 +405,7 @@ public class ActivityInventoryReport  extends Activity {
 							listInventory.setLayoutParams(params);
 							listInventory.requestLayout();
 							tvEmpty.setVisibility(View.GONE);
+							tableGridHead.setVisibility(View.VISIBLE);
 						} else {
 							listInventory.setAdapter(null);
 							tvEmpty.setVisibility(View.VISIBLE);

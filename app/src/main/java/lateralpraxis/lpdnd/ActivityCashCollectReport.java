@@ -1,19 +1,5 @@
 package lateralpraxis.lpdnd;
 
-import java.net.SocketTimeoutException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import org.json.JSONArray;
-
-import lateralpraxis.lpdnd.types.CustomType;
-
 import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
@@ -42,7 +28,21 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+
+import java.net.SocketTimeoutException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import lateralpraxis.lpdnd.types.CustomType;
 
 public class ActivityCashCollectReport   extends Activity {
 	/*Start of code for Variable Declaration*/
@@ -67,6 +67,7 @@ public class ActivityCashCollectReport   extends Activity {
 	/*Start of code to declare Controls*/
 	private TextView tvDate,tvEmpty;
 	private ListView listCollection;
+	private TableLayout tableGridHead;
 	private Button btnGo;
 	private Spinner spCompany;
 	/*End of code to declare Controls*/
@@ -103,9 +104,11 @@ public class ActivityCashCollectReport   extends Activity {
 		tvEmpty = (TextView) findViewById(R.id.tvEmpty);
 		btnGo= (Button) findViewById(R.id.btnGo);
 		spCompany= (Spinner) findViewById(R.id.spCompany);
+		tableGridHead = (TableLayout)findViewById(R.id.tableGridHead);
 		dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 		dateFormatter_database = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
+		tableGridHead.setVisibility(View.GONE);
+		tvEmpty.setVisibility(View.GONE);
 		calendar = Calendar.getInstance();
 		year = calendar.get(Calendar.YEAR);
 		month = calendar.get(Calendar.MONTH);
@@ -381,6 +384,7 @@ public class ActivityCashCollectReport   extends Activity {
 						listCollection.setLayoutParams(params);
 						listCollection.requestLayout();
 						tvEmpty.setVisibility(View.GONE);
+						tableGridHead.setVisibility(View.VISIBLE);
 					} else {
 						listCollection.setAdapter(null);
 						tvEmpty.setVisibility(View.VISIBLE);

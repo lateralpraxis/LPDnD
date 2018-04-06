@@ -26,6 +26,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -63,6 +64,7 @@ public class ActivityDemandReport  extends Activity {
 
 	/*Start of code to declare Controls*/
 	private TextView tvDate,tvEmpty;
+	private TableLayout tableGridHead;
 	private ListView listDemand;
 	private Button btnGo;
 	private Spinner spCentre, spCompany;
@@ -100,9 +102,11 @@ public class ActivityDemandReport  extends Activity {
 		btnGo= (Button) findViewById(R.id.btnGo);
 		spCentre= (Spinner) findViewById(R.id.spCentre);
 		spCompany= (Spinner) findViewById(R.id.spCompany);
+		tableGridHead= (TableLayout) findViewById(R.id.tableGridHead);
 		dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
 		dateFormatter_database = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-
+		tableGridHead.setVisibility(View.GONE);
+		tvEmpty.setVisibility(View.GONE);
 		calendar = Calendar.getInstance();
 		year = calendar.get(Calendar.YEAR);
 		month = calendar.get(Calendar.MONTH);
@@ -397,6 +401,7 @@ public class ActivityDemandReport  extends Activity {
 						listDemand.setLayoutParams(params);
 						listDemand.requestLayout();
 						tvEmpty.setVisibility(View.GONE);
+						tableGridHead.setVisibility(View.VISIBLE);
 					} else {
 						listDemand.setAdapter(null);
 						tvEmpty.setVisibility(View.VISIBLE);
