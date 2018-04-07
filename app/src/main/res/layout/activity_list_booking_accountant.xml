@@ -57,7 +57,7 @@
                     android:layout_weight=".5"
                     android:gravity="start"
                     android:text="@string/label_date"
-                    android:textColor="@color/white"
+                    android:textColor="@color/lplightblue"
                     android:textIsSelectable="false"
                     android:paddingRight="2dp"
                     android:textSize="18sp" />
@@ -68,7 +68,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
                     android:text="@string/Company"
-                    android:textColor="@color/white"
+                    android:textColor="@color/lplightblue"
                     android:textIsSelectable="false"
                     android:gravity="end"
                     android:paddingRight="2dp"

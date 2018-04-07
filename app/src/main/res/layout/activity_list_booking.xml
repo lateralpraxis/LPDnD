@@ -59,7 +59,7 @@
                     android:layout_weight="1"
                     android:gravity="start"
                     android:text="@string/label_date"
-                    android:textColor="@color/white"
+                    android:textColor="@color/lplightblue"
                     android:textIsSelectable="false"
                     android:paddingRight="2dp"
                     android:textSize="18sp" />
