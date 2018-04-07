@@ -24,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -506,8 +505,10 @@ public class ActivityOutletSaleCreate extends ListActivity {
 
             // Adds the TextWatcher as TextChangedListener to both EditTexts
             holder.etSaleQty.addTextChangedListener(textWatcher);
+            // Adds the TextWatcher as TextChangedListener to both EditTexts
+            holder.etSaleRate.addTextChangedListener(textWatcher);
 
-            // Fix for text selection handle not disappearing
+          /*  // Fix for text selection handle not disappearing
             holder.etSaleQty.setOnFocusChangeListener(new OnFocusChangeListener() {
                 @Override
                 public void onFocusChange(View view2, boolean hasFocus) {
@@ -518,8 +519,7 @@ public class ActivityOutletSaleCreate extends ListActivity {
                     }
                 }
             });
-            // Adds the TextWatcher as TextChangedListener to both EditTexts
-            holder.etSaleRate.addTextChangedListener(textWatcher);
+
 
             // Fix for text selection handle not disappearing
             holder.etSaleRate.setOnFocusChangeListener(new OnFocusChangeListener() {
@@ -530,7 +530,7 @@ public class ActivityOutletSaleCreate extends ListActivity {
                             holder.etSaleRate.setText("");
                     }
                 }
-            });
+            });*/
             return arg1;
         }
 

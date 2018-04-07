@@ -199,7 +199,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
                         android:text="@string/label_AdjDate"
-                        android:textColor="@color/white"
+                        android:textColor="@color/lplightblue"
                         android:textIsSelectable="false"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -212,7 +212,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight=".5"
                         android:text="@string/label_Item"
-                        android:textColor="@color/white"
+                        android:textColor="@color/lplightblue"
                         android:textIsSelectable="false"
                         android:textSize="16sp"
                         android:textStyle="bold" />

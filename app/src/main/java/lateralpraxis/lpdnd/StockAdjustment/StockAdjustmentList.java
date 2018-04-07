@@ -14,7 +14,6 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -136,6 +135,7 @@ public class StockAdjustmentList extends Activity {
         linkAddStockAdjustment= (TextView) findViewById(R.id.linkAddStockAdjustment);
         btnGo = (Button) findViewById(R.id.btnGo);
         tableGridHead = (TableLayout) findViewById(R.id.tableGridHead);
+        tableGridHead.setVisibility(View.GONE);
         dateFormatter_display = new SimpleDateFormat("dd-MMM-yyyy", Locale.US);
         dateFormatter_database = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         RadioType = (RadioGroup) findViewById(R.id.RadioType);

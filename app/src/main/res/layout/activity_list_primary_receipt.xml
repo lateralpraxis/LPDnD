@@ -57,7 +57,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight=".5"
-                    android:textColor="@color/white"
+                    android:textColor="@color/lplightblue"
                     android:text="@string/label_code"
                     android:textIsSelectable="false"
                     android:paddingLeft="2dp"
@@ -70,7 +70,7 @@
                     android:layout_weight=".5"
                     android:gravity="end"
                     android:text="@string/label_date"
-                    android:textColor="@color/white"
+                    android:textColor="@color/lplightblue"
                     android:textIsSelectable="false"
                     android:paddingRight="2dp"
                     android:textSize="18sp" />
