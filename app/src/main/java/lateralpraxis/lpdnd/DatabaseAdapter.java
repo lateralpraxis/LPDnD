@@ -3147,7 +3147,7 @@ public class DatabaseAdapter {
     //Method to get Expense Confirmation Data
     public String getExpenseConfirmationHeaderData(String id) {
         String data = "";
-        selectQuery = "SELECT DISTINCT ExpenseDate||'~'||CustomerName||'~'||ExpenseHead||'~'||Amount||'~'||Remarks FROM ExpenseConfirmationData WHERE Id='" + id + "' ";
+        selectQuery = "SELECT DISTINCT ExpenseDate||'~'||CustomerName||'~'||ExpenseHead||'~'||Amount||'~'||(CASE WHEN Remarks='' THEN '-' ELSE Remarks END) FROM ExpenseConfirmationData WHERE Id='" + id + "' ";
         cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {

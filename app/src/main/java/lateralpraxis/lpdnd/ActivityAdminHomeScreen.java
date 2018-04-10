@@ -110,6 +110,7 @@ public class ActivityAdminHomeScreen extends Activity {
                     + Html.fromHtml(userRole.replace(",", ", ")) + " ]");
         }
 
+
         if (userRole.contains("System User") && userRole.contains("Centre User") && userRole.contains("Reconciliation User"))
             views = Arrays.asList(
                     R.layout.btn_delivery,
@@ -120,6 +121,15 @@ public class ActivityAdminHomeScreen extends Activity {
                     R.layout.btn_customersettlement,
                     R.layout.btn_stockconversion,
                     R.layout.btn_reconcile,
+                    R.layout.btn_report);
+        else if (userRole.contains("System User")  && userRole.contains("Reconciliation User") && userRole.contains("Management User"))
+            views = Arrays.asList(
+                    R.layout.btn_delivery,
+                    R.layout.btn_payment,
+                    R.layout.btn_cashdeposit,
+                    R.layout.btn_expenseconfirmation,
+                    R.layout.btn_reconcile,
+                    R.layout.btn_customersettlement,
                     R.layout.btn_report);
         if (userRole.contains("System User") && userRole.contains("Centre User"))
             views = Arrays.asList(
@@ -139,7 +149,6 @@ public class ActivityAdminHomeScreen extends Activity {
                     R.layout.btn_expenseconfirmation,
                     R.layout.btn_reconcile,
                     R.layout.btn_customersettlement,
-                    R.layout.btn_reconcile,
                     R.layout.btn_report);
         else if (userRole.contains("Centre User")  && userRole.contains("Reconciliation User"))
             views = Arrays.asList( R.layout.btn_expenseconfirmation, R.layout.btn_stockconversion, R.layout.btn_stockadjustment,  R.layout.btn_reconcile,R.layout.btn_report);

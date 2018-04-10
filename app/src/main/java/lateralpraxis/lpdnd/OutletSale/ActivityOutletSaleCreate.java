@@ -484,6 +484,15 @@ public class ActivityOutletSaleCreate extends ListActivity {
                         } else {
                             holder.tvAmount.setText("");
                         }
+                        if (holder.etSaleRate.getText().toString().trim().length() > 0) {
+                            if (Double.parseDouble(holder.etSaleRate.getText().toString()) == 0) {
+                                holder.etSaleRate.setText("");
+                                holder.tvAmount.setText("");
+                            } else
+                                holder.tvAmount.setText(common.stringToTwoDecimal(String.valueOf(Double.parseDouble(holder.etSaleQty.getText().toString()) * Double.parseDouble(holder.etSaleRate.getText().toString().replace(",", "")))));
+                        } else {
+                            holder.tvAmount.setText("");
+                        }
                     } else {
                         holder.tvAmount.setText("");
                     }
