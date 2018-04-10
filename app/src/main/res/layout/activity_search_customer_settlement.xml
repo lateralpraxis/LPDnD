@@ -143,6 +143,7 @@
                         android:textColor="@color/white"
                         android:textIsSelectable="false"
                         android:textSize="16sp"
+                        android:paddingRight="2dp"
                         android:textStyle="bold" />
 
                 </TableRow>
