@@ -432,6 +432,83 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to fetch Updated Invetory">
+    private class AsyncRetailOutletInventoryWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityDeliveryConfirmationCreateView.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String userId = "", userRole = "";
+                HashMap<String, String> user = session.getLoginUserDetails();
+                userId = user.get(UserSessionManager.KEY_ID);
+                userRole = user.get(UserSessionManager.KEY_ROLES);
+                String[] name = {"action", "userId", "role"};
+                String[] value = {"ReadOutletInventory", userId, userRole};
+                responseJSON = "";
+                // Call method of web service to download Reatil Outlet Inventory from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        // After execution of web service to download Retail Outlet Inventory
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    if (common.isConnected()) {
+                        AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+                        task.execute();
+                    }
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    db.open();
+                    db.DeleteMasterData("OutletInventory");
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        db.Insert_OutletInventory(jsonArray.getJSONObject(i)
+                                .getString("A"), jsonArray.getJSONObject(i)
+                                .getString("B"), jsonArray.getJSONObject(i)
+                                .getString("C"));
+                    }
+                    db.close();
+                    common.showToast(lang.equalsIgnoreCase("hi") ? "स्टॉक कनवर्ज़न सफलतापूर्वक सहेजा गया" : "Stock Conversion saved successfully.");
+                    Intent i = new Intent(ActivityDeliveryConfirmationCreateView.this, ActivityHomeScreen.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+                    finish();
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityDeliveryConfirmationCreateView.this, result, false);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityDeliveryConfirmationCreateView.this,
+                        "Inventory Downloading failed: "
+                                + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Inventory..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
     //<editor-fold desc="To make view holder to display on screen">
     public class CustomAdapter extends BaseAdapter {
         ArrayList<HashMap<String, String>> _listItems;

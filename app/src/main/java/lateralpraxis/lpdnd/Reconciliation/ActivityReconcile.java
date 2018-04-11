@@ -142,7 +142,8 @@ public class ActivityReconcile extends Activity {
         etRemarks = (EditText) findViewById(R.id.etRemarks);
         btnSave = (Button) findViewById(R.id.btnSave);
         etReconcileAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(8, 2)});
-        etReconcileAmount.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_SIGNED);
+        etReconcileAmount.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+
         //</editor-fold>
 
         //<editor-fold desc="Code to executed on On Focus Changed">
