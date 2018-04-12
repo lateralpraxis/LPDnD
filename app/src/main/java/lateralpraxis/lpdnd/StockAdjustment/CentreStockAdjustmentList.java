@@ -46,8 +46,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.UUID;
 
-import lateralpraxis.lpdnd.ActivityChangePassword;
 import lateralpraxis.lpdnd.ActivityAdminHomeScreen;
+import lateralpraxis.lpdnd.ActivityChangePassword;
 import lateralpraxis.lpdnd.Common;
 import lateralpraxis.lpdnd.DatabaseAdapter;
 import lateralpraxis.lpdnd.R;
@@ -412,10 +412,10 @@ public class CentreStockAdjustmentList extends Activity {
             }
             holder.tvAdjDate.setText(common.convertToDisplayDateFormat(list.get(arg0).get("AdjustDate")));
             holder.tvItem.setText(list.get(arg0).get("Item"));
-            holder.tvExistInv.setText(list.get(arg0).get("ExistingInventory"));
-            holder.tvAdjQty.setText(list.get(arg0).get("Quantity"));
+            holder.tvExistInv.setText(common.stringToTwoDecimal(list.get(arg0).get("ExistingInventory")).replace(".00",""));
+            holder.tvAdjQty.setText(common.stringToTwoDecimal(list.get(arg0).get("Quantity")).replace(".00",""));
             holder.tvCentre.setText(list.get(arg0).get("Centre"));
-            holder.tvNewInv.setText(list.get(arg0).get("NewInventory"));
+            holder.tvNewInv.setText(common.stringToTwoDecimal(list.get(arg0).get("NewInventory")).replace(".00",""));
             holder.tvReason.setText(Html.fromHtml("<b>Remarks: </b>") + list.get(arg0).get("Reason"));
             if(list.get(arg0).get("Flag").equalsIgnoreCase("1"))
                 holder.tableHeader.setVisibility(View.GONE);

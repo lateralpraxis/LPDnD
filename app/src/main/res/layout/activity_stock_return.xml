@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/white" >
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -34,7 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:text="@string/Item"
-                    android:textColor="@color/white"
+                    android:textColor="@color/lplightblue"
                     android:textSize="16sp" />
             </LinearLayout>
 
@@ -66,7 +65,7 @@
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
                     android:text="@string/Quantity"
-                    android:textColor="@color/white"
+                    android:textColor="@color/lplightblue"
                     android:textSize="16sp" />
             </LinearLayout>
 
