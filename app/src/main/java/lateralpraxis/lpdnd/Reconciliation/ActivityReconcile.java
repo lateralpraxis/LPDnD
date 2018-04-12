@@ -11,10 +11,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.InputType;
-import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,14 +30,12 @@ import java.util.regex.Pattern;
 import lateralpraxis.lpdnd.ActivityAdminHomeScreen;
 import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
-import lateralpraxis.lpdnd.DecimalDigitsInputFilter;
 import lateralpraxis.lpdnd.R;
 import lateralpraxis.lpdnd.UserSessionManager;
 
 public class ActivityReconcile extends Activity {
-    final String Digits = "(\\p{Digit}-)";
-    final String HexDigits = "(\\p{XDigit}-)";
-
+    final String Digits = "(\\p{Digit}+)";
+    final String HexDigits = "(\\p{XDigit}+)";
     // an exponent is 'e' or 'E' followed by an optionally
     // signed decimal integer.
     final String Exp = "[eE][+-]?" + Digits;
@@ -141,10 +136,11 @@ public class ActivityReconcile extends Activity {
         etReconcileAmount = (EditText) findViewById(R.id.etReconcileAmount);
         etRemarks = (EditText) findViewById(R.id.etRemarks);
         btnSave = (Button) findViewById(R.id.btnSave);
-        etReconcileAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(9, 2)});
-        etReconcileAmount.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-
-
+        //etReconcileAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(9, 2)});
+        //etReconcileAmount.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+       // etReconcileAmount.setKeyListener(DigitsKeyListener.getInstance(true,false));
+        etReconcileAmount.setKeyListener(DigitsKeyListener.getInstance(false,false));
+        //etReconcileAmount.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         //</editor-fold>
 
         //<editor-fold desc="Code to executed on On Focus Changed">
@@ -168,7 +164,7 @@ public class ActivityReconcile extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to be executed on change of text">
-        TextWatcher textWatcher = new TextWatcher() {
+        /*TextWatcher textWatcher = new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 double reconcileAmt = 0.0;
                 if (!etReconcileAmount.getText().toString().equalsIgnoreCase(".")) {
@@ -201,7 +197,7 @@ public class ActivityReconcile extends Activity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         };
-        etReconcileAmount.addTextChangedListener(textWatcher);
+        etReconcileAmount.addTextChangedListener(textWatcher);*/
         //</editor-fold>
 
         //<editor-fold desc="Code to Set Values in Controls">
