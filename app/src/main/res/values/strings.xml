@@ -396,7 +396,7 @@
     <!-- Start of Reconciliation Variables-->
     <string name="label_SearchHead">Customer</string>
     <string name="label_Reconciliation">Reconcile</string>
-    <string name="label_cash">Cash \u20B9</string>
+    <string name="label_cash">Available \u20B9</string>
     <string name="label_credit">Credit \u20B9</string>
     <string name="label_optremarkshead">Remarks</string>
     <string name="label_mandatecash">Cash \u20B9*</string>
