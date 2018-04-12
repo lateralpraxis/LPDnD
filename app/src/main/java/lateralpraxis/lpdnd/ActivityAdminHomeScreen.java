@@ -727,7 +727,7 @@ public class ActivityAdminHomeScreen extends Activity {
 			try {
 				if (!result.contains("ERROR")) {
 					dba.open();
-					dba.DeleteMasterData("ExpenseConfirmationData");
+					dba.DeleteMasterData("CentreExpenseConfirmationData");
 					// To display message after response from server
 					JSONArray jsonArray = new JSONArray(responseJSON);
 					if (jsonArray.length() > 0) {
