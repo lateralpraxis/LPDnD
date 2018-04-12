@@ -577,6 +577,14 @@ public class Common {
 		return formatter.format(Double.valueOf(value));
 	}
 
+	public String stringToOneDecimal(String value)
+	{
+		NumberFormat formatter = new DecimalFormat("##,##,##,##,##,##,##,##,##0.0");
+		formatter.setRoundingMode(RoundingMode.FLOOR);
+		return formatter.format(Double.valueOf(value));
+	}
+
+
 	public String formateDateFromstring(String inputFormat, String outputFormat, String inputDate){
 
 		Date parsed = null;

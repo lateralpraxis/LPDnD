@@ -334,7 +334,7 @@ public class ActivityConversionView extends Activity {
                 holder = (ViewHolder) arg1.getTag();
             }
             holder.tvName.setText(listCons.get(arg0).get("Name"));
-            holder.tvQty.setText(listCons.get(arg0).get("Quantity"));
+            holder.tvQty.setText(common.stringToOneDecimal(listCons.get(arg0).get("Quantity")).replace(".0",""));
 
 
             arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
@@ -396,7 +396,7 @@ public class ActivityConversionView extends Activity {
                 holder = (ProducedViewHolder) arg1.getTag();
             }
             holder.tvName.setText(listProd.get(arg0).get("Name"));
-            holder.tvQty.setText(listProd.get(arg0).get("Quantity"));
+            holder.tvQty.setText(common.stringToOneDecimal(listProd.get(arg0).get("Quantity")).replace(".0",""));
 
             arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return arg1;

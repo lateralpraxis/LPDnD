@@ -171,6 +171,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical|center_horizontal"
                         android:text="@string/norecord"
+                        android:visibility="gone"
                         android:textColor="@color/black" />
                 </LinearLayout>
             </ScrollView>

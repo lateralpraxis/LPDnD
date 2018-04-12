@@ -294,7 +294,7 @@ public class ActivityStockConversionDetail extends Activity {
                 holder = (ViewHolder) arg1.getTag();
             }
             holder.tvName.setText(listCons.get(arg0).get("Name"));
-            holder.tvQty.setText(listCons.get(arg0).get("Quantity"));
+            holder.tvQty.setText(common.stringToTwoDecimal(listCons.get(arg0).get("Quantity")).replace(".00",""));
 
 
 
@@ -362,7 +362,7 @@ public class ActivityStockConversionDetail extends Activity {
                 holder = (ProducedViewHolder) arg1.getTag();
             }
             holder.tvName.setText(listProd.get(arg0).get("Name"));
-            holder.tvQty.setText(listProd.get(arg0).get("Quantity"));
+            holder.tvQty.setText(common.stringToTwoDecimal(listProd.get(arg0).get("Quantity")).replace(".00",""));
 
             arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return arg1;

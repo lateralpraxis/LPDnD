@@ -307,7 +307,7 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
                     wordDelList = new ArrayList<HashMap<String, String>>();
 
                     if (jsonArray.length() > 0) {
-                        for (int i = 0; i < jsonArray.length(); ++i) {
+                        for (int i = 0; i < jsonArray.length(); i++) {
                             delmap = new HashMap<String, String>();
                             delmap.put("Id", jsonArray.getJSONObject(i)
                                     .getString("A").replace(".0", ""));
