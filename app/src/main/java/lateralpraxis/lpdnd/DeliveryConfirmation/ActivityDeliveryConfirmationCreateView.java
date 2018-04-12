@@ -403,14 +403,14 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
         protected void onPostExecute(String result) {
             try {
                 if (!result.contains("ERROR")) {
-                    if (lang.equalsIgnoreCase("hi"))
-                        common.showToast("प्राप्ति पुष्टिकरण सफलतापूर्वक सहेजा गया|");
-                    else
-                        common.showToast("Receipt confirmation saved successfully.");
 
-                    Intent intent = new Intent(ActivityDeliveryConfirmationCreateView.this, ActivityDeliveryConfirmationCreateList.class);
+                    if (common.isConnected()) {
+                        AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+                        task.execute();
+                    }
+                    /*Intent intent = new Intent(ActivityDeliveryConfirmationCreateView.this, ActivityDeliveryConfirmationCreateList.class);
                     startActivity(intent);
-                    finish();
+                    finish();*/
                 } else {
                     if (result.contains("null") || result == "")
                         result = "Server not responding. Please try again later.";
@@ -466,10 +466,7 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
         protected void onPostExecute(String result) {
             try {
                 if (!result.contains("ERROR")) {
-                    if (common.isConnected()) {
-                        AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
-                        task.execute();
-                    }
+
                     // To display message after response from server
                     JSONArray jsonArray = new JSONArray(responseJSON);
                     db.open();
@@ -481,7 +478,10 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
                                 .getString("C"));
                     }
                     db.close();
-                    common.showToast(lang.equalsIgnoreCase("hi") ? "स्टॉक कनवर्ज़न सफलतापूर्वक सहेजा गया" : "Stock Conversion saved successfully.");
+                    if (lang.equalsIgnoreCase("hi"))
+                        common.showToast("प्राप्ति पुष्टिकरण सफलतापूर्वक सहेजा गया|");
+                    else
+                        common.showToast("Receipt confirmation saved successfully.");
                     Intent i = new Intent(ActivityDeliveryConfirmationCreateView.this, ActivityHomeScreen.class);
                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(i);
