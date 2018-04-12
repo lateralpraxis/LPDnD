@@ -142,7 +142,7 @@ public class ActivityReconcile extends Activity {
         etRemarks = (EditText) findViewById(R.id.etRemarks);
         btnSave = (Button) findViewById(R.id.btnSave);
         etReconcileAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(9, 2)});
-        etReconcileAmount.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+        etReconcileAmount.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
 
         //</editor-fold>
