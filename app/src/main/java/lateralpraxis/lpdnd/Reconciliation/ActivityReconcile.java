@@ -11,8 +11,10 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -166,7 +168,7 @@ public class ActivityReconcile extends Activity {
         //</editor-fold>
 
         //<editor-fold desc="Code to be executed on change of text">
-        /*TextWatcher textWatcher = new TextWatcher() {
+        TextWatcher textWatcher = new TextWatcher() {
             public void afterTextChanged(Editable s) {
                 double reconcileAmt = 0.0;
                 if (!etReconcileAmount.getText().toString().equalsIgnoreCase(".")) {
@@ -199,7 +201,7 @@ public class ActivityReconcile extends Activity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         };
-        etReconcileAmount.addTextChangedListener(textWatcher);*/
+        etReconcileAmount.addTextChangedListener(textWatcher);
         //</editor-fold>
 
         //<editor-fold desc="Code to Set Values in Controls">
