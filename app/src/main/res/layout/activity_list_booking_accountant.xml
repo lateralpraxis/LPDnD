@@ -54,23 +54,33 @@
                     android:id="@+id/tvDate"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".5"
+                    android:layout_weight=".3"
                     android:gravity="start"
                     android:text="@string/label_date"
                     android:textColor="@color/lplightblue"
                     android:textIsSelectable="false"
                     android:paddingRight="2dp"
                     android:textSize="18sp" />
-
+                <TextView
+                    android:id="@+id/tvCentre"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".4"
+                    android:text="@string/label_CentreHeader"
+                    android:textColor="@color/lplightblue"
+                    android:textIsSelectable="false"
+                    android:gravity="left"
+                    android:paddingRight="2dp"
+                    android:textSize="18sp" />
                 <TextView
                     android:id="@+id/tvCompany"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight=".5"
+                    android:layout_weight=".3"
                     android:text="@string/Company"
                     android:textColor="@color/lplightblue"
                     android:textIsSelectable="false"
-                    android:gravity="end"
+                    android:gravity="left"
                     android:paddingRight="2dp"
                     android:textSize="18sp" />
             </TableRow>

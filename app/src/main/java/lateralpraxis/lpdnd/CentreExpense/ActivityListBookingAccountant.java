@@ -168,7 +168,7 @@ public class ActivityListBookingAccountant extends Activity {
 
     //<editor-fold desc="Code to be Bind Data in list view">
     public static class ViewHolder {
-        TextView tvDate, tvExpenseHead, tvAmount, tvId,tvCompany;
+        TextView tvDate, tvExpenseHead, tvAmount, tvId,tvCompany,tvCentre;
         TableRow tableRowDate;
     }
     //</editor-fold>
@@ -222,6 +222,7 @@ public class ActivityListBookingAccountant extends Activity {
                 holder.tvExpenseHead = (TextView) arg1.findViewById(R.id.tvExpenseHead);
                 holder.tvDate = (TextView) arg1.findViewById(R.id.tvDate);
                 holder.tvCompany = (TextView) arg1.findViewById(R.id.tvCompany);
+                holder.tvCentre= (TextView) arg1.findViewById(R.id.tvCentre);
                 holder.tvAmount = (TextView) arg1.findViewById(R.id.tvAmount);
                 holder.tableRowDate = (TableRow) arg1.findViewById(R.id.tableRowDate);
                 holder.tvId = (TextView) arg1.findViewById(R.id.tvId);
@@ -235,6 +236,7 @@ public class ActivityListBookingAccountant extends Activity {
             holder.tvAmount.setText(common.convertToTwoDecimal(list.get(arg0).get("Amount")));
             holder.tvId.setText(list.get(arg0).get("Id"));
             holder.tvCompany.setText(list.get(arg0).get("Company"));
+            holder.tvCentre.setText(list.get(arg0).get("Centre"));
 
 
             arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));

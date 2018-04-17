@@ -3325,9 +3325,9 @@ public class DatabaseAdapter {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         String prevDate = "";
         if (userlang.equalsIgnoreCase("en"))
-            selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.Name FROM ExpenseBookingAccountant eb, Company com, ExpenseHead eh WHERE eb.CompanyId = com.Id AND eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC ";
+            selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.Name,cen.Name FROM ExpenseBookingAccountant eb, Company com, ExpenseHead eh,Centre cen  WHERE eb.CompanyId = com.Id AND eb.ExpenseHeadId = eh.Id AND eb.CentreId = cen.Id ORDER BY eb.AndroidDate DESC ";
         else
-            selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.NameLocal FROM ExpenseBookingAccountant eb, Company com, ExpenseHead eh WHERE eb.CompanyId = com.Id AND eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC ";
+            selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.NameLocal,cen.Name FROM ExpenseBookingAccountant eb, Company com, ExpenseHead eh,Centre cen WHERE eb.CompanyId = com.Id AND eb.ExpenseHeadId = eh.Id AND eb.CentreId = cen.Id ORDER BY eb.AndroidDate DESC ";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
@@ -3336,6 +3336,7 @@ public class DatabaseAdapter {
             map.put("Date", cursor.getString(2));
             map.put("Amount", cursor.getString(3));
             map.put("Name", cursor.getString(4));
+            map.put("Centre", cursor.getString(5));
             if (prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
                 map.put("Flag", "0");
             else
