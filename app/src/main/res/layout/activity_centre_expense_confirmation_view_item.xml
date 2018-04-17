@@ -83,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".5"
                 android:textColor="@color/black"
+                android:gravity="end"
                 android:textIsSelectable="false"
                 android:textSize="18sp"
                 />
