@@ -46,6 +46,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 import lateralpraxis.lpdnd.ActivityHomeScreen;
 import lateralpraxis.lpdnd.Common;
@@ -58,7 +59,44 @@ import lateralpraxis.lpdnd.ViewImage;
 import lateralpraxis.lpdnd.types.CustomType;
 
 public class ActivityAddExpense extends Activity {
+    final String Digits = "(\\p{Digit}+)";
+    final String HexDigits = "(\\p{XDigit}+)";
+    // an exponent is 'e' or 'E' followed by an optionally
+    // signed decimal integer.
+    final String Exp = "[eE][+-]?" + Digits;
+    final String fpRegex =
+            ("[\\x00-\\x20]*" + // Optional leading "whitespace"
+                    "[+-]?(" +         // Optional sign character
+                    "NaN|" +           // "NaN" string
+                    "Infinity|" +      // "Infinity" string
 
+                    // A decimal floating-point string representing a finite positive
+                    // number without a leading sign has at most five basic pieces:
+                    // Digits . Digits ExponentPart FloatTypeSuffix
+                    //
+                    // Since this method allows integer-only strings as input
+                    // in addition to strings of floating-point literals, the
+                    // two sub-patterns below are simplifications of the grammar
+                    // productions from the Java Language Specification, 2nd
+                    // edition, section 3.10.2.
+
+                    // Digits ._opt Digits_opt ExponentPart_opt FloatTypeSuffix_opt
+                    "(((" + Digits + "(\\.)?(" + Digits + "?)(" + Exp + ")?)|" +
+
+                    // . Digits ExponentPart_opt FloatTypeSuffix_opt
+                    "(\\.(" + Digits + ")(" + Exp + ")?)|" +
+
+                    // Hexadecimal strings
+                    "((" +
+                    // 0[xX] HexDigits ._opt BinaryExponent FloatTypeSuffix_opt
+                    "(0[xX]" + HexDigits + "(\\.)?)|" +
+
+                    // 0[xX] HexDigits_opt . HexDigits BinaryExponent FloatTypeSuffix_opt
+                    "(0[xX]" + HexDigits + "?(\\.)" + HexDigits + ")" +
+
+                    ")[pP][+-]?" + Digits + "))" +
+                    "[fFdD]?))" +
+                    "[\\x00-\\x20]*");
     //<editor-fold desc="Variable Declaration for Uploading Attachment">
     protected static final int CAMERA_REQUEST = 0;
     protected static final int GALLERY_REQUEST = 1;
@@ -153,6 +191,18 @@ public class ActivityAddExpense extends Activity {
         etAmt.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
         //</editor-fold>
 
+        etAmt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    if (Pattern.matches(fpRegex, etAmt.getText())) {
+
+                    }
+                    else
+                        etAmt.setText("");
+                }
+            }
+        });
         //<editor-fold desc="Code to Bind Spinners">
         spExpenseHead.setAdapter(DataAdapter("exphead", ""));
         //</editor-fold>
@@ -162,6 +212,7 @@ public class ActivityAddExpense extends Activity {
             //When go button click
             @Override
             public void onClick(View arg0) {
+                etAmt.clearFocus();
                 if(((CustomType)spExpenseHead.getSelectedItem()).getId().equalsIgnoreCase("0"))
                     common.showToast(lang.equalsIgnoreCase("hi") ?"कृपया व्यय हेड का चयन करें":"Please select Expense Head.");
                 else if(etAmt.getText().toString().trim().length()<=0)
