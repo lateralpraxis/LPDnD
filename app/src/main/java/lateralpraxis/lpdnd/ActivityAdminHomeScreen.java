@@ -281,41 +281,48 @@ public class ActivityAdminHomeScreen extends Activity {
 					public void onClick(View v) {
 						if(common.isConnected())
 						{
-							AlertDialog.Builder builderSingle = new AlertDialog.Builder(ActivityAdminHomeScreen.this);
-							builderSingle.setTitle("Select Expense Confirmation For");
-							final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ActivityAdminHomeScreen.this, android.R.layout.select_dialog_singlechoice);
-							arrayAdapter.add("Retail Outlet");
-							arrayAdapter.add("Centre");
-							builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									dialog.dismiss();
-								}
-							});
-							builderSingle.setAdapter(
-									arrayAdapter,
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(DialogInterface dialog, int which) {
-											String strName = arrayAdapter.getItem(which);
-											if (strName.equals("Retail Outlet")) {
+						    if(userRole.contains("Reconciliation User") && !userRole.contains("System User"))
+                            {
+                                ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
+                                task.execute();
+                            }
+                            else {
+                                AlertDialog.Builder builderSingle = new AlertDialog.Builder(ActivityAdminHomeScreen.this);
+                                builderSingle.setTitle("Select Expense Confirmation For");
+                                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ActivityAdminHomeScreen.this, android.R.layout.select_dialog_singlechoice);
+                                arrayAdapter.add("Retail Outlet");
+                                arrayAdapter.add("Centre");
+                                builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builderSingle.setAdapter(
+                                        arrayAdapter,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                String strName = arrayAdapter.getItem(which);
+                                                if (strName.equals("Retail Outlet")) {
 												/*intent = new Intent(context, ExpenseConfirmationList.class);
 												startActivity(intent);
 												finish();*/
-												ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
-												task.execute();
-											} else if (strName.equals("Centre")) {
+                                                    ActivityExpenseConirmationWSCall task = new ActivityExpenseConirmationWSCall();
+                                                    task.execute();
+                                                } else if (strName.equals("Centre")) {
 												/*intent = new Intent(context, CentreExpenseConfirmationList.class);
 												startActivity(intent);
 												finish();*/
-												ActivityCentreExpenseConirmationWSCall task = new ActivityCentreExpenseConirmationWSCall();
-												task.execute();
-											} else {
-												common.showToast("Please select Appropriate option.");
-											}
-										}
-									});
-							builderSingle.show();
+                                                    ActivityCentreExpenseConirmationWSCall task = new ActivityCentreExpenseConirmationWSCall();
+                                                    task.execute();
+                                                } else {
+                                                    common.showToast("Please select Appropriate option.");
+                                                }
+                                            }
+                                        });
+                                builderSingle.show();
+                            }
 						}
 					}
 				});

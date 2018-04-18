@@ -367,7 +367,7 @@ public class ActivityLogin extends Activity {
 							final HashMap<String, String> user = session.getLoginUserDetails();
 							userRole = user.get(UserSessionManager.KEY_ROLES);
 						 
-							if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant")))
+							if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") || userRole.contains("Reconciliation User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant")))
 							{
 								//Open Administrator home page screen
 								Intent	intent = new Intent(context, ActivityAdminHomeScreen.class);

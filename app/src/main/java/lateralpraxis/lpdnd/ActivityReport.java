@@ -264,7 +264,7 @@ public class ActivityReport extends Activity {
 	@Override
 	public void onBackPressed() {
 		Intent i;
-		if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant")))
+		if(userRole.contains("System User") || userRole.contains("Centre User") || userRole.contains("MIS User") || userRole.contains("Management User") || userRole.contains("Reconciliation User") && (!userRole.contains("Route Officer") || !userRole.contains("Collection Officer") || !userRole.contains("Accountant")))
 			i = new Intent(ActivityReport.this,ActivityAdminHomeScreen.class);
 		else
 			i = new Intent(ActivityReport.this,ActivityHomeScreen.class);
