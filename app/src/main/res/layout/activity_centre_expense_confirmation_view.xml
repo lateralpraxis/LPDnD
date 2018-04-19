@@ -58,24 +58,13 @@
                         android:id="@+id/tvCentre"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".3"
+                        android:layout_weight=".7"
                         android:text="@string/label_CentreHeader"
                         android:textColor="@color/lplightblue"
                         android:textIsSelectable="false"
                         android:textSize="18sp"
                         android:textStyle="bold" />
-                    <!-- 1/2 -->
 
-                    <TextView
-                        android:id="@+id/tvCompany"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".4"
-                        android:text="@string/Company"
-                        android:textColor="@color/lplightblue"
-                        android:textIsSelectable="false"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
                 </TableRow>
 
                 <TableRow
@@ -85,12 +74,25 @@
                     android:layout_marginBottom="5.0dip"
                     tools:ignore="UselessParent" >
 
+                    <!-- 1/2 -->
+
+                    <TextView
+                        android:id="@+id/tvCompany"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight=".3"
+                        android:text="@string/Company"
+                        android:textColor="@color/white"
+                        android:textIsSelectable="false"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
                     <!-- 1/0 -->
                     <TextView
                         android:id="@+id/tvExpenseHead"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".5"
+                        android:layout_weight=".4"
                         android:text="@string/ExpenseHead"
                         android:textColor="@color/white"
                         android:textIsSelectable="false"
@@ -102,7 +104,7 @@
                         android:id="@+id/tvAmount"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".5"
+                        android:layout_weight=".3"
                         android:gravity="end"
                         android:text="@string/Amount"
                         android:textColor="@color/white"

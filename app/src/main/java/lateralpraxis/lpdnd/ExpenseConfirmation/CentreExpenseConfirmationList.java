@@ -110,7 +110,7 @@ public class CentreExpenseConfirmationList extends Activity {
     public static class viewHolder {
         TextView tvId, tvDate, tvCentre, tvCompany, tvExpenseHead, tvAmount;
         int ref;
-        TableRow tableHeader;
+        TableRow tableHeader, tableHeaderSubDet;
     }
 
     private class ReportListAdapter extends BaseAdapter {
@@ -168,7 +168,7 @@ public class CentreExpenseConfirmationList extends Activity {
             holder.tvAmount = (TextView) convertView
                     .findViewById(R.id.tvAmount);
             holder.tableHeader = (TableRow) convertView.findViewById(R.id.tableHeader);
-
+            holder.tableHeaderSubDet = (TableRow) convertView.findViewById(R.id.tableHeaderSubDet);
             final HashMap<String,String> itemData = _listData.get(position);
             holder.tvId.setText(itemData.get("Id"));
             holder.tvCentre.setText(itemData.get("CentreName"));
@@ -180,6 +180,10 @@ public class CentreExpenseConfirmationList extends Activity {
                 holder.tableHeader.setVisibility(View.GONE);
             else
                 holder.tableHeader.setVisibility(View.VISIBLE);
+            if(itemData.get("Flag1").equalsIgnoreCase("1"))
+                holder.tableHeaderSubDet.setVisibility(View.GONE);
+            else
+                holder.tableHeaderSubDet.setVisibility(View.VISIBLE);
             convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return convertView;        }
 

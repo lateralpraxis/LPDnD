@@ -749,7 +749,8 @@ public class ActivityAdminHomeScreen extends Activity {
 									.getString("CompanyName"), jsonArray.getJSONObject(i)
 									.getString("ExpenseHeadName"),jsonArray.getJSONObject(i)
 									.getString("Amount"),jsonArray.getJSONObject(i)
-									.getString("Remarks"));
+									.getString("Remarks"),jsonArray.getJSONObject(i)
+                                    .getString("CreateBy"));
 						}
 						dba.close();
 						intent = new Intent(context, CentreExpenseConfirmationList.class);
