@@ -180,10 +180,14 @@ public class CentreExpenseConfirmationList extends Activity {
                 holder.tableHeader.setVisibility(View.GONE);
             else
                 holder.tableHeader.setVisibility(View.VISIBLE);
-            if(itemData.get("Flag1").equalsIgnoreCase("1"))
-                holder.tableHeaderSubDet.setVisibility(View.GONE);
-            else
-                holder.tableHeaderSubDet.setVisibility(View.VISIBLE);
+            if(itemData.get("Flag1").equalsIgnoreCase("1")) {
+                holder.tvCompany.setVisibility(View.GONE);
+                holder.tvExpenseHead.setVisibility(View.GONE);
+            }
+            else {
+                holder.tvCompany.setVisibility(View.VISIBLE);
+                holder.tvExpenseHead.setVisibility(View.VISIBLE);
+            }
             convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return convertView;        }
 

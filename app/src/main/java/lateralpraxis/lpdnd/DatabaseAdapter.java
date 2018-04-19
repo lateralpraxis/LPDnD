@@ -3261,7 +3261,7 @@ public class DatabaseAdapter {
             map.put("ExpenseHead", cursor.getString(4));
             map.put("Amount", cursor.getString(5));
             map.put("Remarks", cursor.getString(6));
-            if (date.equalsIgnoreCase(cursor.getString(1) + "~"+cursor.getString(2)))
+            if (date.equalsIgnoreCase(cursor.getString(1)))
                 map.put("Flag", "1");
             else
                 map.put("Flag", "0");
@@ -3270,7 +3270,8 @@ public class DatabaseAdapter {
             else
                 map.put("Flag1", "0");
 
-            date = cursor.getString(1)+ "~"+ cursor.getString(3);
+            date = cursor.getString(1);
+            comp = cursor.getString(3) + "~"+cursor.getString(4);
             wordList.add(map);
         }
 
