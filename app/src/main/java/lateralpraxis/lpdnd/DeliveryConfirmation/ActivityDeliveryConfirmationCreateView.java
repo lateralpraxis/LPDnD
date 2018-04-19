@@ -581,6 +581,8 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
             //if (_listItems.get(arg0).get("Qty") != null)
             //holder.etQty.setText(String.format("%.1f", Double.parseDouble(_listItems.get(arg0).get("Qty"))));
             holder.etQty.setText(_listItems.get(arg0).get("Qty"));
+            holder.etQty.requestFocus();
+
             if (_listItems.get(arg0).get("Sku").equalsIgnoreCase("0")) {
                 // To display decimal point in number key board control
                 holder.etQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
@@ -644,8 +646,16 @@ public class ActivityDeliveryConfirmationCreateView extends ListActivity {
                 @Override
                 public void onFocusChange(View view2, boolean hasFocus) {
                     view2.dispatchWindowFocusChanged(hasFocus);
+                    if(!hasFocus)
+                    {
+                        if (lang.equalsIgnoreCase("hi"))
+                            tvTotalAmount.setText("कुल: " + common.stringToTwoDecimal(GetTotal()));
+                        else
+                            tvTotalAmount.setText("Total: " + common.stringToTwoDecimal(GetTotal()));
+                    }
                 }
             });
+
             return arg1;
         }
 
