@@ -3947,6 +3947,7 @@ public class ActivityHomeScreen extends Activity {
                     String passExpired = responseJSON.split("~")[0];
                     String passServer = responseJSON.split("~")[1];
                     String membershipError = responseJSON.split("~")[2];
+                    String returnRoles = responseJSON.split("~")[4];
                     // Check if password is expire and open change password
                     // intent
                     if (passExpired.toLowerCase(Locale.US).equals("yes")) {
@@ -4025,6 +4026,7 @@ public class ActivityHomeScreen extends Activity {
                             alert.show();
 
                         } else {
+                            session.updateRoles(returnRoles);
                             if (common.isConnected()) {
                                 if (userRole.equalsIgnoreCase("Customer")) {
                                     // call method of get customer json web
@@ -4466,6 +4468,7 @@ public class ActivityHomeScreen extends Activity {
                     String passExpired = responseJSON.split("~")[0];
                     String passServer = responseJSON.split("~")[1];
                     String membershipError = responseJSON.split("~")[2];
+                    String returnRoles = responseJSON.split("~")[4];
                     // Check if password is expire and open change password
                     // intent
                     if (passExpired.toLowerCase(Locale.US).equals("yes")) {
@@ -4534,6 +4537,7 @@ public class ActivityHomeScreen extends Activity {
                             alert.show();
 
                         } else {
+                            session.updateRoles(returnRoles);
                             if (common.isConnected()) {
                                 AsyncCustomerPrimaryReceiptWSCall task = new AsyncCustomerPrimaryReceiptWSCall();
                                 task.execute();

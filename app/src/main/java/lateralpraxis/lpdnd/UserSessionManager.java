@@ -1,11 +1,11 @@
 package lateralpraxis.lpdnd;
 
-import java.util.HashMap;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+
+import java.util.HashMap;
 
 public class UserSessionManager {
 
@@ -74,6 +74,12 @@ public class UserSessionManager {
 	}  
 	public void updatePassword(String pwd){	
 		editor.putString(KEY_PWD, pwd);
+		editor.commit();
+
+	}
+
+	public void updateRoles(String role){
+		editor.putString(KEY_ROLES, role);
 		editor.commit();
 
 	}
