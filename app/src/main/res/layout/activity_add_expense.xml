@@ -97,7 +97,8 @@
                 android:hint="@string/enterRemarks"
                 android:inputType="textMultiLine|text"
                 android:maxLength="200"
-                android:minLines="4"
+                android:lines="4"
+                android:scrollbars="vertical"
                 android:textAlignment="viewEnd" />
         </LinearLayout>
 

@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal"
-            android:weightSum="1" >
+            android:weightSum="1">
 
             <TextView
                 android:layout_width="0dp"
@@ -61,17 +61,17 @@
                 android:id="@+id/tvDate"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="0.6"
+                android:layout_weight="0.35"
                 android:hint="@string/hint_date" />
 
             <ImageView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="0dp"
                 android:layout_weight="0.1"
                 android:contentDescription="@string/datehead"
-                android:gravity="center"
                 android:onClick="setDate"
                 android:src="@drawable/ic_calendar" />
         </LinearLayout>

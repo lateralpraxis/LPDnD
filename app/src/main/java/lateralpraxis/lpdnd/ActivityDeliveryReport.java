@@ -323,7 +323,7 @@ public class ActivityDeliveryReport extends Activity {
 					holder.tvCust.setText(list.get(arg0).get("CustomerName"));
 					holder.tvInvoice.setText(list.get(arg0).get("InvoiceNo"));
 					holder.tvRcptQty.setText(list.get(arg0).get("Quantity").replace(".0", ""));
-					holder.tvAmount.setText(list.get(arg0).get("Amount").equalsIgnoreCase("0.0")?"-":list.get(arg0).get("Amount").replace(".0", ""));
+					holder.tvAmount.setText(list.get(arg0).get("Amount").equalsIgnoreCase("0.0")?"-":common.convertToTwoDecimal(list.get(arg0).get("Amount").replace(".0", "")));
 					if(list.get(arg0).get("Flag").equalsIgnoreCase("1"))
 						holder.tableHeader.setVisibility(View.GONE);
 					else

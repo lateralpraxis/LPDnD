@@ -205,7 +205,7 @@ public class ActivityOutstanding  extends Activity {
 				holder = (ViewHolder) arg1.getTag();
 			}
 			holder.tvName.setText(list.get(arg0).get("Name"));
-			holder.tvAmount.setText(list.get(arg0).get("Amount"));
+			holder.tvAmount.setText(common.convertToTwoDecimal(list.get(arg0).get("Amount")));
 
 			arg1.setBackgroundColor(Color.parseColor((arg0 % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
 			return arg1;
