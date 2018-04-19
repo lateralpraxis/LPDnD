@@ -177,10 +177,14 @@ public class ExpenseConfirmationList extends Activity {
                 holder.tableHeader.setVisibility(View.GONE);
             else
                 holder.tableHeader.setVisibility(View.VISIBLE);
-          //  if(itemData.get("Flag").equalsIgnoreCase("1"))
-              //  holder.tvDate.setVisibility(View.GONE);
-          //  else
-            //    holder.tvDate.setVisibility(View.VISIBLE);
+            if(itemData.get("Flag1").equalsIgnoreCase("1")) {
+                holder.tvCustomer.setVisibility(View.GONE);
+                holder.tvExpenseHead.setVisibility(View.GONE);
+            }
+            else {
+                holder.tvCustomer.setVisibility(View.VISIBLE);
+                holder.tvExpenseHead.setVisibility(View.VISIBLE);
+            }
             convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return convertView;        }
 
