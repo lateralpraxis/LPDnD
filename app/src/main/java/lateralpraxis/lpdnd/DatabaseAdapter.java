@@ -3220,7 +3220,7 @@ public class DatabaseAdapter {
     //<editor-fold desc="To get Expense Booking data For confirmation">
     public ArrayList<HashMap<String, String>> getExpenseConfirmationData() {
         wordList = new ArrayList<HashMap<String, String>>();
-        String date = "", cust = "";
+        String date = "", cust = "", exp = "";
         selectQuery = "SELECT DISTINCT Id, ExpenseDate, CustomerName, ExpenseHead, Amount, Remarks FROM ExpenseConfirmationData";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -3235,12 +3235,17 @@ public class DatabaseAdapter {
                 map.put("Flag", "1");
             else
                 map.put("Flag", "0");
-            if (cust.equalsIgnoreCase(cursor.getString(2)+"~"+cursor.getString(3)))
+            if (cust.equalsIgnoreCase(cursor.getString(2)))
                 map.put("Flag1", "1");
             else
                 map.put("Flag1", "0");
+            if (exp.equalsIgnoreCase(cursor.getString(3)))
+                map.put("Flag2", "1");
+            else
+                map.put("Flag2", "0");
             date = cursor.getString(1);
-            cust = cursor.getString(2)+"~"+cursor.getString(3);
+            cust = cursor.getString(2);
+            exp = cursor.getString(3);
             wordList.add(map);
         }
 
