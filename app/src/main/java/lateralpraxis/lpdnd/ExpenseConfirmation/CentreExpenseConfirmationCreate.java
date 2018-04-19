@@ -62,7 +62,7 @@ public class CentreExpenseConfirmationCreate extends Activity {
 	/*End of code to declare class*/
 
     /*Start of code to declare Controls*/
-    private TextView tvCentre, tvCompany, tvDate, tvExpenseHead, tvAmount, tvRemarks;
+    private TextView tvCentre, tvCompany, tvDate, tvExpenseHead, tvAmount, tvRemarks, tvCreateBy;
     private Button btnSubmit;
     private RadioGroup RadioType;
     private RadioButton RadioAccept, RadioReject;
@@ -103,6 +103,7 @@ public class CentreExpenseConfirmationCreate extends Activity {
         tvDate = (TextView) findViewById(R.id.tvDate);
         tvExpenseHead = (TextView) findViewById(R.id.tvExpenseHead);
         tvAmount= (TextView) findViewById(R.id.tvAmount);
+        tvCreateBy= (TextView) findViewById(R.id.tvCreateBy);
         tvRemarks= (TextView) findViewById(R.id.tvRemarks);
         etRemarks= (EditText) findViewById(R.id.etRemarks);
         btnSubmit= (Button) findViewById(R.id.btnSubmit);
@@ -117,7 +118,7 @@ public class CentreExpenseConfirmationCreate extends Activity {
         tvExpenseHead.setText(data.split("~")[3].toString());
         tvAmount.setText(common.convertToTwoDecimal(data.split("~")[4].toString()));
         tvRemarks.setText(data.split("~")[5].toString());
-
+        tvCreateBy.setText(data.split("~")[6].toString());
         //<editor-fold desc="Code to be exceuted on change of Radio Button">
         RadioType.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override

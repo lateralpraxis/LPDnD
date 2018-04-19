@@ -85,7 +85,7 @@ public class DatabaseAdapter {
     OutletSale_CREATE = "CREATE TABLE IF NOT EXISTS OutletSale(Id INTEGER PRIMARY KEY AUTOINCREMENT, UniqueId TEXT, CustomerId TEXT, Customer TEXT, SaleType TEXT, CreateBy TEXT, CreateDate TEXT, Imei TEXT, IsSync TEXT);",
             OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
             ExpenseConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseConfirmationData(Id TEXT, ExpenseDate TEXT, CustomerName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT);",
-            CentreExpenseConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS CentreExpenseConfirmationData(Id TEXT, ExpenseDate TEXT, CentreName TEXT, CompanyName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT);",
+            CentreExpenseConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS CentreExpenseConfirmationData(Id TEXT, ExpenseDate TEXT, CentreName TEXT, CompanyName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT, CreateBy TEXT);",
     /********************* Tables used in Delete For System User ******************/
     CashDepositDeleteDataTABLE_CREATE = "CREATE TABLE IF NOT EXISTS CashDepositDeleteData (CashDepositId TEXT, CashDepositDetailId TEXT, DepositDate TEXT, PCDetailId TEXT, Mode TEXT, Amount TEXT, FullName TEXT)",
             RawMaterialMaster_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialMaster(Id TEXT, Name TEXT, UOM TEXT, NameLocal TEXT);",
@@ -2341,14 +2341,14 @@ public class DatabaseAdapter {
         db.execSQL(selectQuery);
         //End of code to insert data from Temporary Detail Table to Main Detail Table
 
-		/*Start of code to update customer ledger*/
+        /*Start of code to update customer ledger*/
         selectQuery = "SELECT SUM(Amount), CompanyId FROM CustomerPaymentTemp GROUP BY CompanyId";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             db.execSQL("UPDATE CustomerLedger SET Balance = Balance + " + cursor.getDouble(0) + " WHERE CustomerId = '" + customerId + "' AND CompanyId ='" + cursor.getString(1) + "' ");
         }
         cursor.close();
-		/*End of code to update customer ledger*/
+        /*End of code to update customer ledger*/
 
         //Start of code to delete data from Temporary Detail Table
         db.execSQL("DELETE FROM CustomerPaymentTemp");
@@ -3161,7 +3161,7 @@ public class DatabaseAdapter {
     //Method to get Expense Confirmation Data
     public String getCentreExpenseConfirmationHeaderData(String id) {
         String data = "";
-        selectQuery = "SELECT DISTINCT ExpenseDate||'~'||CentreName||'~'||CompanyName||'~'||ExpenseHead||'~'||Amount||'~'||Remarks FROM CentreExpenseConfirmationData WHERE Id='" + id + "' ";
+        selectQuery = "SELECT DISTINCT ExpenseDate||'~'||CentreName||'~'||CompanyName||'~'||ExpenseHead||'~'||Amount||'~'||Remarks||'~'||CreateBy FROM CentreExpenseConfirmationData WHERE Id='" + id + "' ";
         cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
@@ -3195,7 +3195,7 @@ public class DatabaseAdapter {
 
     //To insert records in Centre ExpenseConfirmationData Table
     public String Insert_CentreExpenseConfirmationData(String id, String expenseDate, String centreName, String companyName,
-                                                       String expenseHead, String amount, String remarks) {
+                                                       String expenseHead, String amount, String remarks, String createBy) {
         try {
             result = "fail";
             newValues = new ContentValues();
@@ -3206,6 +3206,7 @@ public class DatabaseAdapter {
             newValues.put("ExpenseHead", expenseHead);
             newValues.put("Amount", amount);
             newValues.put("Remarks", remarks);
+            newValues.put("CreateBy", createBy);
 
             db.insert("CentreExpenseConfirmationData", null, newValues);
             result = "success";
@@ -3248,6 +3249,7 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> getCentreExpenseConfirmationData() {
         wordList = new ArrayList<HashMap<String, String>>();
         String date = "";
+        String comp = "";
         selectQuery = "SELECT DISTINCT Id, ExpenseDate, CentreName, CompanyName, ExpenseHead, Amount, Remarks FROM CentreExpenseConfirmationData";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -3263,7 +3265,13 @@ public class DatabaseAdapter {
                 map.put("Flag", "1");
             else
                 map.put("Flag", "0");
+            if (comp.equalsIgnoreCase(cursor.getString(3) + "~"+cursor.getString(4)))
+                map.put("Flag1", "1");
+            else
+                map.put("Flag1", "0");
+
             date = cursor.getString(1);
+            comp = cursor.getString(3) + "~"+cursor.getString(4);
             wordList.add(map);
         }
 

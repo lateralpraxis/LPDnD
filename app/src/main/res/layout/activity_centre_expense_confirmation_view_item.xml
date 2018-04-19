@@ -27,7 +27,7 @@
                 android:id="@+id/tvDate"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".3"
+                android:layout_weight=".4"
                 android:textColor="@color/lpblue"
                 android:textIsSelectable="false"
                 android:textSize="18sp"
@@ -39,23 +39,12 @@
                 android:id="@+id/tvCentre"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".3"
-                android:textColor="@color/lpblue"
-                android:textIsSelectable="false"
-                android:textSize="18sp"
-                 />
-            <!-- 1/2 -->
-
-            <TextView
-                android:id="@+id/tvCompany"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight=".4"
-                android:gravity="end"
+                android:layout_weight=".6"
                 android:textColor="@color/lpblue"
                 android:textIsSelectable="false"
                 android:textSize="18sp"
                 />
+
         </TableRow>
 
         <TableRow
@@ -66,10 +55,21 @@
 
 
             <TextView
+                android:id="@+id/tvCompany"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:textColor="@color/black"
+                android:textIsSelectable="false"
+                android:textSize="18sp"
+                />
+
+
+            <TextView
                 android:id="@+id/tvExpenseHead"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".5"
+                android:layout_weight=".35"
                 android:layout_gravity="left"
                 android:textColor="@color/black"
                 android:textIsSelectable="false"
@@ -81,7 +81,7 @@
                 android:id="@+id/tvAmount"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight=".5"
+                android:layout_weight=".35"
                 android:textColor="@color/black"
                 android:gravity="end"
                 android:textIsSelectable="false"
