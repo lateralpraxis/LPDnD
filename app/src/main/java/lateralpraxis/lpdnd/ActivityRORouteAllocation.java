@@ -1,16 +1,6 @@
 package lateralpraxis.lpdnd;
 
-import java.io.BufferedReader;
-import java.net.HttpURLConnection;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,7 +11,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.PasswordTransformationMethod;
@@ -40,6 +29,17 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Locale;
 
 @SuppressLint("InflateParams") public class ActivityRORouteAllocation  extends Activity{
 	private Common common;
@@ -353,6 +353,8 @@ import android.widget.TextView;
 						String passExpired = responseJSON.split("~")[0];
 						String passServer = responseJSON.split("~")[1];
 						String membershipError = responseJSON.split("~")[2];
+						String returnRoles = responseJSON.split("~")[6];
+						session.updateRoles(returnRoles);
 						//Check if password is expire and open change password intent 
 						if(passExpired.toLowerCase(Locale.US).equals("yes"))
 						{
@@ -923,7 +925,7 @@ import android.widget.TextView;
 					if(!isChecked){
 						start=userInput.getSelectionStart();
 						end=userInput.getSelectionEnd();
-						userInput.setTransformationMethod(new PasswordTransformationMethod());;
+						userInput.setTransformationMethod(new PasswordTransformationMethod());
 						userInput.setSelection(start,end);
 					}else{
 						start=userInput.getSelectionStart();

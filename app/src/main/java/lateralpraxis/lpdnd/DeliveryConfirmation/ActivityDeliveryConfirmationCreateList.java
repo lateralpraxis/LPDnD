@@ -472,7 +472,7 @@ public class  ActivityDeliveryConfirmationCreateList extends Activity {
                     String passExpired = responseJSON.split("~")[0];
                     String passServer = responseJSON.split("~")[1];
                     String membershipError = responseJSON.split("~")[2];
-                    String returnRoles = responseJSON.split("~")[4];
+                    String returnRoles = responseJSON.split("~")[6];
                     // Check if password is expire and open change password
                     // intent
                     if (passExpired.toLowerCase(Locale.US).equals("yes")) {
