@@ -712,8 +712,8 @@ public class ActivityAdminHomeScreen extends Activity {
 				res.updateConfiguration(conf, dm);
 				//</editor-fold>
 
-				String[] name = { "lang"};
-				String[] value = { lang };
+				String[] name = { "lang","userId"};
+				String[] value = { lang,userId };
 				// Call method of web service to Read Expense Data For Confirmation
 				responseJSON = "";
 				responseJSON = common.CallJsonWS(name, value,"GetCentreExpensePendingConfirmation", common.url);
@@ -805,8 +805,8 @@ public class ActivityAdminHomeScreen extends Activity {
                 res.updateConfiguration(conf, dm);
                 //</editor-fold>
 
-                String[] name = {"lang"};
-                String[] value = {lang};
+                String[] name = {"lang","userId"};
+                String[] value = {lang,userId};
                 // Call method of web service to Read Expense Data For Confirmation
                 responseJSON = "";
                 responseJSON = common.CallJsonWS(name, value, "GetExpensePendingConfirmation", common.url);
