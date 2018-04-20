@@ -125,19 +125,23 @@ public class ActivitySearchCustomer extends Activity {
         //<editor-fold desc="Code to be executed on click of List View">
         listCustomer.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> lv, View item, int position, long id) {
-                Intent intent = new Intent(ActivitySearchCustomer.this, ActivityReconcile.class);
-                intent.putExtra("From", From);
-                intent.putExtra("Id", String.valueOf(((TextView) item.findViewById(R.id.tvCustId)).getText().toString()));
-                intent.putExtra("Name", String.valueOf(((TextView) item.findViewById(R.id.tvCustomerName)).getText().toString()));
-                intent.putExtra("Cash", String.valueOf(((TextView) item.findViewById(R.id.tvCashAmount)).getText().toString()));
-                intent.putExtra("Credit", String.valueOf(((TextView) item.findViewById(R.id.tvCreditAmount)).getText().toString()));
-                intent.putExtra("TotalCashSale", String.valueOf(((TextView) item.findViewById(R.id.tvTotalCashSale)).getText().toString()));
-                intent.putExtra("TotalCreditSale", String.valueOf(((TextView) item.findViewById(R.id.tvTotalCreditSale)).getText().toString()));
-                intent.putExtra("TotalPayment", String.valueOf(((TextView) item.findViewById(R.id.tvTotalPayment)).getText().toString()));
-                intent.putExtra("TotalExpense", String.valueOf(((TextView) item.findViewById(R.id.tvTotalExpense)).getText().toString()));
+                if(!String.valueOf(((TextView) item.findViewById(R.id.tvIsReconAllowed)).getText().toString()).equals("0")) {
+                    Intent intent = new Intent(ActivitySearchCustomer.this, ActivityReconcile.class);
+                    intent.putExtra("From", From);
+                    intent.putExtra("Id", String.valueOf(((TextView) item.findViewById(R.id.tvCustId)).getText().toString()));
+                    intent.putExtra("Name", String.valueOf(((TextView) item.findViewById(R.id.tvCustomerName)).getText().toString()));
+                    intent.putExtra("Cash", String.valueOf(((TextView) item.findViewById(R.id.tvCashAmount)).getText().toString()));
+                    intent.putExtra("Credit", String.valueOf(((TextView) item.findViewById(R.id.tvCreditAmount)).getText().toString()));
+                    intent.putExtra("TotalCashSale", String.valueOf(((TextView) item.findViewById(R.id.tvTotalCashSale)).getText().toString()));
+                    intent.putExtra("TotalCreditSale", String.valueOf(((TextView) item.findViewById(R.id.tvTotalCreditSale)).getText().toString()));
+                    intent.putExtra("TotalPayment", String.valueOf(((TextView) item.findViewById(R.id.tvTotalPayment)).getText().toString()));
+                    intent.putExtra("TotalExpense", String.valueOf(((TextView) item.findViewById(R.id.tvTotalExpense)).getText().toString()));
 
-                startActivity(intent);
-                finish();
+                    startActivity(intent);
+                    finish();
+                }
+                else
+                    common.showToast("Expense pending for confirmation, reconciliation not allowed!");
             }
         });
         //</editor-fold>
@@ -186,7 +190,7 @@ public class ActivitySearchCustomer extends Activity {
 
     //<editor-fold desc="Code Binding Data In List">
     public static class viewHolder {
-        TextView tvCustId, tvCashAmount, tvCreditAmount, tvCustomerName,tvTotalCashSale,tvTotalCreditSale,tvTotalPayment, tvTotalExpense;
+        TextView tvCustId, tvCashAmount, tvCreditAmount, tvCustomerName,tvTotalCashSale,tvTotalCreditSale,tvTotalPayment, tvTotalExpense,tvIsReconAllowed;
         int ref;
     }
     //</editor-fold>
@@ -249,6 +253,8 @@ public class ActivitySearchCustomer extends Activity {
                                     .getString("H"));
                             map.put("TotalExpense", jsonArray.getJSONObject(i)
                                     .getString("I"));
+                            map.put("IsReconAllowed", jsonArray.getJSONObject(i)
+                                    .getString("J"));
                             wordList.add(map);
                         }
                         listSize = wordList.size();
@@ -356,7 +362,8 @@ public class ActivitySearchCustomer extends Activity {
                     .findViewById(R.id.tvTotalPayment);
             holder.tvTotalExpense = (TextView) convertView
                     .findViewById(R.id.tvTotalExpense);
-
+            holder.tvIsReconAllowed = (TextView) convertView
+                    .findViewById(R.id.tvIsReconAllowed);
             final HashMap<String, String> itemData = _listData.get(position);
             holder.tvCustId.setText(itemData.get("CustomerId"));
             holder.tvCashAmount.setText(itemData.get("CashAmount"));
@@ -367,7 +374,7 @@ public class ActivitySearchCustomer extends Activity {
             holder.tvTotalCreditSale.setText(itemData.get("TotalCreditSale"));
             holder.tvTotalPayment.setText(itemData.get("TotalPayment"));
             holder.tvTotalExpense.setText(itemData.get("TotalExpense"));
-
+            holder.tvIsReconAllowed.setText(itemData.get("IsReconAllowed"));
             convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return convertView;
         }

@@ -3891,7 +3891,7 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> getOutletPayments() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         selectQuery = "SELECT AndroidDate, Amount FROM OutletPaymentReceipt ORDER BY AndroidDate DESC";
-
+        String strDate ="";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();

@@ -149,19 +149,19 @@ public class ActivityHomeScreen extends Activity {
                 else
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand);
             } else if (userRole.contains("Route Officer") && userRole.contains("Reconciliation User")) {
-                views = Arrays.asList(R.layout.btn_allocation, R.layout.btn_demand, R.layout.btn_delivery, R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_return, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
+                views = Arrays.asList(R.layout.btn_allocation, R.layout.btn_demand, R.layout.btn_delivery, R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_return, R.layout.btn_master,  R.layout.btn_reconcile,R.layout.btn_report, R.layout.btn_sync);
             } else if (userRole.contains("Route Officer")) {
                 views = Arrays.asList(R.layout.btn_allocation, R.layout.btn_demand, R.layout.btn_delivery, R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_return, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
             } else if (userRole.contains("Collection Officer") && userRole.contains("Reconciliation User")) {
-                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_master,  R.layout.btn_reconcile, R.layout.btn_report,R.layout.btn_sync);
             } else if (userRole.contains("Collection Officer")) {
                 views = Arrays.asList(R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_master, R.layout.btn_report, R.layout.btn_sync);
             } else if (userRole.contains("Accountant") && userRole.contains("Reconciliation User")) {
-                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile,R.layout.btn_cashdeposit, R.layout.btn_expensebooking,R.layout.btn_sync);
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_reconcile,R.layout.btn_cashdeposit, R.layout.btn_expensebooking,R.layout.btn_report,R.layout.btn_sync);
             } else if (userRole.contains("Accountant")) {
-                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master, R.layout.btn_report,R.layout.btn_cashdeposit, R.layout.btn_expensebooking,R.layout.btn_sync);
+                views = Arrays.asList(R.layout.btn_payment, R.layout.btn_master,R.layout.btn_cashdeposit, R.layout.btn_expensebooking, R.layout.btn_report,R.layout.btn_sync);
             } else if (userRole.contains("Reconciliation User")) {
-                views = Arrays.asList(R.layout.btn_master, R.layout.btn_report, R.layout.btn_reconcile, R.layout.btn_sync);
+                views = Arrays.asList(R.layout.btn_master, R.layout.btn_reconcile, R.layout.btn_report,R.layout.btn_sync);
             }
 
             go.performClick();

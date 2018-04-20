@@ -47,6 +47,12 @@
         android:visibility="gone" />
 
     <TextView
+        android:id="@+id/tvIsReconAllowed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/tvCustomerName"
         style="@style/style_dataLabel"
         android:paddingBottom="5dp"

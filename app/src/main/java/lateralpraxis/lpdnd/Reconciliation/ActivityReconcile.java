@@ -212,7 +212,11 @@ public class ActivityReconcile extends Activity {
         tvCustomerId.setText(custId);
         tvCustomer.setText(custName);
         tvCash.setText(common.convertToTwoDecimal(cashAmt));
-        tvCredit.setText(common.convertToTwoDecimal(creditAmt));
+        if (Double.valueOf(creditAmt) < 0) {
+            tvCredit.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(creditAmt)).replace("-", "")));
+        } else {
+            tvCredit.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(creditAmt))) + ")");
+        }
         tvTotalCashSale.setText(common.convertToTwoDecimal(TotalCashSale));
         tvTotalCreditSale.setText(common.convertToTwoDecimal(TotalCreditSale));
         tvTotalPayment.setText(common.convertToTwoDecimal(TotalPayment));

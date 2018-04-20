@@ -135,11 +135,11 @@ public class ActivityCreatePayments extends Activity {
         payableAmount = db.getCreditAmount(userId);
         tvHiddenPayableAmount.setText(payableAmount);
         if (Double.valueOf(payableAmount) < 0) {
-            tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
-            tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
+            tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
+            tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
         } else {
-            tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
-            tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
+            tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
+            tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
         }
         //</editor-fold>
 
@@ -157,9 +157,9 @@ public class ActivityCreatePayments extends Activity {
                     double totalPayable = 0.0;
                     if (Pattern.matches(fpRegex, etCashAmount.getText())) {
                         if (tvPayableAmount.getText().toString().contains("("))
-                            totalPayable = Double.valueOf(tvPayableAmount.getText().toString().replace(",", "").replace("(", "").replace(")", ""));
+                            totalPayable = Double.valueOf(tvPayableAmount.getText().toString().replace(",", "").replace("(", "").replace(")", ""))* -1;
                         else
-                            totalPayable = Double.valueOf(tvPayableAmount.getText().toString().replace(",", "")) * -1;
+                            totalPayable = Double.valueOf(tvPayableAmount.getText().toString().replace(",", ""));
                         if (etCashAmount.getText().toString().trim().equals("") || etCashAmount.getText().toString().trim().equals("."))
                             cashAmt = 0.0;
                         else
@@ -167,9 +167,9 @@ public class ActivityCreatePayments extends Activity {
 
 
                         if (common.stringToTwoDecimal(String.valueOf(totalPayable + (cashAmt))).contains("-"))
-                            tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(totalPayable + (cashAmt)))).replace("-", ""));
+                            tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(totalPayable + (cashAmt)))).replace("-", "") + ")");
                         else
-                            tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(totalPayable + (cashAmt)))) + ")");
+                            tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(totalPayable + (cashAmt)))));
                     } else {
                         etCashAmount.setText("");
                         //<editor-fold desc="Code to Set Payable Amount">
@@ -177,11 +177,11 @@ public class ActivityCreatePayments extends Activity {
                         payableAmount = db.getCreditAmount(userId);
                         tvHiddenPayableAmount.setText(payableAmount);
                         if (Double.valueOf(payableAmount) < 0) {
-                            tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
-                            tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
+                            tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
+                            tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
                         } else {
-                            tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
-                            tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
+                            tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
+                            tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
                         }
                         //</editor-fold>
                     }
@@ -202,9 +202,9 @@ public class ActivityCreatePayments extends Activity {
                     if (etCashAmount.getText().toString().trim().length() > 0) {
                         if (Pattern.matches(fpRegex, etCashAmount.getText())) {
                             if (tvPayableAmount.getText().toString().contains("("))
-                                totalPayable = Double.valueOf(tvPayableAmount.getText().toString().replace(",", "").replace("(", "").replace(")", ""));
+                                totalPayable = Double.valueOf(tvPayableAmount.getText().toString().replace(",", "").replace("(", "").replace(")", ""))* -1;
                             else
-                                totalPayable = Double.valueOf(tvPayableAmount.getText().toString().replace(",", "")) * -1;
+                                totalPayable = Double.valueOf(tvPayableAmount.getText().toString().replace(",", ""));
                             if (etCashAmount.getText().toString().trim().equals("") || etCashAmount.getText().toString().trim().equals("."))
                                 cashAmt = 0.0;
                             else
@@ -212,9 +212,9 @@ public class ActivityCreatePayments extends Activity {
 
 
                             if (common.stringToTwoDecimal(String.valueOf(totalPayable + (cashAmt))).contains("-"))
-                                tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(totalPayable + (cashAmt)))).replace("-", ""));
+                                tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(totalPayable + (cashAmt)))).replace("-", "") + ")");
                             else
-                                tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(totalPayable + (cashAmt)))) + ")");
+                                tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(totalPayable + (cashAmt)))));
                         } else {
                             etCashAmount.setText("");
                             //<editor-fold desc="Code to Set Payable Amount">
@@ -222,11 +222,11 @@ public class ActivityCreatePayments extends Activity {
                             payableAmount = db.getCreditAmount(userId);
                             tvHiddenPayableAmount.setText(payableAmount);
                             if (Double.valueOf(payableAmount) < 0) {
-                                tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
-                                tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
+                                tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
+                                tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
                             } else {
-                                tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
-                                tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
+                                tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
+                                tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
                             }
                             //</editor-fold>
                         }
@@ -237,11 +237,11 @@ public class ActivityCreatePayments extends Activity {
                         payableAmount = db.getCreditAmount(userId);
                         tvHiddenPayableAmount.setText(payableAmount);
                         if (Double.valueOf(payableAmount) < 0) {
-                            tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
-                            tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
+                            tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
+                            tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
                         } else {
-                            tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
-                            tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
+                            tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
+                            tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
                         }
                         //</editor-fold>
                     }
@@ -252,11 +252,11 @@ public class ActivityCreatePayments extends Activity {
                     payableAmount = db.getCreditAmount(userId);
                     tvHiddenPayableAmount.setText(payableAmount);
                     if (Double.valueOf(payableAmount) < 0) {
-                        tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
-                        tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount)).replace("-", "")));
+                        tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
+                        tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))).replace("-", "") + ")");
                     } else {
-                        tvPayableAmount.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
-                        tvBalanceData.setText("(" + common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))) + ")");
+                        tvPayableAmount.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
+                        tvBalanceData.setText(common.stringToTwoDecimal(String.format("%.2f", Double.valueOf(payableAmount))));
                     }
                     //</editor-fold>
                 }
@@ -299,7 +299,7 @@ public class ActivityCreatePayments extends Activity {
                                     db.open();
                                     db.Insert_OutletPaymentReceipt(userId,Double.valueOf(etCashAmount.getText().toString()).toString(), UUID.randomUUID().toString());
                                     db.close();
-                                    common.showToast(lang.equalsIgnoreCase("hi") ? "भुगतान सफलतापूर्वक सहेजा गया।" : "payment saved successfully.");
+                                    common.showToast(lang.equalsIgnoreCase("hi") ? "भुगतान सफलतापूर्वक सहेजा गया।" : "Payment saved successfully.");
                                     Intent i = new Intent(ActivityCreatePayments.this, ActivityListPayments.class);
                                     i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     startActivity(i);

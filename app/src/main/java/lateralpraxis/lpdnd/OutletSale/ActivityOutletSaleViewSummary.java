@@ -116,12 +116,18 @@ public class ActivityOutletSaleViewSummary extends Activity {
         ArrayList<HashMap<String, String>> list = dba.GetOutletSaleSummery(userId);
         lsize = list.size();
         if (list != null && list.size() > 0) {
+            String prevType = "";
             for (HashMap<String, String> lable : list) {
                 HashMap<String, String> hm = new HashMap<String, String>();
                 hm.put("Id", String.valueOf(lable.get("Id")));
                 hm.put("Code", String.valueOf(lable.get("Code")));
                 hm.put("Name", String.valueOf(lable.get("Name")));
                 hm.put("Date", String.valueOf(lable.get("Date")));
+                if (prevType.equalsIgnoreCase(String.valueOf(lable.get("Name"))))
+                hm.put("Flag", "1");
+                else
+                    hm.put("Flag", "0");
+                prevType = String.valueOf(lable.get("Name"));
                 HeaderDetails.add(hm);
             }
         }
@@ -150,9 +156,9 @@ public class ActivityOutletSaleViewSummary extends Activity {
                 String status = dba.GetDeliveryConfirmStatus();
                 dba.close();
                 /*if (status.equalsIgnoreCase("0") || status.equalsIgnoreCase("0.0")) {*/
-                    intent = new Intent(context, ActivityOutletSaleCreate.class);
-                    startActivity(intent);
-                    finish();
+                intent = new Intent(context, ActivityOutletSaleCreate.class);
+                startActivity(intent);
+                finish();
                /* } else {
                     common.showToast(lang.equalsIgnoreCase("hi") ? "डिलिवरी पुष्टि के लिए लंबित हैं इसलिए बिक्री की अनुमति नहीं है।" : "Deliveries are pending for confirmation hence sale is not allowed.");
                 }*/
@@ -261,10 +267,14 @@ public class ActivityOutletSaleViewSummary extends Activity {
             //To bind view holder data
             holder.tvId.setText(HeaderDetails.get(arg0).get("Id"));
             holder.tvCode.setText(HeaderDetails.get(arg0).get("Code"));
-            if (lang.equalsIgnoreCase("hi"))
-            holder.tvName.setText(HeaderDetails.get(arg0).get("Name").equalsIgnoreCase("Cash")?"नकद":"जमा धन");
-            else
-                holder.tvName.setText(HeaderDetails.get(arg0).get("Name"));
+            if(HeaderDetails.get(arg0).get("Flag").equalsIgnoreCase("1"))
+                holder.tvName.setText("");
+            else {
+                if (lang.equalsIgnoreCase("hi"))
+                    holder.tvName.setText(HeaderDetails.get(arg0).get("Name").equalsIgnoreCase("Cash") ? "नकद" : "जमा धन");
+                else
+                    holder.tvName.setText(HeaderDetails.get(arg0).get("Name"));
+            }
             //holder.tvDate.setText(HeaderDetails.get(arg0).get("Date"));
 
             holder.tvDateHidden.setText(common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", HeaderDetails.get(arg0).get("Date")));
