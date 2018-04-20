@@ -131,6 +131,11 @@ public class ActivitySearchCustomer extends Activity {
                 intent.putExtra("Name", String.valueOf(((TextView) item.findViewById(R.id.tvCustomerName)).getText().toString()));
                 intent.putExtra("Cash", String.valueOf(((TextView) item.findViewById(R.id.tvCashAmount)).getText().toString()));
                 intent.putExtra("Credit", String.valueOf(((TextView) item.findViewById(R.id.tvCreditAmount)).getText().toString()));
+                intent.putExtra("TotalCashSale", String.valueOf(((TextView) item.findViewById(R.id.tvTotalCashSale)).getText().toString()));
+                intent.putExtra("TotalCreditSale", String.valueOf(((TextView) item.findViewById(R.id.tvTotalCreditSale)).getText().toString()));
+                intent.putExtra("TotalPayment", String.valueOf(((TextView) item.findViewById(R.id.tvTotalPayment)).getText().toString()));
+                intent.putExtra("TotalExpense", String.valueOf(((TextView) item.findViewById(R.id.tvTotalExpense)).getText().toString()));
+
                 startActivity(intent);
                 finish();
             }
@@ -181,7 +186,7 @@ public class ActivitySearchCustomer extends Activity {
 
     //<editor-fold desc="Code Binding Data In List">
     public static class viewHolder {
-        TextView tvCustId, tvCashAmount, tvCreditAmount, tvCustomerName;
+        TextView tvCustId, tvCashAmount, tvCreditAmount, tvCustomerName,tvTotalCashSale,tvTotalCreditSale,tvTotalPayment, tvTotalExpense;
         int ref;
     }
     //</editor-fold>
@@ -235,6 +240,15 @@ public class ActivitySearchCustomer extends Activity {
                                     .getString("D"));
                             map.put("CreditAmount", jsonArray.getJSONObject(i)
                                     .getString("E"));
+
+                            map.put("TotalCashSale", jsonArray.getJSONObject(i)
+                                    .getString("F"));
+                            map.put("TotalCreditSale", jsonArray.getJSONObject(i)
+                                    .getString("G"));
+                            map.put("TotalPayment", jsonArray.getJSONObject(i)
+                                    .getString("H"));
+                            map.put("TotalExpense", jsonArray.getJSONObject(i)
+                                    .getString("I"));
                             wordList.add(map);
                         }
                         listSize = wordList.size();
@@ -334,11 +348,25 @@ public class ActivitySearchCustomer extends Activity {
             holder.tvCustomerName = (TextView) convertView
                     .findViewById(R.id.tvCustomerName);
 
+            holder.tvTotalCashSale = (TextView) convertView
+                    .findViewById(R.id.tvTotalCashSale);
+            holder.tvTotalCreditSale = (TextView) convertView
+                    .findViewById(R.id.tvTotalCreditSale);
+            holder.tvTotalPayment = (TextView) convertView
+                    .findViewById(R.id.tvTotalPayment);
+            holder.tvTotalExpense = (TextView) convertView
+                    .findViewById(R.id.tvTotalExpense);
+
             final HashMap<String, String> itemData = _listData.get(position);
             holder.tvCustId.setText(itemData.get("CustomerId"));
             holder.tvCashAmount.setText(itemData.get("CashAmount"));
             holder.tvCreditAmount.setText(itemData.get("CreditAmount"));
             holder.tvCustomerName.setText(itemData.get("CustomerName"));
+
+            holder.tvTotalCashSale.setText(itemData.get("TotalCashSale"));
+            holder.tvTotalCreditSale.setText(itemData.get("TotalCreditSale"));
+            holder.tvTotalPayment.setText(itemData.get("TotalPayment"));
+            holder.tvTotalExpense.setText(itemData.get("TotalExpense"));
 
             convertView.setBackgroundColor(Color.parseColor((position % 2 == 1) ? "#EEEEEE" : "#FFFFFF"));
             return convertView;

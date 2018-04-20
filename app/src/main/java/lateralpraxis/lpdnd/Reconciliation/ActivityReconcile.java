@@ -77,11 +77,11 @@ public class ActivityReconcile extends Activity {
     Common common;
     //</editor-fold>
     //<editor-fold desc="Code for Variable Declaration">
-    String lang = "en", userId, custId, custName, cashAmt, creditAmt, From, responseJSON;
+    String lang = "en", userId, custId, custName, cashAmt, creditAmt, From, responseJSON, TotalCashSale, TotalCreditSale, TotalPayment, TotalExpense;
     private UserSessionManager session;
     //</editor-fold>
     //<editor-fold desc="Code to Declare Controls">
-    private TextView tvCustomerId, tvCustomer, tvCash, tvCredit;
+    private TextView tvCustomerId, tvCustomer, tvCash, tvCredit, tvTotalCashSale, tvTotalCreditSale, tvTotalPayment, tvTotalExpense;
     private EditText etReconcileAmount, etRemarks;
     private Button btnSave;
     //</editor-fold>
@@ -110,6 +110,10 @@ public class ActivityReconcile extends Activity {
             custName = extras.getString("Name");
             cashAmt = extras.getString("Cash");
             creditAmt = extras.getString("Credit");
+            TotalCashSale = extras.getString("TotalCashSale");
+            TotalCreditSale = extras.getString("TotalCreditSale");
+            TotalPayment = extras.getString("TotalPayment");
+            TotalExpense = extras.getString("TotalExpense");
         }
         //</editor-fold>
 
@@ -133,13 +137,17 @@ public class ActivityReconcile extends Activity {
         tvCustomer = (TextView) findViewById(R.id.tvCustomer);
         tvCash = (TextView) findViewById(R.id.tvCash);
         tvCredit = (TextView) findViewById(R.id.tvCredit);
+        tvTotalCashSale = (TextView) findViewById(R.id.tvTotalCashSale);
+        tvTotalCreditSale = (TextView) findViewById(R.id.tvTotalCreditSale);
+        tvTotalPayment = (TextView) findViewById(R.id.tvTotalPayment);
+        tvTotalExpense = (TextView) findViewById(R.id.tvTotalExpense);
         etReconcileAmount = (EditText) findViewById(R.id.etReconcileAmount);
         etRemarks = (EditText) findViewById(R.id.etRemarks);
         btnSave = (Button) findViewById(R.id.btnSave);
         //etReconcileAmount.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(9, 2)});
         //etReconcileAmount.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
-       // etReconcileAmount.setKeyListener(DigitsKeyListener.getInstance(true,false));
-        etReconcileAmount.setKeyListener(DigitsKeyListener.getInstance(false,false));
+        // etReconcileAmount.setKeyListener(DigitsKeyListener.getInstance(true,false));
+        etReconcileAmount.setKeyListener(DigitsKeyListener.getInstance(false, false));
         //etReconcileAmount.setRawInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         //</editor-fold>
 
@@ -205,6 +213,10 @@ public class ActivityReconcile extends Activity {
         tvCustomer.setText(custName);
         tvCash.setText(common.convertToTwoDecimal(cashAmt));
         tvCredit.setText(common.convertToTwoDecimal(creditAmt));
+        tvTotalCashSale.setText(common.convertToTwoDecimal(TotalCashSale));
+        tvTotalCreditSale.setText(common.convertToTwoDecimal(TotalCreditSale));
+        tvTotalPayment.setText(common.convertToTwoDecimal(TotalPayment));
+        tvTotalExpense.setText(common.convertToTwoDecimal(TotalExpense));
         //</editor-fold>
 
         //<editor-fold desc="Code to be executed on click of Save Button">
@@ -306,7 +318,7 @@ public class ActivityReconcile extends Activity {
             try {
 
                 String[] name = {"customerId", "existingAmount", "newAmount", "remarks", "uniqueId", "userId", "ip", "machine"};
-                String[] value = {custId,common.prevent_E_Notation(cashAmt), common.prevent_E_Notation(Double.valueOf(etReconcileAmount.getText().toString()).toString()), etRemarks.getText().toString(), UUID.randomUUID().toString(), userId, common.getDeviceIPAddress(true), common.getIMEI()};
+                String[] value = {custId, common.prevent_E_Notation(cashAmt), common.prevent_E_Notation(Double.valueOf(etReconcileAmount.getText().toString()).toString()), etRemarks.getText().toString(), UUID.randomUUID().toString(), userId, common.getDeviceIPAddress(true), common.getIMEI()};
                 // Call method of web service to Read Customers For Reconciliation
                 responseJSON = "";
                 responseJSON = common.CallJsonWS(name, value, "CreateReconciliation", common.url);

@@ -398,6 +398,11 @@
     <string name="label_Reconciliation">Reconcile</string>
     <string name="label_cash">Available \u20B9</string>
     <string name="label_credit">Credit \u20B9</string>
+    <string name="label_creditbal">Credit Bal \u20B9</string>
+    <string name="label_creditsale">Credit Sale \u20B9</string>
+    <string name="label_totalpay">Payment \u20B9</string>
+    <string name="label_cashsale">Cash Sale \u20B9</string>
+    <string name="label_totalexp">Expense \u20B9</string>
     <string name="label_optremarkshead">Remarks</string>
     <string name="label_mandatecash">Cash \u20B9*</string>
     <string name="hint_search">Enter Search Text...</string>

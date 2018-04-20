@@ -1,191 +1,302 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:orientation="vertical"
     tools:context="lateralpraxis.lpdnd.Reconciliation.ActivityReconcile">
-
-    <TextView
-        style="@style/style_topbar"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:text="@string/label_Reconciliation" />
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvCustomerId"
-            style="@style/style_dataLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:visibility="gone" />
+            style="@style/style_topbar"
+            android:layout_width="match_parent"
+            android:layout_height="35dp"
+            android:text="@string/label_Reconciliation" />
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
             <TextView
+                android:id="@+id/tvCustomerId"
                 style="@style/style_dataLabel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="center_vertical"
-                android:text="@string/label_SearchHead"
-                android:textStyle="bold" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tvCustomer"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:gravity="center_vertical"
-                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
 
-        </LinearLayout>
+                <TextView
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_SearchHead"
+                    android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
+                <TextView
+                    android:id="@+id/tvCustomer"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
 
-            <TextView
-                style="@style/style_dataLabel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="center_vertical"
-                android:text="@string/Available"
-                android:textStyle="bold" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvCash"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:gravity="center_vertical"
-                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
 
-        </LinearLayout>
+                <TextView
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_cashsale"
+                    android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
+                <TextView
+                    android:id="@+id/tvTotalCashSale"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
 
-            <TextView
-                style="@style/style_dataLabel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="center_vertical"
-                android:text="@string/label_mandatecash"
-                android:textStyle="bold" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/etReconcileAmount"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_weight="0.7"
-                android:hint="@string/hint_amount"
-                android:digits="-0123456789"
-                android:maxLength="7"
-                android:textAlignment="viewEnd" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
 
-        </LinearLayout>
+                <TextView
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_creditsale"
+                    android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
+                <TextView
+                    android:id="@+id/tvTotalCreditSale"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
 
-            <TextView
-                style="@style/style_dataLabel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:gravity="center_vertical"
-                android:text="@string/label_credit"
-                android:textStyle="bold" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvCredit"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.7"
-                android:gravity="center_vertical"
-                android:textSize="16sp" />
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
 
-        </LinearLayout>
+                <TextView
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_totalpay"
+                    android:textStyle="bold" />
 
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
+                <TextView
+                    android:id="@+id/tvTotalPayment"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
 
-            <TextView
-                android:id="@+id/tvRemarks"
-                style="@style/style_dataLabel"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="0.3"
-                android:text="@string/label_optremarkshead"
-                android:textStyle="bold" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/etRemarks"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="end"
-                android:layout_weight="0.7"
-                android:hint="@string/enterRemarks"
-                android:inputType="textMultiLine|text"
-                android:maxLength="200"
-                android:minLines="4"
-                android:textAlignment="viewEnd" />
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:weightSum="1">
+                <TextView
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_creditbal"
+                    android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnSave"
-                style="?android:attr/buttonBarButtonStyle"
+                <TextView
+                    android:id="@+id/tvCredit"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
+
+                <TextView
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_totalexp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvTotalExpense"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
+
+                <TextView
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center_vertical"
+                    android:text="@string/Available"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvCash"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.7"
+                    android:gravity="center_vertical"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
+
+                <TextView
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:gravity="center_vertical"
+                    android:text="@string/label_mandatecash"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etReconcileAmount"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_weight="0.7"
+                    android:digits="-0123456789"
+                    android:hint="@string/hint_amount"
+                    android:maxLength="7"
+                    android:textAlignment="viewEnd" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
+
+                <TextView
+                    android:id="@+id/tvRemarks"
+                    style="@style/style_dataLabel"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.3"
+                    android:text="@string/label_optremarkshead"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/etRemarks"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_weight="0.7"
+                    android:hint="@string/enterRemarks"
+                    android:inputType="textMultiLine|text"
+                    android:maxLength="200"
+                    android:minLines="4"
+                    android:textAlignment="viewEnd" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
-                android:layout_margin="1sp"
-                android:layout_weight=".5"
-                android:background="@drawable/button_design"
-                android:paddingBottom="5sp"
-                android:paddingLeft="10sp"
-                android:paddingRight="10sp"
-                android:paddingTop="5sp"
-                android:text="@string/submit"
-                android:textColor="@color/white" />
+                android:orientation="horizontal"
+                android:paddingBottom="2dp"
+                android:weightSum="1">
+
+                <Button
+                    android:id="@+id/btnSave"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end"
+                    android:layout_margin="1sp"
+                    android:layout_weight=".5"
+                    android:background="@drawable/button_design"
+                    android:paddingBottom="5sp"
+                    android:paddingLeft="10sp"
+                    android:paddingRight="10sp"
+                    android:paddingTop="5sp"
+                    android:text="@string/submit"
+                    android:textColor="@color/white" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</ScrollView>

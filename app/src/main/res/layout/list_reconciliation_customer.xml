@@ -23,6 +23,30 @@
         android:visibility="gone" />
 
     <TextView
+        android:id="@+id/tvTotalCashSale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvTotalCreditSale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvTotalPayment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvTotalExpense"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <TextView
         android:id="@+id/tvCustomerName"
         style="@style/style_dataLabel"
         android:paddingBottom="5dp"
