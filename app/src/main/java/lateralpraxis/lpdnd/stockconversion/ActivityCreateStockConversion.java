@@ -319,8 +319,8 @@ public class ActivityCreateStockConversion extends Activity {
                                        int arg2, long arg3) {
                 etConsumedQty.setText("");
                 db.open();
-                tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
-                tvViewQty.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
+                tvInventory.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()).replace(".0",""));
+                tvViewQty.setText(db.getSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()).replace(".0",""));
                 db.close();
                 if (((CustomType) spSKU.getSelectedItem()).getId().split("-")[1].equalsIgnoreCase("0")) {
                     etConsumedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
@@ -350,8 +350,8 @@ public class ActivityCreateStockConversion extends Activity {
                                        int arg2, long arg3) {
                 etConsumedQty.setText("");
                 db.open();
-                tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
-                tvViewQty.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
+                tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()).replace(".0",""));
+                tvViewQty.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()).replace(".0",""));
                 db.close();
             }
 

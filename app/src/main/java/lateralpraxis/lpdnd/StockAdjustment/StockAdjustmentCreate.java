@@ -241,21 +241,25 @@ public class StockAdjustmentCreate extends Activity {
                             if(TextUtils.isEmpty(tvInventory.getText().toString().trim()))
                                 tvInventory.setText("0");
                             if (Double.valueOf(etAdjustedQty.getText().toString().trim()) > Double.valueOf(tvInventory.getText().toString().trim())) {
-                                tvAdjusted.setText(common.stringToOneDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
+                                tvAdjusted.setText(common.stringToOneNewDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
                                         Double.valueOf(tvInventory.getText().toString().trim())))).replace(".0",""));
                                 tvAdjustedLabel.setText("Gain");
                                 tvAdjustedLabel.setVisibility(View.VISIBLE);
                             } else {
-                                tvAdjusted.setText(common.stringToOneDecimal(String.valueOf((Double.valueOf(tvInventory.getText().toString().trim()) -
+                                tvAdjusted.setText(common.stringToOneNewDecimal(String.valueOf((Double.valueOf(tvInventory.getText().toString().trim()) -
                                         Double.valueOf(etAdjustedQty.getText().toString().trim())))).replace(".0",""));
                                 tvAdjustedLabel.setText("Loss");
                                 tvAdjustedLabel.setVisibility(View.VISIBLE);
                             }
                         }
                         else {
+                            tvAdjusted.setText("");
                             tvAdjustedLabel.setText("");
-                            tvAdjustedLabel.setVisibility(View.GONE);
                         }
+                    }
+                    else {
+                        tvAdjusted.setText("");
+                        tvAdjustedLabel.setText("");
                     }
                 }
             }
@@ -293,8 +297,8 @@ public class StockAdjustmentCreate extends Activity {
                 tvAdjustedLabel.setText("");
                 tvAvailable.setText("");
                 db.open();
-                tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
-                tvAvailable.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()));
+                tvInventory.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()).replace(".0",""));
+                tvAvailable.setText(db.getRawMaterialInventory(((CustomType) spRawMaterial.getSelectedItem()).getId()).replace(".0",""));
                 db.close();
             }
 
