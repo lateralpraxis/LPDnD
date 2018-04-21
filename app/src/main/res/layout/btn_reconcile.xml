@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="fill_vertical"
         android:layout_weight="0.5"
-        android:drawableLeft="@drawable/ic_reports"
+        android:drawableLeft="@drawable/ic_stock_adjustment"
         android:text="@string/menu_reconcile"
         android:textAllCaps="true"
         tools:ignore="RtlHardcoded,RtlSymmetry" />
