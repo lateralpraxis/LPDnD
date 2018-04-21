@@ -2284,7 +2284,7 @@ public class DatabaseAdapter {
         cursor = db.rawQuery(selectQuery, null);
         countImgExpenseAcc = cursor.getCount();
 
-        selectQuery = "SELECT Id FROM OutletSale WHERE IsImageSync IS NULL ";
+        selectQuery = "SELECT Id FROM OutletSale WHERE IsSync IS NULL ";
         cursor = db.rawQuery(selectQuery, null);
         countOutletSale = cursor.getCount();
 
