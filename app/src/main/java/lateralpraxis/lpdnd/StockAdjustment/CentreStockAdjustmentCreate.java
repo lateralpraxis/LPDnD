@@ -201,8 +201,8 @@ public class CentreStockAdjustmentCreate extends Activity {
                 tvAdjustedLabel.setText("");
                 tvAvailable.setText("");
                 db.open();
-                tvInventory.setText(db.getCentreSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
-                tvAvailable.setText(db.getCentreSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()));
+                tvInventory.setText(db.getCentreSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()).replace(".0",""));
+                tvAvailable.setText(db.getCentreSkuInventory(((CustomType) spSKU.getSelectedItem()).getId()).replace(".0",""));
                 db.close();
                 if (((CustomType) spSKU.getSelectedItem()).getId().split("-")[1].equalsIgnoreCase("0")) {
                     etAdjustedQty.setFilters(new InputFilter[]{new DecimalDigitsInputFilter(5, 1)});
@@ -240,12 +240,12 @@ public class CentreStockAdjustmentCreate extends Activity {
                                 tvInventory.setText("0");
                             if (Double.valueOf(etAdjustedQty.getText().toString().trim()) > Double.valueOf(tvInventory.getText().toString().trim())) {
                                 tvAdjusted.setText(common.stringToOneDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
-                                        Double.valueOf(tvInventory.getText().toString().trim())))));
+                                        Double.valueOf(tvInventory.getText().toString().trim())))).replace(".0",""));
                                 tvAdjustedLabel.setText("Gain");
                                 tvAdjustedLabel.setVisibility(View.VISIBLE);
                             } else {
                                 tvAdjusted.setText(common.stringToOneDecimal(String.valueOf((Double.valueOf(tvInventory.getText().toString().trim()) -
-                                        Double.valueOf(etAdjustedQty.getText().toString().trim())))));
+                                        Double.valueOf(etAdjustedQty.getText().toString().trim())))).replace(".0",""));
                                 tvAdjustedLabel.setText("Loss");
                                 tvAdjustedLabel.setVisibility(View.VISIBLE);
                             }
