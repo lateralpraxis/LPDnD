@@ -26,8 +26,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -241,16 +239,20 @@ public class CentreStockAdjustmentCreate extends Activity {
                             if(TextUtils.isEmpty(tvInventory.getText().toString().trim()))
                                 tvInventory.setText("0");
                             if (Double.valueOf(etAdjustedQty.getText().toString().trim()) > Double.valueOf(tvInventory.getText().toString().trim())) {
-                                tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
+                                tvAdjusted.setText(common.stringToOneDecimal(String.valueOf((Double.valueOf(etAdjustedQty.getText().toString().trim()) -
                                         Double.valueOf(tvInventory.getText().toString().trim())))));
                                 tvAdjustedLabel.setText("Gain");
                                 tvAdjustedLabel.setVisibility(View.VISIBLE);
                             } else {
-                                tvAdjusted.setText(common.stringToTwoDecimal(String.valueOf((Double.valueOf(tvInventory.getText().toString().trim()) -
+                                tvAdjusted.setText(common.stringToOneDecimal(String.valueOf((Double.valueOf(tvInventory.getText().toString().trim()) -
                                         Double.valueOf(etAdjustedQty.getText().toString().trim())))));
                                 tvAdjustedLabel.setText("Loss");
                                 tvAdjustedLabel.setVisibility(View.VISIBLE);
                             }
+                        }
+                        else {
+                            tvAdjustedLabel.setText("");
+                            tvAdjustedLabel.setVisibility(View.GONE);
                         }
                     }
                 }

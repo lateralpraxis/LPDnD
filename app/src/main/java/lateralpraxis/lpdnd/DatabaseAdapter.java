@@ -2233,7 +2233,7 @@ public class DatabaseAdapter {
     public boolean IslogoutAllowed() {
         boolean isRequired = true;
 
-        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense, countExpenseAcc, countImgExpense, countImgExpenseAcc;
+        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense, countExpenseAcc, countImgExpense, countImgExpenseAcc, countOutletSale;
 
         selectQuery = "SELECT Id FROM Delivery WHERE IsSync = '0'";
         cursor = db.rawQuery(selectQuery, null);
@@ -2284,8 +2284,13 @@ public class DatabaseAdapter {
         cursor = db.rawQuery(selectQuery, null);
         countImgExpenseAcc = cursor.getCount();
 
+        selectQuery = "SELECT Id FROM OutletSale WHERE IsImageSync IS NULL ";
+        cursor = db.rawQuery(selectQuery, null);
+        countOutletSale = cursor.getCount();
+
+
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0 || countExpenseAcc > 0 || countImgExpense>0 || countImgExpenseAcc>0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0 || countExpenseAcc > 0 || countImgExpense>0 || countImgExpenseAcc>0 || countOutletSale>0)
             isRequired = false;
 
         return isRequired;

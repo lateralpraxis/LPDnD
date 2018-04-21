@@ -364,6 +364,10 @@ public class ActivityAddPrimaryReceipt extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            case R.id.action_go_to_home:
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
                 builder1.setTitle(lang.equalsIgnoreCase("hi") ? "पुष्टीकरण" : "Confirmation");
                 builder1.setMessage(lang.equalsIgnoreCase("hi") ? "क्या आप निश्चित हैं, आप प्राथमिक रसीद मॉड्यूल छोड़ना चाहते हैं, यह प्राथमिक रसीद को छोड़ देगा?" : "Are you sure, you want to leave primary receipt module it will discard primary receipt transaction?");
@@ -391,9 +395,6 @@ public class ActivityAddPrimaryReceipt extends Activity {
                 alertnew.show();
                 return true;
 
-            case R.id.action_go_to_home:
-                onBackPressed();
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

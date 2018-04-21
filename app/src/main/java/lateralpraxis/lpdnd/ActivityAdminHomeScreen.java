@@ -172,7 +172,7 @@ public class ActivityAdminHomeScreen extends Activity {
         else if (userRole.contains("Centre User"))
             views = Arrays.asList(R.layout.btn_stockconversion, R.layout.btn_stockadjustment, R.layout.btn_report);
         else if (userRole.contains("Reconciliation User"))
-            views = Arrays.asList( R.layout.btn_expenseconfirmation, R.layout.btn_reconcile, R.layout.btn_report);
+            views = Arrays.asList( R.layout.btn_expenseconfirmation, R.layout.btn_reconcile);
         else
             views = Arrays.asList(R.layout.btn_report);
 
