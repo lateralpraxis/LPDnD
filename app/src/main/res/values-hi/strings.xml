@@ -44,6 +44,8 @@
     <string name="offers">दर</string>
     <string name="credits">Designed &amp; Developed By\n Lateral Praxis (India) Pvt. Ltd.</string>
     <string name="refresh">Sync Data</string>
+
+    <string name="bluetooth_devices">ब्लूटूथ डिवाइस</string>
     <string name="logout">लॉग आउट</string>
     <string name="welcome">स्वागत हे, </string>
     <string name="label_ViewReports">रिपोर्ट देखें</string>
@@ -88,6 +90,8 @@
     <string name="enter_confirm_password">पासवर्ड की पुष्टि दर्ज करें</string>
     <string name="change_password_btn">पासवर्ड बदलें</string>
     <string name="change_password_home">पासवर्ड बदलें</string>
+    <string name="set_printer">सेट प्रिंटर</string>
+    <string name="print">प्रिंट</string>
     <string name="create_customer_header">नया ग्राहक बनाएं</string>
     <string name="customer_type">प्रकार*</string>
     <string name="customer_name">नाम*</string>
@@ -165,13 +169,13 @@
     <string name="menu_vehicle">वाहन</string>
     <string name="menu_customer">ग्राहक</string>
     <string name="menu_rate">दर</string>
-    <string name="menu_primaryreceipt">प्राथमिक\nरसीद</string>
+    <string name="menu_primaryreceipt">खरीद</string>
     <string name="menu_expense">व्यय</string>
     <string name="menu_stockAdjustment">स्टॉक\nसमायोजन</string>
     <string name="menu_customersettlement">ग्राहक\nनिपटान</string>
     <string name="menu_expenseconfirmation">व्यय\nपुष्टि</string>
     <string name="menu_StockReturnView">स्टॉक वापसी</string>
-    <string name="menu_deliveryConfirmation">प्राप्ति\nपुष्टिकरण</string>
+    <string name="menu_deliveryConfirmation">खरीद\nपुष्टिकरण</string>
     <string name="menu_outlet_sale">बिक्री</string>
     <string name="menu_reconcile">मिलान</string>
     <!--</editor-fold>-->
@@ -309,7 +313,7 @@
 
 
     <!-- Start of Primary Receipt Variables-->
-    <string name="label_PrimaryReceipt">प्राथमिक रसीद</string>
+    <string name="label_PrimaryReceipt">खरीद</string>
     <string name="label_linkAdd">जोड़ें [ + ]</string>
     <string name="label_type">प्रकार</string>
     <string name="label_raw">कच्ची सामग्री</string>
@@ -344,9 +348,9 @@
 
     <!-- Delivery Confirmation -->
 
-    <string name="deliveryConfirmation">प्राप्ति निश्चित करना</string>
-    <string name="pendingDeliveryConfirmation">अपूर्ण प्राप्ति पुष्टिकरण</string>
-    <string name="deliveryConfirmationDetails">प्राप्ति पुष्टिकरण विवरण</string>
+    <string name="deliveryConfirmation">खरीद निश्चित करना</string>
+    <string name="pendingDeliveryConfirmation">अपूर्ण खरीद पुष्टिकरण</string>
+    <string name="deliveryConfirmationDetails">खरीद पुष्टिकरण विवरण</string>
     <string name="delivery">प्राप्ति</string>
     <string name="confirmation">पुष्टिकरण</string>
     <string name="dateHead">दिनांक</string>

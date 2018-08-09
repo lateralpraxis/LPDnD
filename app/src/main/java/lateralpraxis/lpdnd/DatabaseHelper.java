@@ -106,12 +106,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         _db.execSQL(DatabaseAdapter.CentreSKULiveInventory_CREATE);
         _db.execSQL(DatabaseAdapter.CentreUserCentres_CREATE);
         _db.execSQL(DatabaseAdapter.CentreSKU_CREATE);
-
+        _db.execSQL(DatabaseAdapter.Bluetooth_CREATE);
+        _db.execSQL(DatabaseAdapter.Bluetooth_DEFAULT);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase _db, int _oldVersion, int _newVersion) {
-
         onCreate(_db);
     }
 

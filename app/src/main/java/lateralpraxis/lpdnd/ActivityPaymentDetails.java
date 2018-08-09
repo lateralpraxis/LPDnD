@@ -1,37 +1,64 @@
 package lateralpraxis.lpdnd;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 import lateralpraxis.lpdnd.types.CustomerPayment;
 
 @SuppressLint("InflateParams")
-public class ActivityPaymentDetails extends Activity{
+public class ActivityPaymentDetails extends Activity implements Runnable{
+	/*Start of code for printer*/
+	private static final int REQUEST_CONNECT_DEVICE = 111;
+	private static final int REQUEST_ENABLE_BT = 222;
+	final Context context = this;
+	Button mScan, mPrint, mDisc;
+	BluetoothAdapter mBluetoothAdapter;
+	BluetoothDevice mBluetoothDevice;
+	private UUID applicationUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+	private ProgressDialog mBluetoothConnectProgressDialog;
+	private BluetoothSocket mBluetoothSocket;
+	private ArrayAdapter<String> mPairedDevicesArrayAdapter;
+	/*End of code for printer*/
 	/*Start of code to declare controls*/
 	private TextView tvDataHead,tvEmpty,tvTotalAmt;
 	private TableLayout tableDataHeader,tableLayoutTotal;
@@ -39,6 +66,7 @@ public class ActivityPaymentDetails extends Activity{
 	/*End of code to declare controls*/
 
 	/*Start of code to declare class*/
+	UserSessionManager session;
 	DatabaseAdapter db;
 	Common common;
 	CustomAdapter Cadapter;
@@ -48,7 +76,7 @@ public class ActivityPaymentDetails extends Activity{
 	private ArrayList<HashMap<String, String>> PaymentDetails;
 	private int lsize=0;
 	private String strCustId="";
-	private String strCustName="";
+	private String strCustName="", userName = "";
 	private String strDate="";
 	/*End of code to declare variables*/
 
@@ -58,6 +86,15 @@ public class ActivityPaymentDetails extends Activity{
 	private String[] FilePathStrings;
 	private String[] FileNameStrings;
 	/*End of variable declaration for displaying image*/
+
+	private Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			mBluetoothConnectProgressDialog.dismiss();
+			Toast.makeText(ActivityPaymentDetails.this, "Connected.", Toast.LENGTH_SHORT).show();
+		}
+	};
+
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
@@ -66,12 +103,16 @@ public class ActivityPaymentDetails extends Activity{
 		setContentView(R.layout.activity_payment_detail);
 		ActionBar ab = getActionBar();
 		ab.setDisplayHomeAsUpEnabled(true);
+		//To create instance of user session
+		session = new UserSessionManager(getApplicationContext());
+
 		//Code to create instance of classes
 		db = new DatabaseAdapter(this);
 		common = new Common(this);
 
-		//Code to set Action Bar
-		/*		*/
+		// To read user role from user session manager
+		final HashMap<String, String> user = session.getLoginUserDetails();
+		userName = user.get(UserSessionManager.KEY_USERNAME);
 
 		Bundle extras = this.getIntent().getExtras();
 		if (extras != null)
@@ -80,6 +121,103 @@ public class ActivityPaymentDetails extends Activity{
 			strCustName=extras.getString("customerName");
 			strDate=extras.getString("date");
 		}
+//<editor-fold desc="Bluetooth">
+		setResult(Activity.RESULT_CANCELED);
+		mPairedDevicesArrayAdapter = new ArrayAdapter<String>(this, R.layout.device_name);
+
+		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+		Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter.getBondedDevices();
+		if (mBluetoothAdapter != null) {
+			if (!mBluetoothAdapter.isEnabled()) {
+				Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+				startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+			}
+			if (mPairedDevices.size() > 0) {
+				for (BluetoothDevice mDevice : mPairedDevices) {
+					mPairedDevicesArrayAdapter.add(mDevice.getName() + "\n" + mDevice.getAddress());
+					Log.i("LPDND", mDevice.getName() + "\n" + mDevice.getAddress());
+				}
+			} else {
+				String mNoDevices = "None Paired";//getResources().getText(R.string.none_paired).toString();
+				mPairedDevicesArrayAdapter.add(mNoDevices);
+			}
+
+			String btAddress = "0";
+			db.openR();
+			btAddress = db.getBluetooth();
+			if (!btAddress.equalsIgnoreCase("0")) {
+				mBluetoothDevice = mBluetoothAdapter.getRemoteDevice(btAddress);
+				mBluetoothConnectProgressDialog = ProgressDialog.show(ActivityPaymentDetails.this,
+						"Connecting...", mBluetoothDevice.getName() + " : "
+								+ mBluetoothDevice.getAddress(), true, true);
+				Thread mBlutoothConnectThread = new Thread(ActivityPaymentDetails.this);
+				mBlutoothConnectThread.start();
+			}
+		}
+		//</editor-fold>
+
+		//<editor-fold desc="mPrint">
+		mPrint = (Button) findViewById(R.id.mPrint);
+		mPrint.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View mView) {
+				String btAddress = "0";
+				db.openR();
+				btAddress = db.getBluetooth();
+				if (btAddress.equalsIgnoreCase("0"))
+					common.showToast("Alert! Set Printer from menu!", 30000);
+				else {
+					Thread t = new Thread() {
+						public void run() {
+							try {
+								NumberFormat formatter = new DecimalFormat("##,##,##,##,##,##,##,##,##0.00");
+								OutputStream os = mBluetoothSocket.getOutputStream();
+
+								String BILL = "                                  ";
+								BILL = BILL + "\n   SHRI GANESH MILK PRODUCTS    ";
+								BILL = BILL + "\n   Plot No. 109. Sector 1A,     ";
+								BILL = BILL + "\n Timber Market, Kopar Khairane, ";
+								BILL = BILL + "\n     Maharashtra - 400709       ";
+								BILL = BILL + "\n   GSTIN/UIN: 27ABGFS3890M2ZG   ";
+								BILL = BILL + "\nTel:27548367/27548369/8080166166";
+								BILL = BILL + "\n--------------------------------";
+
+								BILL = BILL + String.format("\n%-32s", strCustName);
+								BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", strDate));
+
+								////////// Payment /////////
+								List<CustomerPayment> lablePayment = null;
+								lablePayment = db.getCustomerPaymentPrinter(strCustId,strDate);
+								if (lablePayment.size() > 0) {
+									//BILL = BILL + String.format("\n%-32s", "Payment Details");
+									BILL = BILL + String.format("\n%-7s%11s  %-12s", "Company", "Amount", "Description");
+									String comp="", cheque="";
+//Looping through hash map and add data to printer
+									for (int i = 0; i < lablePayment.size(); i++) {
+										if(!lablePayment.get(i).getCompanyName().equalsIgnoreCase(comp)) {
+											comp = lablePayment.get(i).getCompanyName();
+											BILL = BILL + String.format("\n%-7s%11s  %-6s%-6s", comp, String.valueOf(formatter.format(Float.valueOf(lablePayment.get(i).getAmount()))), lablePayment.get(i).getBankName() != null ? lablePayment.get(i).getBankName():lablePayment.get(i).getChequeNumber(), lablePayment.get(i).getBankName() != null ? lablePayment.get(i).getChequeNumber():"");
+										}
+										else
+											BILL = BILL + String.format("\n%-7s%11s  %-6s%-6s", "", String.valueOf(formatter.format(Float.valueOf(lablePayment.get(i).getAmount()))), lablePayment.get(i).getBankName() != null ? lablePayment.get(i).getBankName():lablePayment.get(i).getChequeNumber(), lablePayment.get(i).getBankName() != null ? lablePayment.get(i).getChequeNumber():"");
+									}
+								}
+								////// End of Payment //////
+								db.close();
+								BILL = BILL + "--------------------------------";
+								BILL = BILL + String.format("\n%32s\n", userName);
+								BILL = BILL + "\n\n\n";
+								os.write(BILL.getBytes());
+							} catch (Exception e) {
+								//Log.e("Main", "Exe ", e);
+							}
+						}
+					};
+					t.start();
+				}
+			}
+		});
+		//</editor-fold>
+
 		//Hash Map for storing data
 		PaymentDetails = new ArrayList<HashMap<String, String>>();
 		//Code to find layouts
@@ -99,6 +237,7 @@ public class ActivityPaymentDetails extends Activity{
 		lsize = lables.size();
 		if(lsize>0)
 		{
+			mPrint.setVisibility(View.VISIBLE);
 			tvEmpty.setVisibility(View.GONE);
 			tableDataHeader.setVisibility(View.VISIBLE);
 			tableLayoutTotal.setVisibility(View.VISIBLE);
@@ -120,6 +259,7 @@ public class ActivityPaymentDetails extends Activity{
 		else
 		{
 			//Display no records message
+			mPrint.setVisibility(View.GONE);
 			tvEmpty.setVisibility(View.VISIBLE);
 			tableDataHeader.setVisibility(View.GONE);
 			tableLayoutTotal.setVisibility(View.GONE);
@@ -291,14 +431,25 @@ public class ActivityPaymentDetails extends Activity{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-
+			try {
+				if (mBluetoothSocket != null)
+					mBluetoothSocket.close();
+			} catch (Exception e) {
+				Log.e("Tag", "Exe ", e);
+			}
 			Intent i = new Intent(ActivityPaymentDetails.this,ActivityPaymentView.class);
 			i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); 
 			startActivity(i);
 			finish();
 			return true;
 
-		case R.id.action_go_to_home: 
+		case R.id.action_go_to_home:
+			try {
+				if (mBluetoothSocket != null)
+					mBluetoothSocket.close();
+			} catch (Exception e) {
+				Log.e("Tag", "Exe ", e);
+			}
 			Intent homeScreenIntent = new Intent(this, ActivityHomeScreen.class);
 			homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(homeScreenIntent);
@@ -313,6 +464,12 @@ public class ActivityPaymentDetails extends Activity{
 	//Event Triggered on Clicking Back
 	@Override
 	public void onBackPressed() {
+		try {
+			if (mBluetoothSocket != null)
+				mBluetoothSocket.close();
+		} catch (Exception e) {
+			Log.e("Tag", "Exe ", e);
+		}
 		Intent i = new Intent(ActivityPaymentDetails.this,ActivityPaymentView.class);
 		startActivity(i);
 		i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -326,6 +483,88 @@ public class ActivityPaymentDetails extends Activity{
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu_home, menu);
 		return true;
+	}
+
+	//<editor-fold desc="on Activity Result">
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch (requestCode) {
+			case REQUEST_CONNECT_DEVICE:
+				if (resultCode == Activity.RESULT_OK) {
+					Bundle mExtra = data.getExtras();
+					String mDeviceAddress = mExtra.getString("DeviceAddress");
+					//Log.v(TAG, "Coming incoming address " + mDeviceAddress);
+					mBluetoothDevice = mBluetoothAdapter.getRemoteDevice(mDeviceAddress);
+					mBluetoothConnectProgressDialog = ProgressDialog.show(this,
+							"Connecting...", mBluetoothDevice.getName() + " : "
+									+ mBluetoothDevice.getAddress(), true, false);
+					Thread mBlutoothConnectThread = new Thread(this);
+					mBlutoothConnectThread.start();
+				}
+				break;
+
+			case REQUEST_ENABLE_BT:
+				if (resultCode == Activity.RESULT_OK) {
+					ListPairedDevices();
+					Intent i = new Intent(ActivityPaymentDetails.this, ActivityPaymentDetails.class);
+					i.putExtra("customerId", strCustId);
+					i.putExtra("customerName", strCustName);
+					i.putExtra("date", strDate);
+					startActivityForResult(i, REQUEST_CONNECT_DEVICE);
+				} else {
+					Toast.makeText(ActivityPaymentDetails.this, "Message", Toast.LENGTH_LONG).show();
+				}
+				break;
+		}
+	}
+	//</editor-fold>
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (mBluetoothAdapter != null) {
+			mBluetoothAdapter.cancelDiscovery();
+		}
+	}
+
+	private void ListPairedDevices() {
+		Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter.getBondedDevices();
+		if (mPairedDevices.size() > 0) {
+			for (BluetoothDevice mDevice : mPairedDevices) {
+				//Log.v(TAG, "PairedDevices: " + mDevice.getName() + "  "+ mDevice.getAddress());
+			}
+		}
+	}
+
+	public void run() {
+		try {
+			mBluetoothSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(applicationUUID);
+			mBluetoothAdapter.cancelDiscovery();
+			mBluetoothSocket.connect();
+			mHandler.sendEmptyMessage(0);
+		} catch (IOException eConnectException) {
+			//Log.d(TAG, "CouldNotConnectToSocket", eConnectException);
+			closeSocket(mBluetoothSocket);
+			return;
+		}
+	}
+
+	private void closeSocket(BluetoothSocket nOpenSocket) {
+		try {
+			nOpenSocket.close();
+			//Log.d(TAG, "SocketClosed");
+		} catch (IOException ex) {
+			//Log.d(TAG, "CouldNotCloseSocket");
+		}
+	}
+
+	public byte[] sel(int val) {
+		ByteBuffer buffer = ByteBuffer.allocate(2);
+		buffer.putInt(val);
+		buffer.flip();
+		return buffer.array();
 	}
 
 }

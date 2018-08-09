@@ -53,13 +53,13 @@ public class Common {
 	private static String responseJSON;
 	//New Server
 	//public final String domain = "http://18.188.117.180"; // 81 Port for QA
-    public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
+    //public final String domain = "http://122.180.148.98:81"; // 81 Port for QA
     //public final String domain = "http://122.180.148.98:82"; // 82 Port for Development
-    //public final String domain = "http://122.180.148.98:82";
+    public final String domain = "http://122.180.148.98:81";
 	//For Demo Server
 	//public final String domain = "http://54.148.76.44"; // lateralpraxis.co.in
-	//public final String url=domain+"/LPDnD-Ganesh/Shared/Services/Android.asmx";
-	public final String url=domain+"/LPDnD/Shared/Services/Android.asmx";
+	public final String url=domain+"/LPDnD-Ganesh/Shared/Services/Android.asmx";
+	//public final String url=domain+"/LPDnD/Shared/Services/Android.asmx";
 	public String log = "lpdnd_app";
 	public String deviceIP = "";
 	UserSessionManager session;
@@ -398,7 +398,7 @@ public class Common {
 	public String convertToTwoDecimal(String value)
 	{		
 		NumberFormat formatter = new DecimalFormat("##,##,##,##,##,##,##,##,##0.00"); 
-		String result = formatter.format(Double.valueOf(value));
+		String result = formatter.format(Float.valueOf(value));
 		return result;
 	}
 

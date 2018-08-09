@@ -15,6 +15,24 @@
             android:id="@+id/tvHeader"
             style="@style/style_topbar"
             android:text="@string/viewpayments" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/mPrint"
+                style="?android:attr/buttonBarButtonStyle"
+                android:background="@drawable/button_design"
+                android:textColor="#FFFFFF"
+                android:layout_marginRight="5dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/print"></Button>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tvDataHead"

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
         android:id="@+id/action_settings"
@@ -10,6 +9,11 @@
         android:title="@string/action_settings"
         tools:ignore="AppCompatResource">
         <menu>
+            <item
+                android:id="@+id/action_set_printer"
+                android:showAsAction="always"
+                android:title="@string/set_printer">
+            </item>
              <item
                 android:id="@+id/action_changelanguage"
                  android:showAsAction="always"

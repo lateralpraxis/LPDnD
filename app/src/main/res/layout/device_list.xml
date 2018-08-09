@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/title_paired_devices"
+        style="@style/style_topbar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/bluetooth_devices"
+        android:padding="5dp"
+        android:visibility="gone"
+         />
+
+    <ListView
+        android:id="@+id/paired_devices"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:descendantFocusability="afterDescendants"
+        android:divider="@color/black"
+        android:dividerHeight="1sp"
+        android:focusable="true"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_weight="1" />
+</LinearLayout>

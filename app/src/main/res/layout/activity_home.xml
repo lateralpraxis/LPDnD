@@ -40,7 +40,6 @@
         </TableLayout>
 
     </ScrollView>
-
     <Button
         android:id="@+id/btnGo"
         android:layout_width="wrap_content"

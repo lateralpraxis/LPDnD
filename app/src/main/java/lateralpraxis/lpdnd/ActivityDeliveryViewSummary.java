@@ -1,23 +1,12 @@
 package lateralpraxis.lpdnd;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import lateralpraxis.lpdnd.types.CustomType;
-
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -31,6 +20,15 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import lateralpraxis.lpdnd.types.CustomType;
 
 @SuppressLint("InflateParams") public class ActivityDeliveryViewSummary  extends Activity{
 	private DatabaseAdapter dba;
@@ -99,6 +97,7 @@ import android.widget.TextView;
 				Intent myIntent = new Intent(ActivityDeliveryViewSummary.this, ActivityDeliveryViewDetail.class);
 				myIntent.putExtra("Id", ((TextView)view.findViewById(R.id.tvId)).getText()); 
 				myIntent.putExtra("Header",((TextView)view.findViewById(R.id.tvName)).getText());
+				myIntent.putExtra("First","first");
 				startActivity(myIntent);
 				finish();
 			}

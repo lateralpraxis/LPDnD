@@ -1,25 +1,12 @@
 package lateralpraxis.lpdnd;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Random;
-import java.util.UUID;
-import java.util.regex.Pattern;
 
-import lateralpraxis.lpdnd.types.CustomType;
-
-import android.annotation.TargetApi;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -33,22 +20,24 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.Html;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -57,8 +46,44 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ActivityPaymentOnly   extends Activity{
-	/*Start of code to declare controls*/
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Random;
+import java.util.Set;
+import java.util.UUID;
+import java.util.regex.Pattern;
+
+import lateralpraxis.lpdnd.types.CustomType;
+import lateralpraxis.lpdnd.types.CustomerPayment;
+
+public class ActivityPaymentOnly   extends Activity implements Runnable{
+    /*Start of code for printer*/
+    private static final int REQUEST_CONNECT_DEVICE = 111;
+    private static final int REQUEST_ENABLE_BT = 222;
+    Button mScan, mPrint, mDisc;
+    BluetoothAdapter mBluetoothAdapter;
+    private UUID applicationUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private ProgressDialog mBluetoothConnectProgressDialog;
+    private BluetoothSocket mBluetoothSocket;
+    BluetoothDevice mBluetoothDevice;
+    private ArrayAdapter<String> mPairedDevicesArrayAdapter;
+    private Cursor cursor;
+    String btAddress = "0", today="";
+    List<CustomerPayment> lablePayment = null;
+    /*End of code for printer*/
+
+    /*Start of code to declare controls*/
 	private Spinner spCustomer,spBank;
 	private TextView tvCustName, tvCustId,tvAttach,tvCompanyId,tvCompanyName,tvPayableAmount,tvBalanceData;
 	private Button btnGo,btnUpload,btnNext,btnSubmit,btnSkip;
@@ -87,7 +112,7 @@ public class ActivityPaymentOnly   extends Activity{
 	/*End of variable declaration for uploading image*/
 	/*Start of variable declaration for displaying image*/
 	File file1;
-	String lang="en";
+	String lang="en", userName = "";
 	private File[] listFile;
 	private String[] FilePathStrings;
 	private String[] FileNameStrings;
@@ -154,6 +179,10 @@ public class ActivityPaymentOnly   extends Activity{
 		conf.locale = myLocale;
 		res.updateConfiguration(conf, dm);
 
+        // To read user role from user session manager
+        final HashMap<String, String> user = session.getLoginUserDetails();
+        userName = user.get(UserSessionManager.KEY_USERNAME);
+        
 		db.open();
 		db.deleteTempDoc();
 		db.close();
@@ -193,6 +222,41 @@ public class ActivityPaymentOnly   extends Activity{
 
 		etOnlineAmount.setFilters(new InputFilter[] {new DecimalDigitsInputFilter(8,2)});
 		etOnlineAmount.setInputType(InputType.TYPE_CLASS_NUMBER + InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
+        //<editor-fold desc="Bluetooth">
+        setResult(Activity.RESULT_CANCELED);
+        mPairedDevicesArrayAdapter = new ArrayAdapter<String>(ActivityPaymentOnly.this, R.layout.device_name);
+
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter.getBondedDevices();
+        if (mBluetoothAdapter != null) {
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
+            if (mPairedDevices.size() > 0) {
+                for (BluetoothDevice mDevice : mPairedDevices) {
+                    mPairedDevicesArrayAdapter.add(mDevice.getName() + "\n" + mDevice.getAddress());
+                    Log.i("LPDND", mDevice.getName() + "\n" + mDevice.getAddress());
+                }
+            } else {
+                String mNoDevices = "None Paired";//getResources().getText(R.string.none_paired).toString();
+                mPairedDevicesArrayAdapter.add(mNoDevices);
+            }
+
+            String btAddress = "0";
+            db.openR();
+            btAddress = db.getBluetooth();
+            if (!btAddress.equalsIgnoreCase("0")) {
+                mBluetoothDevice = mBluetoothAdapter.getRemoteDevice(btAddress);
+                mBluetoothConnectProgressDialog = ProgressDialog.show(ActivityPaymentOnly.this,
+                        "Connecting...", mBluetoothDevice.getName() + " : "
+                                + mBluetoothDevice.getAddress(), true, true);
+                Thread mBlutoothConnectThread = new Thread(ActivityPaymentOnly.this);
+                mBlutoothConnectThread.start();
+            }
+        }
+        //</editor-fold>
 
 		tvAttach.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
@@ -769,6 +833,14 @@ public class ActivityPaymentOnly   extends Activity{
 							imagePath = copyFile(photoPath, outdir);
 						}
 					}
+
+					try {
+						if (mBluetoothSocket != null)
+							mBluetoothSocket.close();
+					} catch (Exception e) {
+						Log.e("Tag", "Exe ", e);
+					}
+
 					//Code to insert data in temporary table
 					db.open();
 					db.insertCustomerPaymentTemp(tvCompanyId.getText().toString(), ((CustomType)spBank.getSelectedItem()).getId(), etChequeNo.getText().toString().trim(), etChequeAmount.getText().toString().trim(),imagePath, selectedPhotoPath,newuuidImg,"");
@@ -804,7 +876,12 @@ public class ActivityPaymentOnly   extends Activity{
 			@Override
 			public void onClick(View arg0) {
 
-				db.open();
+				try {
+					if (mBluetoothSocket != null)
+						mBluetoothSocket.close();
+				} catch (Exception e) {
+					Log.e("Tag", "Exe ", e);
+				}
 
 				//Code to insert data in temporary table
 				db.open();
@@ -963,14 +1040,77 @@ public class ActivityPaymentOnly   extends Activity{
 							db.openR();
 							if(db.GetTotaPaymentCollected()>0.1)
 							{
+							    String unic =UUID.randomUUID().toString();
 								//end of code to insert data in temporary table
 								db.open();
-								db.insertCustomerPayment(UUID.randomUUID().toString(), tvCustId.getText().toString(), user.get(UserSessionManager.KEY_ID), "0");
+                                db.insertCustomerPayment(unic, tvCustId.getText().toString(), user.get(UserSessionManager.KEY_ID), "0");
 								db.close();
 								common.showToast(lang.equalsIgnoreCase("hi")?"भुगतान विवरण सफलतापूर्वक जोड़ा गया।":"Payment details saved successfully.");
 
+                                /////////////////////
+                                {
+                                    db.open();
+                                    btAddress = db.getBluetooth();
+                                    today = db.getDate();
+                                    lablePayment = db.printCustomerPaymentOnly(unic);
+                                    db.close();
+                                    if (btAddress.equalsIgnoreCase("0"))
+                                        common.showToast("Alert! Set Printer from menu!", 30000);
+                                    else {
+                                        Thread t = new Thread() {
+                                            public void run() {
+                                                try {
+                                                    NumberFormat formatter = new DecimalFormat("##,##,##,##,##,##,##,##,##0.00");
+                                                    OutputStream os = mBluetoothSocket.getOutputStream();
+                                                    String BILL="";
+                                                    ////////// Payment /////////
+                                                    if (lablePayment.size() > 0) {
+                                                        BILL = "                                  ";
+                                                        BILL = BILL + "\n   SHRI GANESH MILK PRODUCTS    ";
+                                                        BILL = BILL + "\n   Plot No. 109. Sector 1A,     ";
+                                                        BILL = BILL + "\n Timber Market, Kopar Khairane, ";
+                                                        BILL = BILL + "\n     Maharashtra - 400709       ";
+                                                        BILL = BILL + "\n   GSTIN/UIN: 27ABGFS3890M2ZG   ";
+                                                        BILL = BILL + "\nTel:27548367/27548369/8080166166";
+                                                        BILL = BILL + "\n--------------------------------";
+                                                        BILL = BILL + String.format("\n%-32s", customerName);
+                                                        BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
+                                                        BILL = BILL + String.format("\n%-32s", "Payment Details");
+                                                        BILL = BILL + String.format("\n%-7s%11s  %-12s", "Company", "Amount", "Description");
+                                                        String comp="", cheque="";
+//Looping through hash map and add data to printer
+                                                        for (int i = 0; i < lablePayment.size(); i++) {
+                                                            if(!lablePayment.get(i).getCompanyName().equalsIgnoreCase(comp)) {
+                                                                comp = lablePayment.get(i).getCompanyName();
+                                                                BILL = BILL + String.format("\n%-7s%11s  %-6s%-6s", comp, String.valueOf(formatter.format(Float.valueOf(lablePayment.get(i).getAmount()))), lablePayment.get(i).getBankName() != null ? lablePayment.get(i).getBankName():lablePayment.get(i).getChequeNumber(), lablePayment.get(i).getBankName() != null ? lablePayment.get(i).getChequeNumber():"");
+                                                            }
+                                                            else
+                                                                BILL = BILL + String.format("\n%-7s%11s  %-6s%-6s", "", String.valueOf(formatter.format(Float.valueOf(lablePayment.get(i).getAmount()))), lablePayment.get(i).getBankName() != null ? lablePayment.get(i).getBankName():lablePayment.get(i).getChequeNumber(), lablePayment.get(i).getBankName() != null ? lablePayment.get(i).getChequeNumber():"");
+                                                        }
+                                                        BILL = BILL + "--------------------------------";
+                                                        BILL = BILL + String.format("\n%32s\n", userName);
+                                                        BILL = BILL + "\n\n\n";
+                                                        os.write(BILL.getBytes());
+                                                        try {
+                                                            if (mBluetoothSocket != null)
+                                                                mBluetoothSocket.close();
+                                                        } catch (Exception e) {
+                                                            Log.e("Tag", "Exe ", e);
+                                                        }
+                                                    }
+                                                    ////// End of Payment //////
+                                                } catch (Exception e) {
+                                                    //Log.e("Main", "Exe ", e);
+                                                }
+                                            }
+                                        };
+                                        t.start();
+                                    }
+                                }
+                                /////////////////////
 								Intent homeScreenIntent;
-								homeScreenIntent = new Intent(ActivityPaymentOnly.this, ActivityPaymentView.class);
+								//homeScreenIntent = new Intent(ActivityPaymentOnly.this, ActivityPaymentView.class);
+								homeScreenIntent = new Intent(ActivityPaymentOnly.this, ActivityHomeScreen.class);
 								homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 								startActivity(homeScreenIntent);
 								finish();
@@ -983,6 +1123,12 @@ public class ActivityPaymentOnly   extends Activity{
 								.setCancelable(false)
 								.setPositiveButton(lang.equalsIgnoreCase("hi")?"हाँ":"Yes", new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog, int id) {
+										try {
+											if (mBluetoothSocket != null)
+												mBluetoothSocket.close();
+										} catch (Exception e) {
+											Log.e("Tag", "Exe ", e);
+										}
 										//Code to delete all data from temporary table
 										db.open();
 										db.DeleteTempPaymentDetails("0");
@@ -1350,7 +1496,6 @@ public class ActivityPaymentOnly   extends Activity{
 				DeleteRecursive(child);
 
 		fileOrDirectory.delete();
-
 	}
 
 
@@ -1389,8 +1534,6 @@ public class ActivityPaymentOnly   extends Activity{
 							+ level2Dir, ".nomedia" );
 					if ( noMedia.exists() )
 					{
-
-
 					}
 
 					FileOutputStream noMediaOutStream = new FileOutputStream ( noMedia );
@@ -1475,34 +1618,16 @@ public class ActivityPaymentOnly   extends Activity{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			AlertDialog.Builder builder1 = new AlertDialog.Builder(mContext);
-			builder1.setTitle(lang.equalsIgnoreCase("hi")?"पुष्टीकरण":"Confirmation");
-			builder1.setMessage(lang.equalsIgnoreCase("hi")?"क्या आप निश्चित हैं, आप भुगतान मॉड्यूल छोड़ना चाहते हैं, यह भुगतान लेनदेन को छोड़ देगा?":"Are you sure, you want to leave payment module it will discard payment transaction?");
-			builder1.setCancelable(true);
-			builder1.setPositiveButton(lang.equalsIgnoreCase("hi")?"हाँ":"Yes",
-					new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog,
-						int id) {
-					Intent i = new Intent(ActivityPaymentOnly.this,ActivityPaymentView.class);
-					i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK); 
-					startActivity(i);
-					finish();				
-				}
-			}).setNegativeButton(lang.equalsIgnoreCase("hi")?"नहीं":"No",
-					new DialogInterface.OnClickListener() {
-				@Override
-				public void onClick(DialogInterface dialog,
-						int id) {
-					// if this button is clicked, just close
-					dialog.cancel();
-				}
-			});
-			AlertDialog alertnew = builder1.create();
-			alertnew.show();
+            onBackPressed();
 			return true;
 
-		case R.id.action_go_to_home: 
+		case R.id.action_go_to_home:
+            try {
+                if (mBluetoothSocket != null)
+                    mBluetoothSocket.close();
+            } catch (Exception e) {
+                Log.e("Tag", "Exe ", e);
+            }
 			Intent homeScreenIntent = new Intent(this, ActivityHomeScreen.class);
 			homeScreenIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(homeScreenIntent);
@@ -1525,8 +1650,14 @@ public class ActivityPaymentOnly   extends Activity{
 			@Override
 			public void onClick(DialogInterface dialog,
 					int id) {
+
+                try {
+                    if (mBluetoothSocket != null)
+                        mBluetoothSocket.close();
+                } catch (Exception e) {
+                    Log.e("Tag", "Exe ", e);
+                }
 				Intent i = new Intent(ActivityPaymentOnly.this,ActivityPaymentView.class);
-				startActivity(i);
 				i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivity(i);
 				finish();				
@@ -1553,5 +1684,74 @@ public class ActivityPaymentOnly   extends Activity{
 		inflater.inflate(R.menu.menu_home, menu);
 		return true;
 	}
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if (mBluetoothAdapter != null)
+        {
+            mBluetoothAdapter.cancelDiscovery();
+        }
+    }
+
+    private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener()
+    {
+        public void onItemClick(AdapterView<?> mAdapterView, View mView, int mPosition, long mLong)
+        {
+            mBluetoothAdapter.cancelDiscovery();
+            String mDeviceInfo = ((TextView) mView).getText().toString();
+            String mDeviceAddress = mDeviceInfo.substring(mDeviceInfo.length() - 17);
+            //Log.v(TAG, "Device_Address " + mDeviceAddress);
+
+            Bundle mBundle = new Bundle();
+            mBundle.putString("DeviceAddress", mDeviceAddress);
+            Intent mBackIntent = new Intent();
+            mBackIntent.putExtras(mBundle);
+            setResult(Activity.RESULT_OK, mBackIntent);
+            finish();
+        }
+    };
+
+    private void ListPairedDevices() {
+        Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter
+                .getBondedDevices();
+        if (mPairedDevices.size() > 0) {
+            for (BluetoothDevice mDevice : mPairedDevices) {
+                //Log.v(TAG, "PairedDevices: " + mDevice.getName() + "  "+ mDevice.getAddress());
+            }
+        }
+    }
+
+    public void run() {
+        try {
+            mBluetoothSocket = mBluetoothDevice
+                    .createRfcommSocketToServiceRecord(applicationUUID);
+            mBluetoothAdapter.cancelDiscovery();
+            mBluetoothSocket.connect();
+            mHandler.sendEmptyMessage(0);
+        } catch (IOException eConnectException) {
+            //Log.d(TAG, "CouldNotConnectToSocket", eConnectException);
+            closeSocket(mBluetoothSocket);
+            return;
+        }
+    }
+
+    private void closeSocket(BluetoothSocket nOpenSocket) {
+        try {
+            nOpenSocket.close();
+            //Log.d(TAG, "SocketClosed");
+        } catch (IOException ex) {
+            //Log.d(TAG, "CouldNotCloseSocket");
+        }
+    }
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            mBluetoothConnectProgressDialog.dismiss();
+            Toast.makeText(ActivityPaymentOnly.this, "Connected", Toast.LENGTH_LONG).show();
+        }
+    };
 
 }

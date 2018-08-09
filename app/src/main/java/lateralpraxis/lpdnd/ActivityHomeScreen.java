@@ -4,6 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -52,6 +55,8 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.UUID;
 
 import lateralpraxis.lpdnd.CentreExpense.ActivityListBookingAccountant;
 import lateralpraxis.lpdnd.DeliveryConfirmation.ActivityDeliveryConfirmationCreateList;
@@ -65,6 +70,14 @@ import lateralpraxis.lpdnd.stockconversion.ActivityListStockConversion;
 
 public class ActivityHomeScreen extends Activity {
 
+    private static final int REQUEST_CONNECT_DEVICE = 111;
+    private static final int REQUEST_ENABLE_BT = 222;
+    BluetoothAdapter mBluetoothAdapter;
+    private UUID applicationUUID = UUID
+            .fromString("00001101-0000-1000-8000-00805F9B34FB");
+    private ProgressDialog mBluetoothConnectProgressDialog;
+    private BluetoothSocket mBluetoothSocket;
+    BluetoothDevice mBluetoothDevice;
     static final int ITEM_PER_ROW = 2;
     private static String responseJSON, responseJSON1, sendJSon, newId,
             customerType, strSyncWhat;
@@ -88,6 +101,7 @@ public class ActivityHomeScreen extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_home);
 
         // To create object of user session
@@ -106,6 +120,7 @@ public class ActivityHomeScreen extends Activity {
         tl.setColumnStretchable(1, true);
 
     /*--------End of Code to find controls -----------------------------*/
+
         strSyncWhat = "";
         try {
             common.copyDBToSDCard("ganeshdairy.db");
@@ -646,6 +661,32 @@ public class ActivityHomeScreen extends Activity {
             i.putExtra("fromwhere", "home");
             startActivity(i);
             finish();
+        }
+        else if (id == R.id.action_set_printer) {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+            if (mBluetoothAdapter != null) {
+                if (!mBluetoothAdapter.isEnabled()) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+                    try {
+                        if (mBluetoothSocket != null)
+                            mBluetoothSocket.close();
+                    } catch (Exception e) {
+                        Log.e("Tag", "Exe ", e);
+                    }
+                }
+                else {
+                    ListPairedDevices();
+                    Intent connectIntent = new Intent(ActivityHomeScreen.this, ActivitySetPrinter.class);
+                    startActivityForResult(connectIntent, REQUEST_CONNECT_DEVICE);
+                    try {
+                        if (mBluetoothSocket != null)
+                            mBluetoothSocket.close();
+                    } catch (Exception e) {
+                        Log.e("Tag", "Exe ", e);
+                    }
+                }
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -5163,4 +5204,34 @@ public class ActivityHomeScreen extends Activity {
         }
     }
     //</editor-fold>
+
+
+    public void onActivityResult(int mRequestCode, int mResultCode, Intent mDataIntent) {
+        super.onActivityResult(mRequestCode, mResultCode, mDataIntent);
+
+        switch (mRequestCode) {
+            case REQUEST_CONNECT_DEVICE:
+                if (mResultCode == Activity.RESULT_OK) {
+                }
+                break;
+
+            case REQUEST_ENABLE_BT:
+                if (mResultCode == Activity.RESULT_OK) {
+                    ListPairedDevices();
+                    Intent connectIntent = new Intent(ActivityHomeScreen.this, ActivitySetPrinter.class);
+                    startActivity(connectIntent);
+                    finish();
+                }
+                break;
+        }
+    }
+
+    private void ListPairedDevices() {
+        Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter.getBondedDevices();
+        if (mPairedDevices.size() > 0) {
+            for (BluetoothDevice mDevice : mPairedDevices) {
+                Log.v("LPDnD", "PairedDevices: " + mDevice.getName() + "  "+ mDevice.getAddress());
+            }
+        }
+    }
 }

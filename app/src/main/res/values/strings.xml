@@ -57,6 +57,7 @@
     <string name="drawer_open">drawer_open</string>
     <string name="drawer_close">drawer_close</string>
     <string name="date">Demand Date: </string>
+    <string name="bluetooth_devices">Bluetooth Device(s)</string>
     <string name="customer">Customer : </string>
     <string name="customerType">Customer Type</string>
     <string name="custType">Type</string>
@@ -93,6 +94,8 @@
     <string name="enter_new_password">Enter New Password</string>
     <string name="enter_confirm_password">Enter Confirm Password</string>
     <string name="change_password_btn">Change Password</string>
+    <string name="set_printer">Set Printer</string>
+    <string name="print">Print</string>
     <string name="change_password_home">Change Password</string>
     <string name="create_customer_header">Create New Customer</string>
     <string name="customer_type">Type*</string>
@@ -146,7 +149,7 @@
 
     <!--<editor-fold desc="Start Of Menu Declaration">-->
     <string name="menu_cashDeposit">DEPOSIT</string>
-    <string name="menu_payment">PAYMENT</string>
+    <string name="menu_payment">Receipt</string>
     <string name="menu_return">RETURNS</string>
     <string name="menu_syncTrans">SYNC</string>
     <string name="menu_masters">MASTERS</string>
@@ -163,12 +166,12 @@
     <string name="menu_stockOutstanding">PENDING</string>
     <string name="menu_DelRec">DELIVERY\n/RECEIPT(C)</string>
     <string name="menu_VehDelRec">DELIVERY\n/RECEIPT(V)</string>
-    <string name="menu_primaryreceipt">Primary\nReceipt</string>
+    <string name="menu_primaryreceipt">Purchase</string>
     <string name="menu_expense">Expense</string>
     <string name="menu_stockAdjustment">STOCK\nADJUSTMENT</string>
     <string name="menu_customersettlement">CUSTOMER\nSETTLEMENT</string>
     <string name="menu_expenseconfirmation">EXPENSE\nCONFIRMATION</string>
-    <string name="menu_deliveryConfirmation">RECEIPT\nCONFIRMATION</string>
+    <string name="menu_deliveryConfirmation">Purchase\nCONFIRMATION</string>
     <string name="menu_StockReturnView">Stock Return</string>
     <string name="menu_outlet_sale">Sale</string>
     <string name="menu_reconcile">Reconciliation</string>
@@ -233,10 +236,10 @@
 
     <string name="uat_app_">UAT App!</string>
     <!-- Newly added By Akhilesh -->
-    <string name="payments">Payments</string>
-    <string name="viewpayments">View Payments</string>
-    <string name="paymentdetails">Payment Details</string>
-    <string name="createpayment">[ Create Payments ]</string>
+    <string name="payments">Receipt</string>
+    <string name="viewpayments">View Receipt</string>
+    <string name="paymentdetails">Receipt Details</string>
+    <string name="createpayment">[ Create Receipt ]</string>
     <string name="company">Company *</string>
     <string name="company_label">Company</string>
     <string name="customer_label">Customer</string>
@@ -310,7 +313,7 @@
     <!-- End of Report Variables-->
 
     <!-- Start of Primary Receipt Variables-->
-    <string name="label_PrimaryReceipt">Primary Receipt</string>
+    <string name="label_PrimaryReceipt">Purchase</string>
     <string name="label_linkAdd">Add [ + ]</string>
     <string name="label_type">Type</string>
     <string name="label_raw">Raw Material</string>
@@ -345,9 +348,9 @@
     <!-- End of Outlet Sale  -->
 
     <!-- Delivery Confirmation -->
-    <string name="deliveryConfirmation">Receipt Confirmation</string>
-    <string name="pendingDeliveryConfirmation">Pending Receipt Confirmation</string>
-    <string name="deliveryConfirmationDetails">Receipt Confirmation Details</string>
+    <string name="deliveryConfirmation">Purchase Confirmation</string>
+    <string name="pendingDeliveryConfirmation">Pending Purchase Confirmation</string>
+    <string name="deliveryConfirmationDetails">Purchase Confirmation Details</string>
     <string name="delivery">Delivery</string>
     <string name="confirmation">Confirm Qty</string>
     <string name="dateHead">Date</string>

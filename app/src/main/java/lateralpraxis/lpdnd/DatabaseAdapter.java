@@ -36,6 +36,8 @@ public class DatabaseAdapter {
             Vehicle_CREATE = "CREATE TABLE IF NOT EXISTS Vehicle(Id TEXT, Name TEXT, RouteId TEXT);",
             Company_CREATE = "CREATE TABLE IF NOT EXISTS Company(Id TEXT, Name TEXT, ShortName TEXT);",
             Bank_CREATE = "CREATE TABLE IF NOT EXISTS Bank(Id TEXT, Name TEXT);",
+            Bluetooth_CREATE = "CREATE TABLE IF NOT EXISTS Bluetooth(Address TEXT);",
+            Bluetooth_DEFAULT = "INSERT INTO Bluetooth(Address) VALUES('0');",
             RouteVehicleMaster_CREATE = "CREATE TABLE IF NOT EXISTS RouteVehicleMaster(RouteId TEXT, Route TEXT, VehicleId TEXT, Vehicle TEXT, Capacity TEXT);",
             CustomerMaster_CREATE = "CREATE TABLE IF NOT EXISTS CustomerMaster(RouteId TEXT, Route TEXT, CustomerId TEXT, Customer TEXT, Mobile TEXT, CustomerType TEXT, LoginId TEXT, CustomerLocal TEXT);",
             DemandDate_CREATE = "CREATE TABLE IF NOT EXISTS DemandDate(Date TEXT);",
@@ -1545,7 +1547,7 @@ public class DatabaseAdapter {
             map.put("Item", cursor.getString(0));
             map.put("DelQty", cursor.getString(1));
             map.put("Rate", cursor.getString(2));
-            map.put("Amount", cursor.getString(3));
+            map.put("Amount", String.valueOf(cursor.getFloat(3)));
             map.put("DQty", cursor.getString(4));
             wordList.add(map);
         }
@@ -2534,7 +2536,19 @@ public class DatabaseAdapter {
     //Method to get customer payment data by Date
     public List<CustomerPayment> getCustomerPayment(String customerId, String date) {
         List<CustomerPayment> labels = new ArrayList<CustomerPayment>();
-        selectQuery = "SELECT cmp.Name, cd.Amount,(CASE WHEN (cd.Remarks!='' AND cd.Remarks IS NOT NULL) THEN cd.Remarks WHEN ifnull(b.Name,0) = 0 THEN cd.ChequeNumber ELSE b.Name||' - '||cd.ChequeNumber END), b.Name, cd.ImagePath FROM CustomerPaymentDetail cd LEFT OUTER JOIN Bank b ON cd.BankId = b.Id, Company cmp WHERE cd.CompanyId = cmp.Id AND cd.MasterId IN (SELECT Id FROM CustomerPaymentMaster WHERE SUBSTR(CreateDate,0,11)='" + date + "' AND CustomerId = '" + customerId + "' AND DeliveryUniqueId='0') ORDER BY cmp.Name";
+        selectQuery = "SELECT cmp.ShortName, cd.Amount,(CASE WHEN (cd.Remarks!='' AND cd.Remarks IS NOT NULL) THEN cd.Remarks WHEN ifnull(b.Name,0) = 0 THEN cd.ChequeNumber ELSE b.Name||' - '||cd.ChequeNumber END), b.Name, cd.ImagePath FROM CustomerPaymentDetail cd LEFT OUTER JOIN Bank b ON cd.BankId = b.Id, Company cmp WHERE cd.CompanyId = cmp.Id AND cd.MasterId IN (SELECT Id FROM CustomerPaymentMaster WHERE SUBSTR(CreateDate,0,11)='" + date + "' AND CustomerId = '" + customerId + "' AND DeliveryUniqueId='0') ORDER BY cmp.Name, b.Name";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            labels.add(new CustomerPayment(0, cursor.getString(0), String.valueOf(cursor.getFloat(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
+        }
+        cursor.close();
+        return labels;
+    }
+
+    //Method to get customer payment data for printer
+    public List<CustomerPayment> getCustomerPaymentPrinter(String customerId, String date) {
+        List<CustomerPayment> labels = new ArrayList<CustomerPayment>();
+        selectQuery = "SELECT cmp.ShortName, cd.Amount,(CASE WHEN (cd.Remarks!='' AND cd.Remarks IS NOT NULL) THEN 'Online' WHEN ifnull(b.Name,0) = 0 THEN 'Cash' ELSE cd.ChequeNumber END), b.Name, cd.ImagePath FROM CustomerPaymentDetail cd LEFT OUTER JOIN Bank b ON cd.BankId = b.Id, Company cmp WHERE cd.CompanyId = cmp.Id AND cd.MasterId IN (SELECT Id FROM CustomerPaymentMaster WHERE CAST(cd.Amount AS NUMERIC)>0 AND SUBSTR(CreateDate,0,11)='" + date + "' AND CustomerId = '" + customerId + "' AND DeliveryUniqueId='0') ORDER BY cmp.Name, b.Name";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             labels.add(new CustomerPayment(0, cursor.getString(0), String.valueOf(cursor.getFloat(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
@@ -2559,7 +2573,19 @@ public class DatabaseAdapter {
     //Method to get customer payment data by Date for delivery
     public List<CustomerPayment> getCustomerPaymentForDelivery(String customerId, String date) {
         List<CustomerPayment> labels = new ArrayList<CustomerPayment>();
-        selectQuery = "SELECT cmp.Name, SUM(cd.Amount), (CASE WHEN (cd.Remarks!='' AND cd.Remarks IS NOT NULL) THEN cd.Remarks WHEN ifnull(b.Name,0) = 0 THEN cd.ChequeNumber ELSE b.Name||' - '||cd.ChequeNumber END), b.Name, cd.ImagePath FROM CustomerPaymentDetail cd LEFT OUTER JOIN Bank b ON cd.BankId = b.Id, Company cmp WHERE cd.CompanyId = cmp.Id AND cd.MasterId IN (SELECT Id FROM CustomerPaymentMaster WHERE SUBSTR(CreateDate,0,11)='" + date + "' AND CustomerId = '" + customerId + "' AND DeliveryUniqueId!='0') GROUP BY cmp.Name, cd.ChequeNumber, b.Name, cd.ImagePath,cd.Remarks ORDER BY cmp.Name";
+        selectQuery = "SELECT cmp.ShortName, SUM(cd.Amount), (CASE WHEN (cd.Remarks!='' AND cd.Remarks IS NOT NULL) THEN cd.Remarks WHEN ifnull(b.Name,0) = 0 THEN cd.ChequeNumber ELSE b.Name||' - '||cd.ChequeNumber END), b.Name, cd.ImagePath FROM CustomerPaymentDetail cd LEFT OUTER JOIN Bank b ON cd.BankId = b.Id, Company cmp WHERE cd.CompanyId = cmp.Id AND cd.MasterId IN (SELECT Id FROM CustomerPaymentMaster WHERE SUBSTR(CreateDate,0,11)='" + date + "' AND CustomerId = '" + customerId + "' AND DeliveryUniqueId!='0') GROUP BY cmp.Name, cd.ChequeNumber, b.Name, cd.ImagePath,cd.Remarks ORDER BY cmp.Name, b.Name";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            labels.add(new CustomerPayment(0, cursor.getString(0), String.valueOf(cursor.getFloat(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
+        }
+        cursor.close();
+        return labels;
+    }
+
+    //Method to get customer payment data by Date for delivery
+    public List<CustomerPayment> getCustomerPaymentForDeliveryPrinter(String customerId, String date) {
+        List<CustomerPayment> labels = new ArrayList<CustomerPayment>();
+        selectQuery = "SELECT cmp.ShortName, SUM(cd.Amount), (CASE WHEN (cd.Remarks!='' AND cd.Remarks IS NOT NULL) THEN 'Online' WHEN ifnull(b.Name,0) = 0 THEN 'Cash' ELSE cd.ChequeNumber END), b.Name, cd.ImagePath FROM CustomerPaymentDetail cd LEFT OUTER JOIN Bank b ON cd.BankId = b.Id, Company cmp WHERE CAST(cd.Amount AS NUMERIC)>0 AND cd.CompanyId = cmp.Id AND cd.MasterId IN (SELECT Id FROM CustomerPaymentMaster WHERE SUBSTR(CreateDate,0,11)='" + date + "' AND CustomerId = '" + customerId + "' AND DeliveryUniqueId!='0') GROUP BY cmp.Name, cd.ChequeNumber, b.Name, cd.ImagePath,cd.Remarks ORDER BY cmp.Name, b.Name";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             labels.add(new CustomerPayment(0, cursor.getString(0), String.valueOf(cursor.getFloat(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
@@ -4179,4 +4205,99 @@ public class DatabaseAdapter {
         return status;
     }
     //</editor-fold>
+
+    // To get total of delivery details for printer
+    public String getDeliveryDetailPrinter(String id, String date) {
+        String total = "0";
+        selectQuery = "SELECT SUM(dd.DelQty*dd.Rate) FROM DeliveryDetail dd, (SELECT DISTINCT Id FROM Delivery WHERE Customerid ='" + id + "' AND SUBSTR(CreateDate,0,11)='" + date + "') de WHERE de.Id = dd.DeliveryId";
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToNext()) {
+            total = String.valueOf(cursor.getFloat(0));
+        }
+        cursor.close();
+        return total;
+    }
+
+    //To get Bluetooth Address
+    public String getBluetooth() {
+        String address = "0";
+        selectQuery = "SELECT Address FROM Bluetooth";
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToNext()) {
+            address =cursor.getString(0);
+        }
+        cursor.close();
+        return address;
+    }
+
+    //To Update Bluetooth Address
+    public String setBluetooth(String address) {
+        try {
+            db.execSQL("UPDATE Bluetooth SET Address = '" + address + "'");
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<HashMap<String, String>> printDeliveryById(String id) {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        try {
+            selectQuery = "SELECT det.Sku, det.DelQty, det.Rate, det.DelQty*det.Rate, det.DQty FROM Delivery mas, DeliveryDetail det WHERE mas.Id = det.DeliveryId AND mas.UniqueId ='" + id + "' ";
+            cursor = db.rawQuery(selectQuery, null);
+            while (cursor.moveToNext()) {
+                map = new HashMap<String, String>();
+                map.put("Item", cursor.getString(0));
+                map.put("DelQty", cursor.getString(1));
+                map.put("Rate", cursor.getString(2));
+                map.put("Amount", String.valueOf(cursor.getFloat(3)));
+                map.put("DQty", cursor.getString(4));
+                wordList.add(map);
+            }
+            cursor.close();
+        }
+        catch (Exception ex)
+        {
+            ex.getMessage();
+        }
+        return wordList;
+    }
+
+    // To get total of delivery details for printer
+    public String printDeliveryByIdTotal(String id) {
+        String total = "0";
+        selectQuery = "SELECT SUM(det.DelQty*det.Rate) FROM Delivery mas, DeliveryDetail det WHERE mas.Id = det.DeliveryId AND mas.UniqueId ='" + id + "'";
+        cursor = db.rawQuery(selectQuery, null);
+        if (cursor.moveToNext()) {
+            total = String.valueOf(cursor.getFloat(0));
+        }
+        cursor.close();
+        return total;
+    }
+
+    //Method to get customer payment data for delivery
+    public List<CustomerPayment> printCustomerPaymentDelivery(String id) {
+        List<CustomerPayment> labels = new ArrayList<CustomerPayment>();
+        selectQuery = "SELECT cmp.ShortName, SUM(cd.Amount), (CASE WHEN (cd.Remarks!='' AND cd.Remarks IS NOT NULL) THEN 'Online' WHEN ifnull(b.Name,0) = 0 THEN 'Cash' ELSE cd.ChequeNumber END), b.Name, cd.ImagePath FROM CustomerPaymentDetail cd LEFT OUTER JOIN Bank b ON cd.BankId = b.Id, Company cmp WHERE CAST(cd.Amount AS NUMERIC)>0 AND cd.CompanyId = cmp.Id AND cd.MasterId IN (SELECT Id FROM CustomerPaymentMaster WHERE DeliveryUniqueId='" + id + "' AND DeliveryUniqueId!='0') GROUP BY cmp.Name, cd.ChequeNumber, b.Name, cd.ImagePath,cd.Remarks ORDER BY cmp.Name, b.Name";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            labels.add(new CustomerPayment(0, cursor.getString(0), String.valueOf(cursor.getFloat(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
+        }
+        cursor.close();
+        return labels;
+    }
+
+    //Method to get customer payment only data
+    public List<CustomerPayment> printCustomerPaymentOnly(String id) {
+        List<CustomerPayment> labels = new ArrayList<CustomerPayment>();
+        selectQuery = "SELECT cmp.ShortName, SUM(cd.Amount), (CASE WHEN (cd.Remarks!='' AND cd.Remarks IS NOT NULL) THEN 'Online' WHEN ifnull(b.Name,0) = 0 THEN 'Cash' ELSE cd.ChequeNumber END), b.Name, cd.ImagePath FROM CustomerPaymentDetail cd LEFT OUTER JOIN Bank b ON cd.BankId = b.Id, Company cmp WHERE CAST(cd.Amount AS NUMERIC)>0 AND cd.CompanyId = cmp.Id AND cd.MasterId IN (SELECT Id FROM CustomerPaymentMaster WHERE UniqueId='" + id + "') GROUP BY cmp.Name, cd.ChequeNumber, b.Name, cd.ImagePath,cd.Remarks ORDER BY cmp.Name, b.Name";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            labels.add(new CustomerPayment(0, cursor.getString(0), String.valueOf(cursor.getFloat(1)), cursor.getString(2), cursor.getString(3), cursor.getString(4)));
+        }
+        cursor.close();
+        return labels;
+    }
 }
