@@ -108,6 +108,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         _db.execSQL(DatabaseAdapter.CentreSKU_CREATE);
         _db.execSQL(DatabaseAdapter.Bluetooth_CREATE);
         _db.execSQL(DatabaseAdapter.Bluetooth_DEFAULT);
+        _db.execSQL(DatabaseAdapter.ExcessHead_CREATE);
+        _db.execSQL(DatabaseAdapter.ExcessBookingAccountant_CREATE);
+        _db.execSQL(DatabaseAdapter.ExcessBooking_CREATE);
+        _db.execSQL(DatabaseAdapter.ExcessConfirmation_CREATE);
+        _db.execSQL(DatabaseAdapter.CentreExcessConfirmation_CREATE);
     }
 
     @Override

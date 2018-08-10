@@ -168,9 +168,11 @@
     <string name="menu_VehDelRec">DELIVERY\n/RECEIPT(V)</string>
     <string name="menu_primaryreceipt">Purchase</string>
     <string name="menu_expense">Expense</string>
+    <string name="menu_excess">Excess</string>
     <string name="menu_stockAdjustment">STOCK\nADJUSTMENT</string>
     <string name="menu_customersettlement">CUSTOMER\nSETTLEMENT</string>
     <string name="menu_expenseconfirmation">EXPENSE\nCONFIRMATION</string>
+    <string name="menu_excessconfirmation">EXCESS\nCONFIRMATION</string>
     <string name="menu_deliveryConfirmation">Purchase\nCONFIRMATION</string>
     <string name="menu_StockReturnView">Stock Return</string>
     <string name="menu_outlet_sale">Sale</string>
@@ -368,6 +370,11 @@
     <string name="label_viewfile">View Attachment</string>
     <!-- End of Expense Booking Variables-->
 
+    <!-- Start of Excess Booking Variables-->
+    <string name="label_Excess">Excess Fund Booking</string>
+    <string name="label_excesshead">Excess Fund Head *</string>
+    <string name="label_excessheader">Excess Fund Head</string>
+    <!-- End of Excess Booking Variables-->
 
     <!-- Start of Stock Adjustment Variables-->
     <string name="label_StockAdjustment">Stock Adjustment</string>
@@ -383,6 +390,11 @@
     <string name="expenseConfirmation">Expense Confirmation</string>
     <string name="expenseDetails">Expense Details</string>
     <string name="ExpenseHead">Expense Head</string>
+
+    <string name="excessConfirmation">Excess Fund Confirmation</string>
+    <string name="excessDetails">Excess Fund Details</string>
+    <string name="ExcessHead">Excess Fund Head</string>
+
     <string name="accept">Accept</string>
     <string name="reject">Reject</string>
     <string name="label_FromDate">From Date</string>
@@ -420,6 +432,13 @@
     <string name="label_accchoosefile">Choose File</string>
     <string name="label_accviewfile">View Attachment</string>
     <!-- End of Account Expense Booking Variables-->
+
+    <!-- Start of Account Excess Booking Variables-->
+    <string name="label_accExcess">Excess Fund Booking Accounts</string>
+    <string name="label_accexcesshead">Excess Fund Head *</string>
+    <string name="label_accexcessheader">Excess Fund Head</string>
+    <!-- End of Account Excess Booking Variables-->
+
 
     <!-- Start of Customer Settlement Variables-->
     <string name="customerSettlementDetails">Customer Settlement Details</string>

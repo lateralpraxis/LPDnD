@@ -171,9 +171,11 @@
     <string name="menu_rate">दर</string>
     <string name="menu_primaryreceipt">खरीद</string>
     <string name="menu_expense">व्यय</string>
+    <string name="menu_excess">अतिरिक्त</string>
     <string name="menu_stockAdjustment">स्टॉक\nसमायोजन</string>
     <string name="menu_customersettlement">ग्राहक\nनिपटान</string>
     <string name="menu_expenseconfirmation">व्यय\nपुष्टि</string>
+    <string name="menu_excessconfirmation">अतिरिक्त\पुष्टि</string>
     <string name="menu_StockReturnView">स्टॉक वापसी</string>
     <string name="menu_deliveryConfirmation">खरीद\nपुष्टिकरण</string>
     <string name="menu_outlet_sale">बिक्री</string>
@@ -373,6 +375,11 @@
     <string name="expenseConfirmation">व्यय पुष्टि</string>
     <string name="expenseDetails">व्यय विवरण</string>
     <string name="ExpenseHead">व्यय हेड</string>
+
+    <string name="excessConfirmation">अतिरिक्त फंड  पुष्टि</string>
+    <string name="excessDetails">अतिरिक्त फंड विवरण</string>
+    <string name="ExcessHead">अतिरिक्त फंड हेड</string>
+
     <string name="accept">स्वीकृत</string>
     <string name="reject">अस्वीकृत</string>
     <string name="label_FromDate">तिथि से</string>
@@ -393,6 +400,12 @@
     <string name="label_choosefile">फ़ाइल चुनें</string>
     <string name="label_viewfile">अनुलग्नक देखें</string>
     <!-- End of Expense Booking Variables-->
+
+    <!-- Start of Excess Booking Variables-->
+    <string name="label_Excess">अतिरिक्त फंड बुकिंग</string>
+    <string name="label_excesshead">अतिरिक्त फंड हेड *</string>
+    <string name="label_excessheader">अतिरिक्त फंड हेड</string>
+    <!-- End of Excess Booking Variables-->
 
     <!-- Start of Reconciliation Variables-->
     <string name="label_SearchHead">ग्राहक</string>
@@ -418,6 +431,12 @@
     <string name="label_accchoosefile">फ़ाइल चुनें</string>
     <string name="label_accviewfile">अनुलग्नक देखें</string>
     <!-- End of Account Expense Booking Variables-->
+
+    <!-- Start of Account Excess Booking Variables-->
+    <string name="label_accExcess">अतिरिक्त फंड बुकिंग</string>
+    <string name="label_accexcesshead">अतिरिक्त फंड हेड *</string>
+    <string name="label_accexcessheader">अतिरिक्त फंड हेड</string>
+    <!-- End of Account Excess Booking Variables-->
 
     <!-- Start of Customer Settlement Variables-->
     <string name="customerSettlementDetails">ग्राहक निपटारा विवरण</string>

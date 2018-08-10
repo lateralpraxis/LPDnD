@@ -58,9 +58,11 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
+import lateralpraxis.lpdnd.CentreExcess.ActivityListExcessAccountant;
 import lateralpraxis.lpdnd.CentreExpense.ActivityListBookingAccountant;
 import lateralpraxis.lpdnd.DeliveryConfirmation.ActivityDeliveryConfirmationCreateList;
 import lateralpraxis.lpdnd.ExpenseBooking.ActivityListBooking;
+import lateralpraxis.lpdnd.OutletExcess.ActivityListExcess;
 import lateralpraxis.lpdnd.OutletPayment.ActivityListPayments;
 import lateralpraxis.lpdnd.OutletSale.ActivityOutletSaleViewSummary;
 import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
@@ -160,7 +162,7 @@ public class ActivityHomeScreen extends Activity {
 
             if (userRole.equalsIgnoreCase("Customer")) {
                 if (customerType.equalsIgnoreCase("Retail Outlet"))
-                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_delivery_confirmation, R.layout.btn_stockconversion, R.layout.btn_stockadjustment, R.layout.btn_outletpayment, R.layout.btn_expensebooking, R.layout.btn_customersync);
+                    views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand, R.layout.btn_primaryreceipt, R.layout.btn_outlet_sale, R.layout.btn_delivery_confirmation, R.layout.btn_stockconversion, R.layout.btn_stockadjustment, R.layout.btn_outletpayment, R.layout.btn_expensebooking,R.layout.btn_excessbooking, R.layout.btn_customersync);
                 else
                     views = Arrays.asList(R.layout.btn_product, R.layout.btn_demand);
             } else if (userRole.contains("Route Officer") && userRole.contains("Reconciliation User")) {
@@ -168,7 +170,7 @@ public class ActivityHomeScreen extends Activity {
             }  else if (userRole.contains("Collection Officer") && userRole.contains("Reconciliation User")) {
                 views = Arrays.asList(R.layout.btn_master,R.layout.btn_payment, R.layout.btn_cashdeposit,  R.layout.btn_reconcile, R.layout.btn_sync);
             }  else if (userRole.contains("Accountant") && userRole.contains("Reconciliation User")) {
-                views = Arrays.asList(R.layout.btn_master,R.layout.btn_payment,  R.layout.btn_reconcile,R.layout.btn_cashdeposit, R.layout.btn_expensebooking,R.layout.btn_sync,R.layout.btn_report);
+                views = Arrays.asList(R.layout.btn_master,R.layout.btn_payment,  R.layout.btn_reconcile,R.layout.btn_cashdeposit, R.layout.btn_expensebooking,R.layout.btn_excessbooking,R.layout.btn_sync,R.layout.btn_report);
             }  else if (userRole.contains("Reconciliation User")) {
                 views = Arrays.asList(R.layout.btn_master, R.layout.btn_reconcile, R.layout.btn_sync);
             }
@@ -176,7 +178,7 @@ public class ActivityHomeScreen extends Activity {
                 views = Arrays.asList(R.layout.btn_master, R.layout.btn_payment, R.layout.btn_cashdeposit,  R.layout.btn_sync);
             }
             else if (userRole.contains("Accountant")) {
-                views = Arrays.asList(R.layout.btn_master,R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_expensebooking, R.layout.btn_sync,R.layout.btn_report);
+                views = Arrays.asList(R.layout.btn_master,R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_expensebooking,R.layout.btn_excessbooking, R.layout.btn_sync,R.layout.btn_report);
             }
             else if (userRole.contains("Route Officer")) {
                 views = Arrays.asList(R.layout.btn_master,R.layout.btn_allocation, R.layout.btn_demand, R.layout.btn_delivery, R.layout.btn_payment, R.layout.btn_cashdeposit, R.layout.btn_return,  R.layout.btn_sync);
@@ -500,6 +502,26 @@ public class ActivityHomeScreen extends Activity {
                         }
                         else{
                             intent = new Intent(context, ActivityListBooking.class);
+                            startActivity(intent);
+                            finish();
+                        }
+
+                    }
+                });
+                break;
+            case R.layout.btn_excessbooking:
+                btn = (Button) btnLayout.findViewById(R.id.btnExcessBooking);
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if (userRole.contains("Accountant") || (userRole.contains("Accountant") && userRole.contains("Reconciliation User"))) {
+                            intent = new Intent(context, ActivityListExcessAccountant.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                        else{
+                            intent = new Intent(context, ActivityListExcess.class);
                             startActivity(intent);
                             finish();
                         }
@@ -2443,7 +2465,7 @@ public class ActivityHomeScreen extends Activity {
                     }
                     dba.close();
                     if (common.isConnected()) {
-                        AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+                        AsyncExcessHeadWSCall task = new AsyncExcessHeadWSCall();
                         task.execute(result);
 
                     }
@@ -2465,6 +2487,76 @@ public class ActivityHomeScreen extends Activity {
         @Override
         protected void onPreExecute() {
             Dialog.setMessage("Downloading Expense Head..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to fetch Excess Head Data From Portal">
+    private class AsyncExcessHeadWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String[] name = {"action", "userId", "role"};
+                String[] value = {"ReadExcessHead", userId, userRole};
+                responseJSON = "";
+                // Call method of web service to download Reatil Outlet Inventory from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        // After execution of web service to download Retail Outlet Inventory
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    dba.open();
+                    dba.DeleteMasterData("ExcessHead");
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        dba.Insert_ExcessHead(jsonArray.getJSONObject(i)
+                                .getString("A"), jsonArray.getJSONObject(i)
+                                .getString("B"), jsonArray.getJSONObject(i)
+                                .getString("C"));
+                    }
+                    dba.close();
+                    if (common.isConnected()) {
+                        AsyncRetailOutletInventoryWSCall task = new AsyncRetailOutletInventoryWSCall();
+                        task.execute(result);
+
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Excess Fund Head Downloading failed: "
+                                + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Excess Fund Head..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
@@ -2513,7 +2605,7 @@ public class ActivityHomeScreen extends Activity {
                     }
                     dba.close();
                     if (common.isConnected()) {
-                        AsyncCentreWSCall task = new AsyncCentreWSCall();
+                        AsyncCentreExcessHeadWSCall task = new AsyncCentreExcessHeadWSCall();
                         task.execute(result);
 
                     }
@@ -2535,6 +2627,76 @@ public class ActivityHomeScreen extends Activity {
         @Override
         protected void onPreExecute() {
             Dialog.setMessage("Downloading Expense Head..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async Method to fetch Excess Head Data From Portal">
+    private class AsyncCentreExcessHeadWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+                String[] name = {"action", "userId", "role"};
+                String[] value = {"ReadExcessHead", userId, userRole};
+                responseJSON = "";
+                // Call method of web service to download Expense Head from
+                // server
+                responseJSON = common.CallJsonWS(name, value, "ReadMaster",
+                        common.url);
+                return responseJSON;
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            }
+        }
+
+        // After execution of web service to download Expense Head
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    dba.open();
+                    dba.DeleteMasterData("ExcessHead");
+                    for (int i = 0; i < jsonArray.length(); ++i) {
+                        dba.Insert_ExcessHead(jsonArray.getJSONObject(i)
+                                .getString("A"), jsonArray.getJSONObject(i)
+                                .getString("B"), jsonArray.getJSONObject(i)
+                                .getString("C"));
+                    }
+                    dba.close();
+                    if (common.isConnected()) {
+                        AsyncCentreWSCall task = new AsyncCentreWSCall();
+                        task.execute(result);
+
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Excess Fund Head Downloading failed: "
+                                + "Unable to get response from server.", false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Excess Fund Head..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
@@ -4440,7 +4602,7 @@ public class ActivityHomeScreen extends Activity {
                     }
                     if (common.isConnected()) {
 
-                        AsyncOutletSaleWSCall task = new AsyncOutletSaleWSCall();
+                        AsyncCustomerExcessWSCall task = new AsyncCustomerExcessWSCall();
                         task.execute();
 
                     }
@@ -4463,6 +4625,105 @@ public class ActivityHomeScreen extends Activity {
         protected void onPreExecute() {
 
             Dialog.setMessage("Posting Outlet Expense...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async method for Posting Outlet Excess for Retail Outlet">
+    private class AsyncCustomerExcessWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Will contain the raw JSON response as a string.
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonExpense = new JSONObject();
+                dba.open();
+                // to get Primary Receipt from database
+                ArrayList<HashMap<String, String>> insmast = dba
+                        .getUnSyncOutletExcess();
+                dba.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to post payment
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("CustomerId", insp.get("CustomerId"));
+                        jsonins.put("ExpenseHeadId", insp.get("ExpenseHeadId"));
+                        jsonins.put("Amount",common.prevent_E_Notation(insp.get("Amount")));
+                        jsonins.put("Remarks", insp.get("Remarks"));
+                        jsonins.put("TransactionDate", insp.get("TransactionDate"));
+                        jsonins.put("UploadFileName", insp.get("ImageName"));
+                        jsonins.put("CreateBy", userId);
+                        jsonins.put("ipAddress",
+                                common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", common.getIMEI());
+                        array.put(jsonins);
+                    }
+                    jsonExpense.put("Master", array);
+
+                    sendJSon = jsonExpense.toString();
+
+                    // To invoke json web service to create payment
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "CreateOutletExcess", common.url);
+                } else {
+                    return "No outlet excess fund booking pending to be send.";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                dba.close();
+            }
+        }
+
+        // After execution of json web service to create payment
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        dba.open();
+                        dba.Update_OutletExcessIsSync();
+                        dba.close();
+                    }
+                    if (common.isConnected()) {
+
+                        AsyncOutletSaleWSCall task = new AsyncOutletSaleWSCall();
+                        task.execute();
+
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                    common.showToast("Error: " + result);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Unable to fetch response from server.", false);
+            }
+
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Outlet Excess Fund Booking...");
             Dialog.setCancelable(false);
             Dialog.show();
         }
@@ -4796,6 +5057,8 @@ public class ActivityHomeScreen extends Activity {
                             jsonDoc.put("UniqueId", mast.get("UniqueId"));
                             jsonDoc.put("UploadFileName",
                                     mast.get("UploadFileName"));
+                            jsonDoc.put("ModuleName",
+                                    mast.get("ModuleName"));
                             File fle = new File(mast.get("ImagePath"));
                             String flArray = "";
                             // Code to check if file exists and create byte
@@ -4973,6 +5236,104 @@ public class ActivityHomeScreen extends Activity {
                         dba.close();
                     }
                     if (common.isConnected()) {
+                        AsyncCentreExcessWSCall task = new AsyncCentreExcessWSCall();
+                        task.execute();
+                    }
+                } else {
+                    if (result.contains("null"))
+                        result = "Server not responding.";
+                    common.showAlert(ActivityHomeScreen.this, result, false);
+                    common.showToast("Error: " + result);
+                }
+            } catch (Exception e) {
+                common.showAlert(ActivityHomeScreen.this,
+                        "Unable to fetch response from server.", false);
+            }
+
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+
+            Dialog.setMessage("Posting Centre Expense...");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Async method for Posting Centre Excess Booking">
+    private class AsyncCentreExcessWSCall extends AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+
+            // Will contain the raw JSON response as a string.
+            try {
+
+                responseJSON = "";
+
+                JSONObject jsonExpense = new JSONObject();
+                dba.open();
+                // to get Un Sync Centre Expense from database
+                ArrayList<HashMap<String, String>> insmast = dba
+                        .getUnSyncAccountantExcess();
+                dba.close();
+                if (insmast != null && insmast.size() > 0) {
+                    JSONArray array = new JSONArray();
+                    // To make json string to Centre Expense
+                    for (HashMap<String, String> insp : insmast) {
+                        JSONObject jsonins = new JSONObject();
+                        jsonins.put("UniqueId", insp.get("UniqueId"));
+                        jsonins.put("CentreId", insp.get("CentreId"));
+                        jsonins.put("CompanyId", insp.get("CompanyId"));
+                        jsonins.put("ExpenseHeadId", insp.get("ExpenseHeadId"));
+                        jsonins.put("Amount",common.prevent_E_Notation(insp.get("Amount")));
+                        jsonins.put("Remarks", insp.get("Remarks"));
+                        jsonins.put("TransactionDate", insp.get("TransactionDate"));
+                        jsonins.put("UploadFileName", insp.get("ImageName"));
+                        jsonins.put("CreateBy", userId);
+                        jsonins.put("ipAddress",
+                                common.getDeviceIPAddress(true));
+                        jsonins.put("Machine", common.getIMEI());
+                        array.put(jsonins);
+                    }
+                    jsonExpense.put("Master", array);
+
+                    sendJSon = jsonExpense.toString();
+
+                    // To invoke json web service to create payment
+                    responseJSON = common.invokeJSONWS(sendJSon, "json",
+                            "CreateCentreExcess", common.url);
+                } else {
+                    return "No centre expense pending to be send.";
+                }
+                return responseJSON;
+            } catch (Exception e) {
+                // TODO: handle exception
+                return "ERROR: " + "Unable to get response from server.";
+            } finally {
+                dba.close();
+            }
+        }
+
+        // After execution of json web service to create payment
+        @Override
+        protected void onPostExecute(String result) {
+
+            try {
+                // To display message after response from server
+                if (!result.contains("ERROR")) {
+                    if (responseJSON.equalsIgnoreCase("success")) {
+                        dba.open();
+                        dba.Update_AccountantExcessIsSync();
+                        dba.close();
+                    }
+                    if (common.isConnected()) {
                         // call method of attachment json web service
                         Async_ExpenseAttachments_WSCall task = new Async_ExpenseAttachments_WSCall();
                         task.execute();
@@ -4995,7 +5356,7 @@ public class ActivityHomeScreen extends Activity {
         @Override
         protected void onPreExecute() {
 
-            Dialog.setMessage("Posting Centre Expense...");
+            Dialog.setMessage("Posting Centre Excess Fund Booking...");
             Dialog.setCancelable(false);
             Dialog.show();
         }
@@ -5034,6 +5395,7 @@ public class ActivityHomeScreen extends Activity {
                             jsonDoc.put("UniqueId", mast.get("UniqueId"));
                             jsonDoc.put("UploadFileName",
                                     mast.get("UploadFileName"));
+                            jsonDoc.put("ModuleName", mast.get("ModuleName"));
                             File fle = new File(mast.get("ImagePath"));
                             String flArray = "";
                             // Code to check if file exists and create byte
@@ -5130,7 +5492,7 @@ public class ActivityHomeScreen extends Activity {
 
         @Override
         protected void onPreExecute() {
-            Dialog.setMessage("Uploading Expense Attachments ..");
+            Dialog.setMessage("Uploading Expense and Excess Fund Attachments ..");
             Dialog.setCancelable(false);
             Dialog.show();
         }

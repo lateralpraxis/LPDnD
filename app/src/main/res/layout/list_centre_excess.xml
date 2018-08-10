@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <TableLayout
+        android:id="@+id/tableGridHead"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+        <TableRow
+            android:id="@+id/tableRowDate"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5.0dip" >
+
+            <TextView
+                android:id="@+id/tvId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"></TextView>
+            <TextView
+                android:id="@+id/tvDate"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:gravity="start"
+                android:paddingRight="2dp"
+                android:text="@string/label_date"
+                android:textColor="@color/lpblue"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tvCentre"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".4"
+                android:paddingRight="2dp"
+                android:textColor="@color/lpblue"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+            <TextView
+                android:id="@+id/tvCompany"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".3"
+                android:paddingRight="2dp"
+                android:textColor="@color/lpblue"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+        </TableRow>
+        <TableRow
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5.0dip">
+
+            <TextView
+                android:id="@+id/tvExpenseHead"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:paddingLeft="2dp"
+                android:textColor="@color/black"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".5"
+                android:gravity="end"
+                android:paddingRight="2dp"
+                android:textColor="@color/black"
+                android:textIsSelectable="false"
+                android:textSize="18sp" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>

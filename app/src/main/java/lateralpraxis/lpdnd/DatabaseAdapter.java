@@ -88,6 +88,8 @@ public class DatabaseAdapter {
             OutletSaleDetail_CREATE = "CREATE TABLE IF NOT EXISTS OutletSaleDetail(Id INTEGER PRIMARY KEY AUTOINCREMENT, OutletSaleId TEXT, SkuId TEXT, Sku TEXT, Rate TEXT, SaleRate TEXT, Qty TEXT, SaleQty TEXT);",
             ExpenseConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseConfirmationData(Id TEXT, ExpenseDate TEXT, CustomerName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT);",
             CentreExpenseConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS CentreExpenseConfirmationData(Id TEXT, ExpenseDate TEXT, CentreName TEXT, CompanyName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT, CreateBy TEXT);",
+            ExcessConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS ExcessConfirmationData(Id TEXT, ExpenseDate TEXT, CustomerName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT);",
+            CentreExcessConfirmation_CREATE = "CREATE TABLE IF NOT EXISTS CentreExcessConfirmationData(Id TEXT, ExpenseDate TEXT, CentreName TEXT, CompanyName TEXT, ExpenseHead TEXT, Amount TEXT, Remarks TEXT, CreateBy TEXT);",
     /********************* Tables used in Delete For System User ******************/
     CashDepositDeleteDataTABLE_CREATE = "CREATE TABLE IF NOT EXISTS CashDepositDeleteData (CashDepositId TEXT, CashDepositDetailId TEXT, DepositDate TEXT, PCDetailId TEXT, Mode TEXT, Amount TEXT, FullName TEXT)",
             RawMaterialMaster_CREATE = "CREATE TABLE IF NOT EXISTS RawMaterialMaster(Id TEXT, Name TEXT, UOM TEXT, NameLocal TEXT);",
@@ -115,9 +117,12 @@ public class DatabaseAdapter {
     CentreUserCentres_CREATE = "CREATE TABLE IF NOT EXISTS CentreUserCentres(Id TEXT, Name TEXT);",
             OutletLedger_CREATE = "CREATE TABLE IF NOT EXISTS OutletLedger(Id TEXT, Quantity TEXT);",
             ExpenseHead_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseHead(Id TEXT, Name TEXT, NameLocal TEXT);",
+            ExcessHead_CREATE = "CREATE TABLE IF NOT EXISTS ExcessHead(Id TEXT, Name TEXT, NameLocal TEXT);",
             OutletPaymentReceipt_CREATE = "CREATE TABLE IF NOT EXISTS OutletPaymentReceipt(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, Amount TEXT, AndroidDate TEXT, UniqueId TEXT, IsSync TEXT);",
             ExpenseBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);",
-            ExpenseBookingAccountant_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBookingAccountant(Id INTEGER PRIMARY KEY AUTOINCREMENT,CentreId TEXT,CompanyId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
+            ExcessBooking_CREATE = "CREATE TABLE IF NOT EXISTS ExcessBooking(Id INTEGER PRIMARY KEY AUTOINCREMENT,CustomerId TEXT, ExcessHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);",
+            ExpenseBookingAccountant_CREATE = "CREATE TABLE IF NOT EXISTS ExpenseBookingAccountant(Id INTEGER PRIMARY KEY AUTOINCREMENT,CentreId TEXT,CompanyId TEXT, ExpenseHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);",
+            ExcessBookingAccountant_CREATE = "CREATE TABLE IF NOT EXISTS ExcessBookingAccountant(Id INTEGER PRIMARY KEY AUTOINCREMENT,CentreId TEXT,CompanyId TEXT, ExcessHeadId TEXT, Amount TEXT, Remarks TEXT, AndroidDate TEXT, UniqueId TEXT,ImagePath TEXT,ImageName TEXT, IsSync TEXT, IsImageSync TEXT);";
 
     // Context of the application using the database.
     private final Context context;
@@ -370,6 +375,12 @@ public class DatabaseAdapter {
                 else
                     selectQuery = "SELECT Id, NameLocal FROM ExpenseHead WHERE Id !='1' ORDER BY Name COLLATE NOCASE ASC";
                 break;
+            case "excesshead":
+                if (userlang.equalsIgnoreCase("en"))
+                    selectQuery = "SELECT Id, Name FROM ExcessHead ORDER BY Name COLLATE NOCASE ASC";
+                else
+                    selectQuery = "SELECT Id, NameLocal FROM ExcessHead ORDER BY Name COLLATE NOCASE ASC";
+                break;
             case "centre":
                 selectQuery = "SELECT Id, Name FROM Centre ORDER BY LOWER(Name)";
                 break;
@@ -393,6 +404,8 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0-0", "...Select SKU"));
             else if (masterType.equalsIgnoreCase("exphead"))
                 labels.add(new CustomType("0", "...Select Expense Head"));
+            else if (masterType.equalsIgnoreCase("excesshead"))
+                labels.add(new CustomType("0", "...Select Excess Fund Head"));
             else if (masterType.equalsIgnoreCase("centreusercentre"))
                 labels.add(new CustomType("0", "...Select Centre"));
             else if (masterType.equalsIgnoreCase("centre"))
@@ -416,6 +429,8 @@ public class DatabaseAdapter {
                 labels.add(new CustomType("0-0", "...उत्पाद चयन करें"));
             else if (masterType.equalsIgnoreCase("exphead"))
                 labels.add(new CustomType("0", "...व्यय हेड चयन करें"));
+            else if (masterType.equalsIgnoreCase("excesshead"))
+                labels.add(new CustomType("0", "...अतिरिक्त फंड हेड चयन करें"));
             else if (masterType.equalsIgnoreCase("centreusercentre"))
                 labels.add(new CustomType("0", "... केंद्र का चयन करें"));
             else if (masterType.equalsIgnoreCase("centre"))
@@ -1404,7 +1419,7 @@ public class DatabaseAdapter {
 
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
 
-        selectQuery = "SELECT UniqueId, ImageName, ImagePath FROM ExpenseBooking WHERE IsImageSync IS NULL AND ImagePath!='' ";
+        selectQuery = "SELECT UniqueId, ImageName, ImagePath, 'Expense' FROM ExpenseBooking WHERE IsImageSync IS NULL AND ImagePath!='' UNION SELECT UniqueId, ImageName, ImagePath,'Excess' FROM ExcessBooking WHERE IsImageSync IS NULL AND ImagePath!='' ";
 
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -1412,6 +1427,7 @@ public class DatabaseAdapter {
             map.put("UniqueId", cursor.getString(0));
             map.put("UploadFileName", cursor.getString(1));
             map.put("ImagePath", cursor.getString(2));
+            map.put("ModuleName", cursor.getString(3));
 
             wordList.add(map);
         }
@@ -1425,7 +1441,7 @@ public class DatabaseAdapter {
 
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
 
-        selectQuery = "SELECT UniqueId, ImageName, ImagePath FROM ExpenseBookingAccountant WHERE IsImageSync IS NULL AND ImagePath!='' ";
+        selectQuery = "SELECT UniqueId, ImageName, ImagePath, 'Expense' FROM ExpenseBookingAccountant WHERE IsImageSync IS NULL AND ImagePath!='' UNION SELECT UniqueId, ImageName, ImagePath, 'Excess' FROM ExcessBookingAccountant WHERE IsImageSync IS NULL AND ImagePath!='' ";
 
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
@@ -1433,6 +1449,7 @@ public class DatabaseAdapter {
             map.put("UniqueId", cursor.getString(0));
             map.put("UploadFileName", cursor.getString(1));
             map.put("ImagePath", cursor.getString(2));
+            map.put("ModuleName", cursor.getString(3));
 
             wordList.add(map);
         }
@@ -1444,10 +1461,15 @@ public class DatabaseAdapter {
     public void updateOutletAttachmentStatus(String uniqueId) {
         selectQuery = "UPDATE ExpenseBooking SET IsImageSync = 1 WHERE UniqueId ='" + uniqueId + "'";
         db.execSQL(selectQuery);
+        selectQuery = "UPDATE ExcessBooking SET IsImageSync = 1 WHERE UniqueId ='" + uniqueId + "'";
+        db.execSQL(selectQuery);
     }
 
     public void updateAccountantAttachmentStatus(String uniqueId) {
         selectQuery = "UPDATE ExpenseBookingAccountant SET IsImageSync = 1 WHERE UniqueId ='" + uniqueId + "'";
+        db.execSQL(selectQuery);
+
+        selectQuery = "UPDATE ExcessBookingAccountant SET IsImageSync = 1 WHERE UniqueId ='" + uniqueId + "'";
         db.execSQL(selectQuery);
     }
 
@@ -1784,10 +1806,38 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to Updated Outlet Excess IsSYnc Flag">
+    public String Update_OutletExcessIsSync() {
+        try {
+            String query = "UPDATE ExcessBooking SET IsSync = '1'";
+            db.execSQL(query);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Code to Updated Accountant Expense IsSYnc Flag">
     public String Update_AccountantExpenseIsSync() {
         try {
             String query = "UPDATE ExpenseBookingAccountant SET IsSync = '1'";
+            db.execSQL(query);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to Updated Accountant Excess IsSYnc Flag">
+    public String Update_AccountantExcessIsSync() {
+        try {
+            String query = "UPDATE ExcessBookingAccountant SET IsSync = '1'";
             db.execSQL(query);
             result = "success";
             return result;
@@ -1847,7 +1897,10 @@ public class DatabaseAdapter {
             db.execSQL("DELETE FROM OutletPrimaryReceipt;");
             db.execSQL("DELETE FROM OutletPaymentReceipt;");
             db.execSQL("DELETE FROM ExpenseBooking;");
+            db.execSQL("DELETE FROM ExcessBooking;");
             db.execSQL("DELETE FROM ExpenseBookingAccountant;");
+            db.execSQL("DELETE FROM ExcessBookingAccountant;");
+            db.execSQL("DELETE FROM ExcessBookingAccountant;");
 
             db.execSQL("DELETE FROM OutletSale;");
             db.execSQL("DELETE FROM OutletSaleDetail;");
@@ -1867,6 +1920,12 @@ public class DatabaseAdapter {
             db.execSQL(selectQuery);
 
             selectQuery = "DELETE FROM ExpenseBookingAccountant WHERE IsSync IS NOT NULL AND IsImageSync IS NOT NULL AND strftime( '%d-%m-%Y', DATE()) -strftime( '%d-%m-%Y',AndroidDate)>0";
+            db.execSQL(selectQuery);
+
+            selectQuery = "DELETE FROM ExcessBooking WHERE IsSync IS NOT NULL AND IsImageSync IS NOT NULL AND strftime( '%d-%m-%Y', DATE()) -strftime( '%d-%m-%Y',AndroidDate)>0";
+            db.execSQL(selectQuery);
+
+            selectQuery = "DELETE FROM ExcessBookingAccountant WHERE IsSync IS NOT NULL AND IsImageSync IS NOT NULL AND strftime( '%d-%m-%Y', DATE()) -strftime( '%d-%m-%Y',AndroidDate)>0";
             db.execSQL(selectQuery);
 
             result = "success";
@@ -2235,7 +2294,7 @@ public class DatabaseAdapter {
     public boolean IslogoutAllowed() {
         boolean isRequired = true;
 
-        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense, countExpenseAcc, countImgExpense, countImgExpenseAcc, countOutletSale;
+        int countDelivery, countStockReturn, countPaymentMaster, countPaymentDetail, countComplaint, countPrimaryReceipt, countoutletPayment, countExpense, countExpenseAcc, countImgExpense, countImgExpenseAcc, countOutletSale,countExcessAcc,countImgExcessAcc,countExcess,countImgExcess;
 
         selectQuery = "SELECT Id FROM Delivery WHERE IsSync = '0'";
         cursor = db.rawQuery(selectQuery, null);
@@ -2273,18 +2332,35 @@ public class DatabaseAdapter {
         cursor = db.rawQuery(selectQuery, null);
         countExpense = cursor.getCount();
 
+
+                selectQuery = "SELECT Id FROM ExcessBooking WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        countExcess = cursor.getCount();
+
         selectQuery = "SELECT Id FROM ExpenseBookingAccountant WHERE IsSync IS NULL";
         cursor = db.rawQuery(selectQuery, null);
         countExpenseAcc = cursor.getCount();
 
+        selectQuery = "SELECT Id FROM ExcessBookingAccountant WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        countExcessAcc = cursor.getCount();
 
         selectQuery = "SELECT Id FROM ExpenseBooking WHERE IsImageSync IS NULL AND ImageName!='' ";
         cursor = db.rawQuery(selectQuery, null);
         countImgExpense = cursor.getCount();
 
+
+                selectQuery = "SELECT Id FROM ExcessBooking WHERE IsImageSync IS NULL AND ImageName!='' ";
+        cursor = db.rawQuery(selectQuery, null);
+        countImgExcess = cursor.getCount();
+
         selectQuery = "SELECT Id FROM ExpenseBookingAccountant WHERE IsImageSync IS NULL AND ImageName!='' ";
         cursor = db.rawQuery(selectQuery, null);
         countImgExpenseAcc = cursor.getCount();
+
+        selectQuery = "SELECT Id FROM ExcessBookingAccountant WHERE IsImageSync IS NULL AND ImageName!='' ";
+        cursor = db.rawQuery(selectQuery, null);
+        countImgExcessAcc = cursor.getCount();
 
         selectQuery = "SELECT Id FROM OutletSale WHERE IsSync='0' ";
         cursor = db.rawQuery(selectQuery, null);
@@ -2292,7 +2368,7 @@ public class DatabaseAdapter {
 
 
         cursor.close();
-        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0 || countExpenseAcc > 0 || countImgExpense>0 || countImgExpenseAcc>0 || countOutletSale>0)
+        if (countDelivery > 0 || countStockReturn > 0 || countPaymentMaster > 0 || countPaymentDetail > 0 || countComplaint > 0 || countPrimaryReceipt > 0 || countoutletPayment > 0 || countExpense > 0 || countExpenseAcc > 0 || countImgExpense>0 || countImgExpenseAcc>0 || countOutletSale>0 || countExcessAcc>0 || countImgExcessAcc>0 || countExcess>0 || countImgExcess>0)
             isRequired = false;
 
         return isRequired;
@@ -3203,6 +3279,80 @@ public class DatabaseAdapter {
         return data;
     }
 
+
+    //Method to get Excess Confirmation Data
+    public String getExcessConfirmationHeaderData(String id) {
+        String data = "";
+        selectQuery = "SELECT DISTINCT ExpenseDate||'~'||CustomerName||'~'||ExpenseHead||'~'||Amount||'~'||(CASE WHEN Remarks='' THEN '-' ELSE Remarks END) FROM ExcessConfirmationData WHERE Id='" + id + "' ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                data = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+        return data;
+    }
+
+    //Method to get Excess Confirmation Data
+    public String getCentreExcessConfirmationHeaderData(String id) {
+        String data = "";
+        selectQuery = "SELECT DISTINCT ExpenseDate||'~'||CentreName||'~'||CompanyName||'~'||ExpenseHead||'~'||Amount||'~'||Remarks||'~'||CreateBy FROM CentreExcessConfirmationData WHERE Id='" + id + "' ";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                data = cursor.getString(0);
+            } while (cursor.moveToNext());
+        }
+        return data;
+    }
+
+    //To insert records in ExcessConfirmationData Table
+    public String Insert_ExcessConfirmationData(String id, String expenseDate, String customerName, String expenseHead, String amount, String remarks) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("ExpenseDate", expenseDate);
+            newValues.put("CustomerName", customerName);
+            newValues.put("ExpenseHead", expenseHead);
+            newValues.put("Amount", amount);
+            newValues.put("Remarks", remarks);
+
+            db.insert("ExcessConfirmationData", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    //To insert records in Centre ExcessConfirmationData Table
+    public String Insert_CentreExcessConfirmationData(String id, String expenseDate, String centreName, String companyName,
+                                                       String expenseHead, String amount, String remarks, String createBy) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("ExpenseDate", expenseDate);
+            newValues.put("CentreName", centreName);
+            newValues.put("CompanyName", companyName);
+            newValues.put("ExpenseHead", expenseHead);
+            newValues.put("Amount", amount);
+            newValues.put("Remarks", remarks);
+            newValues.put("CreateBy", createBy);
+
+            db.insert("CentreExcessConfirmationData", null, newValues);
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     //To insert records in ExpenseConfirmationData Table
     public String Insert_ExpenseConfirmationData(String id, String expenseDate, String customerName, String expenseHead, String amount, String remarks) {
         try {
@@ -3322,6 +3472,80 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="To get Excess Booking data For confirmation">
+    public ArrayList<HashMap<String, String>> getExcessConfirmationData() {
+        wordList = new ArrayList<HashMap<String, String>>();
+        String date = "", cust = "", exp = "";
+        selectQuery = "SELECT DISTINCT Id, ExpenseDate, CustomerName, ExpenseHead, Amount, Remarks FROM ExcessConfirmationData";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Id", cursor.getString(0));
+            map.put("ExpenseDate", cursor.getString(1));
+            map.put("CustomerName", cursor.getString(2));
+            map.put("ExpenseHead", cursor.getString(3));
+            map.put("Amount", cursor.getString(4));
+            map.put("Remarks", cursor.getString(5));
+            if (date.equalsIgnoreCase(cursor.getString(1)))
+                map.put("Flag", "1");
+            else
+                map.put("Flag", "0");
+            if (cust.equalsIgnoreCase(cursor.getString(2)))
+                map.put("Flag1", "1");
+            else
+                map.put("Flag1", "0");
+            if (exp.equalsIgnoreCase(cursor.getString(3)))
+                map.put("Flag2", "1");
+            else
+                map.put("Flag2", "0");
+            date = cursor.getString(1);
+            cust = cursor.getString(2);
+            exp = cursor.getString(3);
+            wordList.add(map);
+        }
+
+        cursor.close();
+
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="To get Centre Excess Booking data For confirmation">
+    public ArrayList<HashMap<String, String>> getCentreExcessConfirmationData() {
+        wordList = new ArrayList<HashMap<String, String>>();
+        String date = "";
+        String comp = "";
+        selectQuery = "SELECT DISTINCT Id, ExpenseDate, CentreName, CompanyName, ExpenseHead, Amount, Remarks FROM CentreExcessConfirmationData";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Id", cursor.getString(0));
+            map.put("ExpenseDate", cursor.getString(1));
+            map.put("CentreName", cursor.getString(2));
+            map.put("CompanyName", cursor.getString(3));
+            map.put("ExpenseHead", cursor.getString(4));
+            map.put("Amount", cursor.getString(5));
+            map.put("Remarks", cursor.getString(6));
+            if (date.equalsIgnoreCase(cursor.getString(1)))
+                map.put("Flag", "1");
+            else
+                map.put("Flag", "0");
+            if (comp.equalsIgnoreCase(cursor.getString(3) + "~"+cursor.getString(4)))
+                map.put("Flag1", "1");
+            else
+                map.put("Flag1", "0");
+
+            date = cursor.getString(1);
+            comp = cursor.getString(3) + "~"+cursor.getString(4);
+            wordList.add(map);
+        }
+
+        cursor.close();
+
+        return wordList;
+    }
+    //</editor-fold>
+
     public String convertToDisplayDateFormat(String dateValue) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
         String createDateForDB = "";
@@ -3348,6 +3572,35 @@ public class DatabaseAdapter {
             selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
         else
             selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.Id FROM ExpenseBooking eb, ExpenseHead eh WHERE eb.ExpenseHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Date", cursor.getString(0));
+            map.put("Name", cursor.getString(1));
+            map.put("Amount", cursor.getString(2));
+            map.put("Remarks", cursor.getString(3));
+            map.put("Id", cursor.getString(4));
+            if (prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
+                map.put("Flag", "0");
+            else
+                map.put("Flag", "1");
+            prevDate = convertToDisplayDateFormat(cursor.getString(0));
+
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Method to Fetch Excess Details">
+    public ArrayList<HashMap<String, String>> getExcessDetails() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        String prevDate = "";
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.Id FROM ExcessBooking eb, ExcessHead eh WHERE eb.ExcessHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        else
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.Id FROM ExcessBooking eb, ExcessHead eh WHERE eb.ExcessHeadId = eh.Id ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
@@ -3399,6 +3652,35 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Method to Fetch Accountant Excess Details">
+    public ArrayList<HashMap<String, String>> getAccountantExcessDetails() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+        String prevDate = "";
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.Name,cen.Name FROM ExcessBookingAccountant eb, Company com, ExcessHead eh,Centre cen  WHERE eb.CompanyId = com.Id AND eb.ExcessHeadId = eh.Id AND eb.CentreId = cen.Id ORDER BY eb.AndroidDate DESC ";
+        else
+            selectQuery = "SELECT eb.Id, com.ShortName, eb.AndroidDate, eb.Amount, eh.NameLocal,cen.Name FROM ExcessBookingAccountant eb, Company com, ExcessHead eh,Centre cen WHERE eb.CompanyId = com.Id AND eb.ExcessHeadId = eh.Id AND eb.CentreId = cen.Id ORDER BY eb.AndroidDate DESC ";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("Id", cursor.getString(0));
+            map.put("Company", cursor.getString(1));
+            map.put("Date", cursor.getString(2));
+            map.put("Amount", cursor.getString(3));
+            map.put("Name", cursor.getString(4));
+            map.put("Centre", cursor.getString(5));
+            if (prevDate.equalsIgnoreCase(convertToDisplayDateFormat(cursor.getString(0))))
+                map.put("Flag", "0");
+            else
+                map.put("Flag", "1");
+            prevDate = convertToDisplayDateFormat(cursor.getString(0));
+
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Code to get Expense Detail By Id">
     public ArrayList<String> getExpenseDetailById(String id, String lang) {
@@ -3424,6 +3706,29 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to get Excess Detail By Id">
+    public ArrayList<String> getExcessDetailById(String id, String lang) {
+        ArrayList<String> expensedetails = new ArrayList<String>();
+
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExcessBooking eb, ExcessHead eh WHERE eb.ExcessHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        else
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName FROM ExcessBooking eb, ExcessHead eh WHERE eb.ExcessHeadId = eh.Id AND eb.Id =" + id + " ORDER BY eb.AndroidDate DESC, LOWER(Name) ASC";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            expensedetails.add(cursor.getString(0));
+            expensedetails.add(cursor.getString(1));
+            expensedetails.add(cursor.getString(2));
+            expensedetails.add(cursor.getString(3));
+            expensedetails.add(cursor.getString(4));
+            expensedetails.add(cursor.getString(5));
+
+        }
+        cursor.close();
+
+        return expensedetails;
+    }
+    //</editor-fold>
 
     //<editor-fold desc="Code to get Accountant Expense Detail By Id">
     public ArrayList<String> getAccountantExpenseDetailById(String id, String lang) {
@@ -3433,6 +3738,32 @@ public class DatabaseAdapter {
             selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExpenseBookingAccountant eb, ExpenseHead eh, Company com, Centre cen WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
         else
             selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExpenseBookingAccountant eb, ExpenseHead eh, Company com, Centre cen WHERE eb.ExpenseHeadId = eh.Id AND eb.Id =" + id + " AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            expensedetails.add(cursor.getString(0));
+            expensedetails.add(cursor.getString(1));
+            expensedetails.add(cursor.getString(2));
+            expensedetails.add(cursor.getString(3));
+            expensedetails.add(cursor.getString(4));
+            expensedetails.add(cursor.getString(5));
+            expensedetails.add(cursor.getString(6));
+            expensedetails.add(cursor.getString(7));
+
+        }
+        cursor.close();
+
+        return expensedetails;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to get Accountant Excess Detail By Id">
+    public ArrayList<String> getAccountantExcessDetailById(String id, String lang) {
+        ArrayList<String> expensedetails = new ArrayList<String>();
+
+        if (userlang.equalsIgnoreCase("en"))
+            selectQuery = "SELECT  eb.AndroidDate, eh.Name, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExcessBookingAccountant eb, ExcessHead eh, Company com, Centre cen WHERE eb.ExcessHeadId = eh.Id AND eb.Id =" + id + " AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
+        else
+            selectQuery = "SELECT  eb.AndroidDate, eh.NameLocal, eb.Amount, eb.Remarks, eb.ImagePath, eb.ImageName, com.Name, cen.Name FROM ExcessBookingAccountant eb, ExcessHead eh, Company com, Centre cen WHERE eb.ExcessHeadId = eh.Id AND eb.Id =" + id + " AND eb.CompanyId = com.Id AND eb.CentreId = cen.Id";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             expensedetails.add(cursor.getString(0));
@@ -3846,6 +4177,25 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to insert Excess Head Data in ExpenseHead Table">
+    public String Insert_ExcessHead(String id, String name, String nameLocal) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("Id", id);
+            newValues.put("Name", name);
+            newValues.put("NameLocal", nameLocal);
+            db.insert("ExcessHead", null, newValues);
+
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Code to insert Outlet Payment Receipt Data in OutletPaymentReceipt Table">
     public String Insert_OutletPaymentReceipt(String customerId, String amount, String uniqueId) {
         try {
@@ -3892,6 +4242,31 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Code to insert Excess Data in Expense Booking Table">
+    public String Insert_ExcessBooking(String customerId, String excessHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("CustomerId", customerId);
+            newValues.put("ExcessHeadId", excessHeadId);
+            newValues.put("Amount", amount);
+            newValues.put("Remarks", remarks);
+            newValues.put("AndroidDate", getDateTime());
+            newValues.put("UniqueId", uniqueId);
+            newValues.put("ImagePath", imagePath);
+            newValues.put("ImageName", imageName);
+
+            db.insert("ExcessBooking", null, newValues);
+
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Code to insert Accountant Expense Data in Expense Booking Table">
     public String Insert_ExpenseBookingAccountant(String centreId, String companyId, String expenseHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
         try {
@@ -3908,6 +4283,32 @@ public class DatabaseAdapter {
             newValues.put("ImageName", imageName);
 
             db.insert("ExpenseBookingAccountant", null, newValues);
+
+            result = "success";
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Code to insert Accountant Excess Data in Excess Booking Table">
+    public String Insert_ExcessBookingAccountant(String centreId, String companyId, String excessHeadId, String amount, String remarks, String uniqueId, String imagePath, String imageName) {
+        try {
+            result = "fail";
+            newValues = new ContentValues();
+            newValues.put("CentreId", centreId);
+            newValues.put("CompanyId", companyId);
+            newValues.put("ExcessHeadId", excessHeadId);
+            newValues.put("Amount", amount);
+            newValues.put("Remarks", remarks);
+            newValues.put("AndroidDate", getDateTime());
+            newValues.put("UniqueId", uniqueId);
+            newValues.put("ImagePath", imagePath);
+            newValues.put("ImageName", imageName);
+
+            db.insert("ExcessBookingAccountant", null, newValues);
 
             result = "success";
             return result;
@@ -3976,11 +4377,56 @@ public class DatabaseAdapter {
     }
     //</editor-fold>
 
+    //<editor-fold desc="Method to fetch UnSync Outlet Excess">
+    public ArrayList<HashMap<String, String>> getUnSyncOutletExcess() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+
+        selectQuery = "SELECT UniqueId, CustomerId,ExcessHeadId,  Amount, AndroidDate, Remarks,ImageName FROM ExcessBooking WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("CustomerId", cursor.getString(1));
+            map.put("ExpenseHeadId", cursor.getString(2));
+            map.put("Amount", cursor.getString(3));
+            map.put("TransactionDate", cursor.getString(4));
+            map.put("Remarks", cursor.getString(5));
+            map.put("ImageName", cursor.getString(6));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
     //<editor-fold desc="Method to fetch UnSync Accountant Expense">
     public ArrayList<HashMap<String, String>> getUnSyncAccountantExpense() {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
 
         selectQuery = "SELECT UniqueId, CentreId,CompanyId,ExpenseHeadId,  Amount, AndroidDate, Remarks,ImageName FROM ExpenseBookingAccountant WHERE IsSync IS NULL";
+        cursor = db.rawQuery(selectQuery, null);
+        while (cursor.moveToNext()) {
+            map = new HashMap<String, String>();
+            map.put("UniqueId", cursor.getString(0));
+            map.put("CentreId", cursor.getString(1));
+            map.put("CompanyId", cursor.getString(2));
+            map.put("ExpenseHeadId", cursor.getString(3));
+            map.put("Amount", cursor.getString(4));
+            map.put("TransactionDate", cursor.getString(5));
+            map.put("Remarks", cursor.getString(6));
+            map.put("ImageName", cursor.getString(7));
+            wordList.add(map);
+        }
+        cursor.close();
+        return wordList;
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="Method to fetch UnSync Accountant Excess">
+    public ArrayList<HashMap<String, String>> getUnSyncAccountantExcess() {
+        ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
+
+        selectQuery = "SELECT UniqueId, CentreId,CompanyId,ExcessHeadId,  Amount, AndroidDate, Remarks,ImageName FROM ExcessBookingAccountant WHERE IsSync IS NULL";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();

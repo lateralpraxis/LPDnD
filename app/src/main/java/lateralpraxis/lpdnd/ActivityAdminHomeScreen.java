@@ -35,6 +35,8 @@ import java.util.Locale;
 
 import lateralpraxis.lpdnd.CentreStockConversion.ActivityListCentreConversion;
 import lateralpraxis.lpdnd.CustomerSettlement.CustomerSettlementList;
+import lateralpraxis.lpdnd.ExcessConfirmation.CentreExcessConfirmationList;
+import lateralpraxis.lpdnd.ExcessConfirmation.ExcessConfirmationList;
 import lateralpraxis.lpdnd.ExpenseConfirmation.CentreExpenseConfirmationList;
 import lateralpraxis.lpdnd.ExpenseConfirmation.ExpenseConfirmationList;
 import lateralpraxis.lpdnd.Reconciliation.ActivitySearchCustomer;
@@ -117,6 +119,7 @@ public class ActivityAdminHomeScreen extends Activity {
                     R.layout.btn_payment,
                     R.layout.btn_cashdeposit,
                     R.layout.btn_expenseconfirmation,
+                    R.layout.btn_excessconfirmation,
                     R.layout.btn_reconcile,
                     R.layout.btn_customersettlement,
                     R.layout.btn_stockconversion,
@@ -128,6 +131,7 @@ public class ActivityAdminHomeScreen extends Activity {
                     R.layout.btn_payment,
                     R.layout.btn_cashdeposit,
                     R.layout.btn_expenseconfirmation,
+                    R.layout.btn_excessconfirmation,
                     R.layout.btn_reconcile,
                     R.layout.btn_customersettlement,
                     R.layout.btn_report);
@@ -137,6 +141,7 @@ public class ActivityAdminHomeScreen extends Activity {
                     R.layout.btn_payment,
                     R.layout.btn_cashdeposit,
                     R.layout.btn_expenseconfirmation,
+                    R.layout.btn_excessconfirmation,
                     R.layout.btn_reconcile,
                     R.layout.btn_customersettlement,
                     R.layout.btn_stockconversion,
@@ -147,17 +152,19 @@ public class ActivityAdminHomeScreen extends Activity {
                     R.layout.btn_payment,
                     R.layout.btn_cashdeposit,
                     R.layout.btn_expenseconfirmation,
+                    R.layout.btn_excessconfirmation,
                     R.layout.btn_reconcile,
                     R.layout.btn_customersettlement,
                     R.layout.btn_report);
         else if (userRole.contains("Centre User")  && userRole.contains("Reconciliation User"))
-            views = Arrays.asList( R.layout.btn_expenseconfirmation, R.layout.btn_stockconversion, R.layout.btn_stockadjustment,  R.layout.btn_reconcile,R.layout.btn_report);
+            views = Arrays.asList( R.layout.btn_expenseconfirmation,R.layout.btn_excessconfirmation, R.layout.btn_stockconversion, R.layout.btn_stockadjustment,  R.layout.btn_reconcile,R.layout.btn_report);
         else if (userRole.contains("System User"))
             views = Arrays.asList(
                     R.layout.btn_delivery,
                     R.layout.btn_payment,
                     R.layout.btn_cashdeposit,
                     R.layout.btn_expenseconfirmation,
+                    R.layout.btn_excessconfirmation,
                     R.layout.btn_reconcile,
                     R.layout.btn_customersettlement,
                     R.layout.btn_report);
@@ -166,13 +173,13 @@ public class ActivityAdminHomeScreen extends Activity {
         else if (userRole.contains("Management User") && userRole.contains("Centre User"))
             views = Arrays.asList(R.layout.btn_stockconversion, R.layout.btn_stockadjustment, R.layout.btn_report);
         else if (userRole.contains("MIS User") && userRole.contains("Reconciliation User"))
-            views = Arrays.asList( R.layout.btn_expenseconfirmation,R.layout.btn_reconcile, R.layout.btn_report);
+            views = Arrays.asList( R.layout.btn_expenseconfirmation,R.layout.btn_excessconfirmation,R.layout.btn_reconcile, R.layout.btn_report);
         else if (userRole.contains("Management User") && userRole.contains("Reconciliation User"))
-            views = Arrays.asList( R.layout.btn_expenseconfirmation, R.layout.btn_reconcile, R.layout.btn_report);
+            views = Arrays.asList( R.layout.btn_expenseconfirmation,R.layout.btn_excessconfirmation, R.layout.btn_reconcile, R.layout.btn_report);
         else if (userRole.contains("Centre User"))
             views = Arrays.asList(R.layout.btn_stockconversion, R.layout.btn_stockadjustment, R.layout.btn_report);
         else if (userRole.contains("Reconciliation User"))
-            views = Arrays.asList( R.layout.btn_expenseconfirmation, R.layout.btn_reconcile);
+            views = Arrays.asList( R.layout.btn_expenseconfirmation,R.layout.btn_excessconfirmation, R.layout.btn_reconcile);
         else
             views = Arrays.asList(R.layout.btn_report);
 
@@ -288,7 +295,7 @@ public class ActivityAdminHomeScreen extends Activity {
                             }
                             else {
                                 AlertDialog.Builder builderSingle = new AlertDialog.Builder(ActivityAdminHomeScreen.this);
-                                builderSingle.setTitle("Select Expense Confirmation For");
+                                builderSingle.setTitle("Select Excess Fund Confirmation For");
                                 final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ActivityAdminHomeScreen.this, android.R.layout.select_dialog_singlechoice);
                                 arrayAdapter.add("Retail Outlet");
                                 arrayAdapter.add("Centre");
@@ -327,6 +334,60 @@ public class ActivityAdminHomeScreen extends Activity {
 					}
 				});
 				break;
+            case R.layout.btn_excessconfirmation:
+                btn = (Button) btnLayout.findViewById(R.id.btnExpenseConfirmation);
+                btn.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if(common.isConnected())
+                        {
+                            if(userRole.contains("Reconciliation User") && !userRole.contains("System User"))
+                            {
+                                ActivityExcessConirmationWSCall task = new ActivityExcessConirmationWSCall();
+                                task.execute();
+                            }
+                            else {
+                                AlertDialog.Builder builderSingle = new AlertDialog.Builder(ActivityAdminHomeScreen.this);
+                                builderSingle.setTitle("Select Expense Confirmation For");
+                                final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(ActivityAdminHomeScreen.this, android.R.layout.select_dialog_singlechoice);
+                                arrayAdapter.add("Retail Outlet");
+                                arrayAdapter.add("Centre");
+                                builderSingle.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                });
+                                builderSingle.setAdapter(
+                                        arrayAdapter,
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                String strName = arrayAdapter.getItem(which);
+                                                if (strName.equals("Retail Outlet")) {
+												/*intent = new Intent(context, ExpenseConfirmationList.class);
+												startActivity(intent);
+												finish();*/
+                                                    ActivityExcessConirmationWSCall task = new ActivityExcessConirmationWSCall();
+                                                    task.execute();
+                                                } else if (strName.equals("Centre")) {
+												/*intent = new Intent(context, CentreExpenseConfirmationList.class);
+												startActivity(intent);
+												finish();*/
+                                                    ActivityCentreExcessConirmationWSCall task = new ActivityCentreExcessConirmationWSCall();
+                                                    task.execute();
+                                                } else {
+                                                    common.showToast("Please select Appropriate option.");
+                                                }
+                                            }
+                                        });
+                                builderSingle.show();
+                            }
+                        }
+                    }
+                });
+                break;
             case R.layout.btn_customersettlement:
                 btn = (Button) btnLayout.findViewById(R.id.btnCustomerSettlement);
                 btn.setOnClickListener(new View.OnClickListener() {
@@ -747,8 +808,8 @@ public class ActivityAdminHomeScreen extends Activity {
 									.getString("ExpenseDate"),jsonArray.getJSONObject(i)
 									.getString("CentreName"), jsonArray.getJSONObject(i)
 									.getString("CompanyName"), jsonArray.getJSONObject(i)
-									.getString("ExpenseHeadName"),jsonArray.getJSONObject(i)
-									.getString("Amount"),jsonArray.getJSONObject(i)
+									.getString("ExpenseHeadName"),common.prevent_E_Notation(jsonArray.getJSONObject(i)
+									.getString("Amount")),jsonArray.getJSONObject(i)
 									.getString("Remarks"),jsonArray.getJSONObject(i)
                                     .getString("CreateBy"));
 						}
@@ -839,8 +900,8 @@ public class ActivityAdminHomeScreen extends Activity {
                                     .getString("Id"), jsonArray.getJSONObject(i)
                                     .getString("ExpenseDate"), jsonArray.getJSONObject(i)
                                     .getString("CustomerName"), jsonArray.getJSONObject(i)
-                                    .getString("ExpenseHeadName"), jsonArray.getJSONObject(i)
-                                    .getString("Amount"), jsonArray.getJSONObject(i)
+                                    .getString("ExpenseHeadName"), common.prevent_E_Notation(jsonArray.getJSONObject(i)
+                                    .getString("Amount")), jsonArray.getJSONObject(i)
                                     .getString("Remarks"));
                         }
                         dba.close();
@@ -869,6 +930,186 @@ public class ActivityAdminHomeScreen extends Activity {
         @Override
         protected void onPreExecute() {
             Dialog.setMessage("Downloading Expense Booking Confirmation Data..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+
+    // Web Service to Fetch Excess Data for Confirmation
+    private class ActivityExcessConirmationWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityAdminHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+                //<editor-fold desc="Code to set default language">
+                lang = session.getDefaultLang();
+                Locale myLocale = new Locale(lang);
+                Resources res = getResources();
+                DisplayMetrics dm = res.getDisplayMetrics();
+                Configuration conf = res.getConfiguration();
+                conf.locale = myLocale;
+                res.updateConfiguration(conf, dm);
+                //</editor-fold>
+
+                String[] name = {"lang","userId"};
+                String[] value = {lang,userId};
+                // Call method of web service to Read Expense Data For Confirmation
+                responseJSON = "";
+                responseJSON = common.CallJsonWS(name, value, "GetExcessPendingConfirmation", common.url);
+                return "";
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                return "ERROR: " + e.getMessage();
+            }
+
+        }
+
+        // After execution of product web service
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    dba.open();
+                    dba.DeleteMasterData("ExcessConfirmationData");
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    if (jsonArray.length() > 0) {
+
+                        // inserting data into CashDepositDeleteData
+                        for (int i = 0; i < jsonArray.length(); ++i) {
+
+                            dba.Insert_ExcessConfirmationData(jsonArray.getJSONObject(i)
+                                    .getString("Id"), jsonArray.getJSONObject(i)
+                                    .getString("ExcessDate"), jsonArray.getJSONObject(i)
+                                    .getString("CustomerName"), jsonArray.getJSONObject(i)
+                                    .getString("ExcessHeadName"), common.prevent_E_Notation(jsonArray.getJSONObject(i)
+                                    .getString("Amount")), jsonArray.getJSONObject(i)
+                                    .getString("Remarks"));
+                        }
+                        dba.close();
+                        intent = new Intent(context, ExcessConfirmationList.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        common.showToast("There is no data available for confirming excess fund data!");
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityAdminHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                common.showAlert(ActivityAdminHomeScreen.this,
+                        "Excess Fund Booking Confirmation Data Downloading failed: " + e.toString(),
+                        false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Excess Fund Booking Confirmation Data..");
+            Dialog.setCancelable(false);
+            Dialog.show();
+        }
+    }
+
+    // Web Service to Fetch Excess Data for Confirmation for Retail outlet
+    private class ActivityCentreExcessConirmationWSCall extends
+            AsyncTask<String, Void, String> {
+        private ProgressDialog Dialog = new ProgressDialog(
+                ActivityAdminHomeScreen.this);
+
+        @Override
+        protected String doInBackground(String... params) {
+            try {
+
+                //<editor-fold desc="Code to set default language">
+                lang = session.getDefaultLang();
+                Locale myLocale = new Locale(lang);
+                Resources res = getResources();
+                DisplayMetrics dm = res.getDisplayMetrics();
+                Configuration conf = res.getConfiguration();
+                conf.locale = myLocale;
+                res.updateConfiguration(conf, dm);
+                //</editor-fold>
+
+                String[] name = { "lang","userId"};
+                String[] value = { lang,userId };
+                // Call method of web service to Read Expense Data For Confirmation
+                responseJSON = "";
+                responseJSON = common.CallJsonWS(name, value,"GetCentreExcessPendingConfirmation", common.url);
+                return "";
+            } catch (SocketTimeoutException e) {
+                return "ERROR: TimeOut Exception. Either Server is busy or Internet is slow";
+            } catch (final Exception e) {
+                // TODO: handle exception
+                e.printStackTrace();
+                return "ERROR: " + e.getMessage();
+            }
+
+        }
+
+        // After execution of product web service
+        @Override
+        protected void onPostExecute(String result) {
+            try {
+                if (!result.contains("ERROR")) {
+                    dba.open();
+                    dba.DeleteMasterData("CentreExcessConfirmationData");
+                    // To display message after response from server
+                    JSONArray jsonArray = new JSONArray(responseJSON);
+                    if (jsonArray.length() > 0) {
+
+                        // inserting data into CashDepositDeleteData
+                        for (int i = 0; i < jsonArray.length(); ++i) {
+
+                            dba.Insert_CentreExcessConfirmationData(jsonArray.getJSONObject(i)
+                                    .getString("Id"),jsonArray.getJSONObject(i)
+                                    .getString("ExcessDate"),jsonArray.getJSONObject(i)
+                                    .getString("CentreName"), jsonArray.getJSONObject(i)
+                                    .getString("CompanyName"), jsonArray.getJSONObject(i)
+                                    .getString("ExcessHeadName"),common.prevent_E_Notation(jsonArray.getJSONObject(i)
+                                    .getString("Amount")),jsonArray.getJSONObject(i)
+                                    .getString("Remarks"),jsonArray.getJSONObject(i)
+                                    .getString("CreateBy"));
+                        }
+                        dba.close();
+                        intent = new Intent(context, CentreExcessConfirmationList.class);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        common.showToast("There is no data available for confirming excess fund booking data!");
+                    }
+
+                } else {
+                    if (result.contains("null") || result == "")
+                        result = "Server not responding. Please try again later.";
+                    common.showAlert(ActivityAdminHomeScreen.this, result, false);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                common.showAlert(ActivityAdminHomeScreen.this,
+                        "Excess Fund Booking Confirmation Data Downloading failed: " + e.toString(),
+                        false);
+            }
+            Dialog.dismiss();
+        }
+
+        // To display message on screen within process
+        @Override
+        protected void onPreExecute() {
+            Dialog.setMessage("Downloading Excess Fund Booking Confirmation Data..");
             Dialog.setCancelable(false);
             Dialog.show();
         }
