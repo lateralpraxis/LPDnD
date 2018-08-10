@@ -485,6 +485,8 @@ import lateralpraxis.lpdnd.types.CustomType;
 
 													dba.open();
 													btAddress = dba.getBluetooth();
+
+													final String custNames =dba.printCustomerNameById(customerId);
 													lables = dba.printDeliveryById(unicId);
 													total = dba.printDeliveryByIdTotal(unicId);
 													today = dba.getDate();
@@ -509,7 +511,7 @@ import lateralpraxis.lpdnd.types.CustomType;
 																		BILL = BILL + "\n   GSTIN/UIN: 27ABGFS3890M2ZG   ";
 																		BILL = BILL + "\nTel:27548367/27548369/8080166166";
 																		BILL = BILL + "\n--------------------------------";
-																		BILL = BILL + String.format("\n%-32s", ((CustomType) spCustomer.getSelectedItem()).getName());
+																		BILL = BILL + String.format("\n%-32s", custNames);
 																		BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
 																		BILL = BILL + String.format("\n%-10s%8s%6s%8s\n", "Product", "Quantity", "Rate", "Amount");
 																		for (HashMap<String, String> lable : lables) {

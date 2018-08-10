@@ -238,9 +238,10 @@ public class ActivityDeliveryViewDetail extends Activity implements Runnable {
                                 String deliveryDate = "";
                                 dba.open();
                                 deliveryDate = dba.getDemandDate();
+                                final String custNames =dba.printCustomerNameById(id);
                                 dba.close();
 
-                                BILL = BILL + String.format("\n%-32s", header);
+                                BILL = BILL + String.format("\n%-32s", custNames);
                                 BILL = BILL + String.format("\n%32s\n", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", deliveryDate));
 
 
@@ -248,6 +249,7 @@ public class ActivityDeliveryViewDetail extends Activity implements Runnable {
                                 dba.open();
                                 ArrayList<HashMap<String, String>> lables = null;
                                 String total = "0";
+
                                 lables = dba.getDeliveryDetails(id, deliveryDate);
                                 total = dba.getDeliveryDetailPrinter(id, deliveryDate);
                                 if (lables != null && lables.size() > 0) {

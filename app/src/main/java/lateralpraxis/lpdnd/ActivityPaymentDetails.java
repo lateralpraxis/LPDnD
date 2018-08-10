@@ -171,7 +171,8 @@ public class ActivityPaymentDetails extends Activity implements Runnable{
 							try {
 								NumberFormat formatter = new DecimalFormat("##,##,##,##,##,##,##,##,##0.00");
 								OutputStream os = mBluetoothSocket.getOutputStream();
-
+								db.openR();
+								final String custNames =db.printCustomerNameById(strCustId);
 								String BILL = "                                  ";
 								BILL = BILL + "\n   SHRI GANESH MILK PRODUCTS    ";
 								BILL = BILL + "\n   Plot No. 109. Sector 1A,     ";
@@ -181,7 +182,7 @@ public class ActivityPaymentDetails extends Activity implements Runnable{
 								BILL = BILL + "\nTel:27548367/27548369/8080166166";
 								BILL = BILL + "\n--------------------------------";
 
-								BILL = BILL + String.format("\n%-32s", strCustName);
+								BILL = BILL + String.format("\n%-32s", custNames);
 								BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", strDate));
 
 								////////// Payment /////////

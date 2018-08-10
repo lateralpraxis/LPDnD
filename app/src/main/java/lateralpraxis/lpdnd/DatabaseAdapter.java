@@ -1562,7 +1562,7 @@ public class DatabaseAdapter {
     // To get all delivery details
     public ArrayList<HashMap<String, String>> getDeliveryDetails(String id, String date) {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
-        selectQuery = "SELECT dd.Sku, SUM(dd.DelQty), dd.Rate, SUM(dd.DelQty)*dd.Rate, SUM(dd.DQty) FROM DeliveryDetail dd, (SELECT DISTINCT Id FROM Delivery WHERE Customerid ='" + id + "' AND SUBSTR(CreateDate,0,11)='" + date + "') de WHERE de.Id = dd.DeliveryId GROUP BY SKUID ORDER BY LOWER(dd.Sku)";
+        selectQuery = "SELECT pm.Product, SUM(dd.DelQty), dd.Rate, SUM(dd.DelQty)*dd.Rate, SUM(dd.DQty) FROM DeliveryDetail dd LEFT OUTER JOIN ProductMaster pm ON dd.SKUId = pm.SKUId, (SELECT DISTINCT Id FROM Delivery WHERE Customerid ='" + id + "' AND SUBSTR(CreateDate,0,11)='" + date + "') de WHERE de.Id = dd.DeliveryId GROUP BY SKUID ORDER BY LOWER(dd.Sku)";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();
@@ -4691,7 +4691,7 @@ public class DatabaseAdapter {
     public ArrayList<HashMap<String, String>> printDeliveryById(String id) {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
         try {
-            selectQuery = "SELECT det.Sku, det.DelQty, det.Rate, det.DelQty*det.Rate, det.DQty FROM Delivery mas, DeliveryDetail det WHERE mas.Id = det.DeliveryId AND mas.UniqueId ='" + id + "' ";
+            selectQuery = "SELECT pm.Product, det.DelQty, det.Rate, det.DelQty*det.Rate, det.DQty FROM Delivery mas, DeliveryDetail det LEFT OUTER JOIN ProductMaster pm ON det.SKUId = pm.SKUId WHERE mas.Id = det.DeliveryId AND mas.UniqueId ='" + id + "' ";
             cursor = db.rawQuery(selectQuery, null);
             while (cursor.moveToNext()) {
                 map = new HashMap<String, String>();
@@ -4709,6 +4709,24 @@ public class DatabaseAdapter {
             ex.getMessage();
         }
         return wordList;
+    }
+
+
+    public String printCustomerNameById(String id) {
+        String customername ="";
+        try {
+            selectQuery = "SELECT Customer FROM CustomerMaster WHERE CustomerId ='" + id + "' ";
+            cursor = db.rawQuery(selectQuery, null);
+            while (cursor.moveToNext()) {
+                customername = cursor.getString(0);
+            }
+            cursor.close();
+        }
+        catch (Exception ex)
+        {
+            ex.getMessage();
+        }
+        return customername;
     }
 
     // To get total of delivery details for printer

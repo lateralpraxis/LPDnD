@@ -977,6 +977,7 @@ public class ActivityDeliveryPayment   extends Activity implements Runnable{
 									db.open();
 									btAddress = db.getBluetooth();
 									today = db.getDate();
+									final String custNames =db.printCustomerNameById(tvCustId.getText().toString());
 									listA = db.printDeliveryById(deliveryUniqueId);
 									total = db.printDeliveryByIdTotal(deliveryUniqueId);
 									lablePayment = db.printCustomerPaymentDelivery(deliveryUniqueId);
@@ -1000,7 +1001,7 @@ public class ActivityDeliveryPayment   extends Activity implements Runnable{
 														BILL = BILL + "\n   GSTIN/UIN: 27ABGFS3890M2ZG   ";
 														BILL = BILL + "\nTel:27548367/27548369/8080166166";
 														BILL = BILL + "\n--------------------------------";
-														BILL = BILL + String.format("\n%-32s", customerName);
+														BILL = BILL + String.format("\n%-32s", custNames);
 														BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
 														BILL = BILL + String.format("\n%-10s%8s%6s%8s\n", "Product", "Quantity", "Rate", "Amount");
 														for (HashMap<String, String> lable : listA) {
