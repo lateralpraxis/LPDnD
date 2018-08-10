@@ -525,6 +525,7 @@ import lateralpraxis.lpdnd.types.CustomType;
 																		BILL = BILL + String.format("\n%32s\n", userName);
 																		BILL = BILL + "\n\n\n";
 																		os.write(BILL.getBytes());
+																		os.write(BILL.getBytes());
 																		try {
 																			if (mBluetoothSocket != null)
 																				mBluetoothSocket.close();

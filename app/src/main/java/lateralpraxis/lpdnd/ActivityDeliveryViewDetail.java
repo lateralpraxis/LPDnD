@@ -286,6 +286,7 @@ public class ActivityDeliveryViewDetail extends Activity implements Runnable {
                                 BILL = BILL + String.format("\n%32s\n", userName);
                                 BILL = BILL + "\n\n\n";
                                 os.write(BILL.getBytes());
+                                os.write(BILL.getBytes());
                             } catch (Exception e) {
                                 //Log.e("Main", "Exe ", e);
                             }
