@@ -130,7 +130,7 @@ import lateralpraxis.lpdnd.types.CustomType;
 		{
 			routeId = arr[0];
 		}
-		Log.i("LPDND", "routeId="+routeId);
+
 		// to create object of controls
 		btnGo = (Button) findViewById(R.id.btnGo);
 		btnCreate = (Button) findViewById(R.id.btnCreate);
@@ -164,7 +164,6 @@ import lateralpraxis.lpdnd.types.CustomType;
 			if (mPairedDevices.size() > 0) {
 				for (BluetoothDevice mDevice : mPairedDevices) {
 					mPairedDevicesArrayAdapter.add(mDevice.getName() + "\n" + mDevice.getAddress());
-					Log.i("LPDND", mDevice.getName() + "\n" + mDevice.getAddress());
 				}
 			} else {
 				String mNoDevices = "None Paired";//getResources().getText(R.string.none_paired).toString();
@@ -512,7 +511,8 @@ import lateralpraxis.lpdnd.types.CustomType;
 																		BILL = BILL + "\nTel:27548367/27548369/8080166166";
 																		BILL = BILL + "\n--------------------------------";
 																		BILL = BILL + String.format("\n%-32s", custNames);
-																		BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
+																		//BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
+																		BILL = BILL + String.format("\n%32s",  today);
 																		BILL = BILL + String.format("\n%-10s%8s%6s%8s\n", "Product", "Quantity", "Rate", "Amount");
 																		for (HashMap<String, String> lable : lables) {
 																			//totalAmounts =totalAmounts+ Double.valueOf(lable.get("DelQty"))*Double.valueOf(lable.get("Rate").replace(",", ""));

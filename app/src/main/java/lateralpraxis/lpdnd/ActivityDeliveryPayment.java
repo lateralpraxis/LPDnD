@@ -269,8 +269,17 @@ public class ActivityDeliveryPayment   extends Activity implements Runnable{
         Set<BluetoothDevice> mPairedDevices = mBluetoothAdapter.getBondedDevices();
         if (mBluetoothAdapter != null) {
             if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            	try {
+					Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+					startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+				}
+				catch (Exception ex)
+				{
+
+				}
+				finally {
+
+				}
             }
             if (mPairedDevices.size() > 0) {
                 for (BluetoothDevice mDevice : mPairedDevices) {
@@ -1002,7 +1011,8 @@ public class ActivityDeliveryPayment   extends Activity implements Runnable{
 														BILL = BILL + "\nTel:27548367/27548369/8080166166";
 														BILL = BILL + "\n--------------------------------";
 														BILL = BILL + String.format("\n%-32s", custNames);
-														BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
+														//BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
+														BILL = BILL + String.format("\n%32s", today);
 														BILL = BILL + String.format("\n%-10s%8s%6s%8s\n", "Product", "Quantity", "Rate", "Amount");
 														for (HashMap<String, String> lable : listA) {
 															BILL = BILL + String.valueOf(lable.get("Item")) + "\n";

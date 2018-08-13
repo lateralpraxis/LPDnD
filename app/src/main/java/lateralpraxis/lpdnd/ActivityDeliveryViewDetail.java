@@ -242,7 +242,8 @@ public class ActivityDeliveryViewDetail extends Activity implements Runnable {
                                 dba.close();
 
                                 BILL = BILL + String.format("\n%-32s", custNames);
-                                BILL = BILL + String.format("\n%32s\n", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", deliveryDate));
+                                //BILL = BILL + String.format("\n%32s\n", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", deliveryDate));
+                                BILL = BILL + String.format("\n%32s\n",  deliveryDate);
 
 
                                 //To get delivery details from database

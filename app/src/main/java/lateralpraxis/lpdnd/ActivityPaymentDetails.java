@@ -183,7 +183,8 @@ public class ActivityPaymentDetails extends Activity implements Runnable{
 								BILL = BILL + "\n--------------------------------";
 
 								BILL = BILL + String.format("\n%-32s", custNames);
-								BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", strDate));
+								//BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", strDate));
+								BILL = BILL + String.format("\n%32s",  strDate);
 
 								////////// Payment /////////
 								List<CustomerPayment> lablePayment = null;

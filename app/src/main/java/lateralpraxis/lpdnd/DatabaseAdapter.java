@@ -1562,7 +1562,7 @@ public class DatabaseAdapter {
     // To get all delivery details
     public ArrayList<HashMap<String, String>> getDeliveryDetails(String id, String date) {
         ArrayList<HashMap<String, String>> wordList = new ArrayList<HashMap<String, String>>();
-        selectQuery = "SELECT pm.Product, SUM(dd.DelQty), dd.Rate, SUM(dd.DelQty)*dd.Rate, SUM(dd.DQty) FROM DeliveryDetail dd LEFT OUTER JOIN ProductMaster pm ON dd.SKUId = pm.SKUId, (SELECT DISTINCT Id FROM Delivery WHERE Customerid ='" + id + "' AND SUBSTR(CreateDate,0,11)='" + date + "') de WHERE de.Id = dd.DeliveryId GROUP BY SKUID ORDER BY LOWER(dd.Sku)";
+        selectQuery = "SELECT pm.Product, SUM(dd.DelQty), dd.Rate, SUM(dd.DelQty)*dd.Rate, SUM(dd.DQty) FROM DeliveryDetail dd LEFT OUTER JOIN ProductMaster pm ON dd.SKUId = pm.SKUId, (SELECT DISTINCT Id FROM Delivery WHERE Customerid ='" + id + "' AND SUBSTR(CreateDate,0,11)='" + date + "') de WHERE de.Id = dd.DeliveryId GROUP BY pm.SKUID ORDER BY LOWER(dd.Sku)";
         cursor = db.rawQuery(selectQuery, null);
         while (cursor.moveToNext()) {
             map = new HashMap<String, String>();

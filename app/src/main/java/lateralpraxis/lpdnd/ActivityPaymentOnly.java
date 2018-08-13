@@ -1076,7 +1076,8 @@ public class ActivityPaymentOnly   extends Activity implements Runnable{
                                                         BILL = BILL + "\nTel:27548367/27548369/8080166166";
                                                         BILL = BILL + "\n--------------------------------";
                                                         BILL = BILL + String.format("\n%-32s", custNames);
-                                                        BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
+                                                        //BILL = BILL + String.format("\n%32s", common.formateDateFromstring("yyyy-MM-dd", "dd-MMM-yyyy", today));
+														BILL = BILL + String.format("\n%32s", today);
                                                         BILL = BILL + String.format("\n%-32s", "Payment Details");
                                                         BILL = BILL + String.format("\n%-7s%11s  %-12s", "Company", "Amount", "Description");
                                                         String comp="", cheque="";
